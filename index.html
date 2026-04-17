@@ -55,18 +55,12 @@
   --transition: 180ms cubic-bezier(.4,0,.2,1);
 }
 
-/* ═══════════════════════════════════════════
-   RESET / BASE
-═══════════════════════════════════════════ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; font-family: var(--font); background: var(--bg); color: var(--txt); font-size: 14px; -webkit-font-smoothing: antialiased; }
 button { font-family: var(--font); cursor: pointer; border: none; background: none; }
 input, textarea { font-family: var(--font); }
 a { color: inherit; text-decoration: none; }
 
-/* ═══════════════════════════════════════════
-   SCROLLBAR
-═══════════════════════════════════════════ */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
@@ -78,76 +72,35 @@ a { color: inherit; text-decoration: none; }
   position: fixed; inset: 0;
   background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%);
   display: flex; align-items: center; justify-content: center;
-  z-index: 9999;
-  transition: opacity .35s, visibility .35s;
+  z-index: 9999; transition: opacity .35s, visibility .35s;
 }
 #login-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
 .login-card {
-  background: var(--surface);
-  border-radius: 20px;
-  padding: 40px 36px;
-  width: 360px;
-  max-width: 95vw;
+  background: var(--surface); border-radius: 20px;
+  padding: 40px 36px; width: 360px; max-width: 95vw;
   box-shadow: 0 24px 80px rgba(0,0,0,.3);
   animation: loginIn .4s cubic-bezier(.34,1.56,.64,1) both;
 }
 @keyframes loginIn { from { opacity:0; transform: translateY(24px) scale(.96); } to { opacity:1; transform: none; } }
 
-.login-logo {
-  display: flex; align-items: center; gap: 12px;
-  margin-bottom: 28px;
-}
-.login-logo-icon {
-  width: 44px; height: 44px;
-  background: var(--blue);
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px;
-  box-shadow: 0 6px 20px rgba(37,99,235,.35);
-}
+.login-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.login-logo-icon { width: 44px; height: 44px; background: var(--blue); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 6px 20px rgba(37,99,235,.35); }
 .login-logo-text { font-size: 17px; font-weight: 600; color: var(--txt); line-height: 1.2; }
 .login-logo-sub  { font-size: 12px; color: var(--txt3); font-weight: 400; }
-
 .login-title { font-size: 22px; font-weight: 600; color: var(--txt); margin-bottom: 6px; }
 .login-sub   { font-size: 13px; color: var(--txt2); margin-bottom: 24px; }
-
 .login-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
 .login-label { font-size: 12px; font-weight: 600; color: var(--txt2); }
 .login-input-wrap { position: relative; }
-.login-input {
-  width: 100%; padding: 11px 40px 11px 14px;
-  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-  font-size: 14px; color: var(--txt); background: var(--surface2);
-  outline: none; transition: var(--transition);
-  letter-spacing: .1em;
-}
+.login-input { width: 100%; padding: 11px 40px 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; color: var(--txt); background: var(--surface2); outline: none; transition: var(--transition); letter-spacing: .1em; }
 .login-input:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
 .login-input.error { border-color: var(--red); box-shadow: 0 0 0 3px rgba(220,38,38,.1); }
-
-.login-eye {
-  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-  cursor: pointer; color: var(--txt3); display: flex; align-items: center;
-  transition: color .15s;
-}
+.login-eye { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--txt3); display: flex; align-items: center; transition: color .15s; }
 .login-eye:hover { color: var(--txt2); }
-
-.login-error {
-  background: var(--red-lt); border: 1px solid #FECACA;
-  border-radius: var(--radius-sm); padding: 9px 12px;
-  font-size: 12px; color: var(--red); margin-bottom: 14px;
-  display: none;
-}
+.login-error { background: var(--red-lt); border: 1px solid #FECACA; border-radius: var(--radius-sm); padding: 9px 12px; font-size: 12px; color: var(--red); margin-bottom: 14px; display: none; }
 .login-error.show { display: block; }
-
-.btn-login {
-  width: 100%; padding: 12px;
-  background: var(--blue); color: #fff;
-  font-size: 14px; font-weight: 600;
-  border-radius: var(--radius-sm);
-  transition: var(--transition);
-  margin-top: 4px;
-}
+.btn-login { width: 100%; padding: 12px; background: var(--blue); color: #fff; font-size: 14px; font-weight: 600; border-radius: var(--radius-sm); transition: var(--transition); margin-top: 4px; }
 .btn-login:hover { background: var(--blue-dk); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,.3); }
 .btn-login:active { transform: none; }
 .btn-login:disabled { opacity: .6; pointer-events: none; }
@@ -157,179 +110,67 @@ a { color: inherit; text-decoration: none; }
 ═══════════════════════════════════════════ */
 #app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
-/* ── TOPBAR ── */
-#topbar {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 0 20px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 100;
-}
+#topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 20px; height: 60px; display: flex; align-items: center; gap: 16px; flex-shrink: 0; position: relative; z-index: 100; }
 
 .logo { display: flex; align-items: center; gap: 10px; }
-.logo-icon {
-  width: 34px; height: 34px;
-  background: var(--blue); border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px; flex-shrink: 0;
-}
+.logo-icon { width: 34px; height: 34px; background: var(--blue); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
 .logo-text { font-size: 15px; font-weight: 600; color: var(--txt); letter-spacing: -.01em; }
 
-#status-msg {
-  font-size: 12px; color: var(--txt3);
-  margin-left: 4px; font-family: var(--mono);
-  min-width: 0; overflow: hidden;
-  text-overflow: ellipsis; white-space: nowrap;
-}
+#status-msg { font-size: 12px; color: var(--txt3); margin-left: 4px; font-family: var(--mono); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 
-/* search */
 .search-wrap { position: relative; display: flex; align-items: center; }
 .search-wrap svg { position: absolute; left: 10px; color: var(--txt3); pointer-events: none; }
-#search-input {
-  padding: 7px 12px 7px 32px;
-  border: 1px solid var(--border); border-radius: var(--radius-sm);
-  font-size: 13px; color: var(--txt); background: var(--surface2);
-  width: 200px; transition: var(--transition); outline: none;
-}
+#search-input { padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--txt); background: var(--surface2); width: 200px; transition: var(--transition); outline: none; }
 #search-input:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
 
-/* btn import */
-.btn-import {
-  display: flex; align-items: center; gap: 7px;
-  background: var(--blue); color: #fff;
-  font-size: 13px; font-weight: 600;
-  padding: 8px 16px; border-radius: var(--radius-sm);
-  transition: var(--transition); white-space: nowrap;
-}
+.btn-import { display: flex; align-items: center; gap: 7px; background: var(--blue); color: #fff; font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: var(--radius-sm); transition: var(--transition); white-space: nowrap; }
 .btn-import:hover { background: var(--blue-dk); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,.25); }
 .btn-import:active { transform: translateY(0); }
 
-/* btn logout */
-.btn-logout {
-  display: flex; align-items: center; gap: 6px;
-  background: var(--surface2); color: var(--txt2);
-  font-size: 12px; font-weight: 600;
-  padding: 7px 13px; border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  transition: var(--transition); white-space: nowrap;
-}
+.btn-logout { display: flex; align-items: center; gap: 6px; background: var(--surface2); color: var(--txt2); font-size: 12px; font-weight: 600; padding: 7px 13px; border-radius: var(--radius-sm); border: 1px solid var(--border); transition: var(--transition); white-space: nowrap; }
 .btn-logout:hover { background: var(--red-lt); color: var(--red); border-color: #FECACA; }
 
-/* firebase status dot */
-.fb-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--green); flex-shrink: 0;
-  box-shadow: 0 0 0 2px var(--green-lt);
-}
+.fb-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; box-shadow: 0 0 0 2px var(--green-lt); }
 .fb-dot.offline { background: var(--red); box-shadow: 0 0 0 2px var(--red-lt); }
 .fb-dot.connecting { background: var(--amber); box-shadow: 0 0 0 2px var(--amber-lt); animation: pulse .8s ease-in-out infinite alternate; }
 @keyframes pulse { from { opacity:.5; } to { opacity:1; } }
 
-/* ── BOARD ── */
-#board {
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  padding: 14px 16px;
-  overflow: hidden;
-  min-width: 0;
-}
+/* ═══════════════════════════════════════════
+   BOARD & COLUMNS
+═══════════════════════════════════════════ */
+#board { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 14px 16px; overflow: hidden; min-width: 0; }
 
-/* ── COLUMN ── */
-.column {
-  display: flex; flex-direction: column;
-  background: var(--surface2); border: 1px solid var(--border);
-  border-radius: var(--radius); overflow: hidden; transition: var(--transition);
-}
-.column.drag-over {
-  border-color: var(--accent, var(--blue));
-  background: var(--accent-lt, var(--blue-lt));
-  box-shadow: 0 0 0 2px var(--accent, var(--blue));
-}
+.column { display: flex; flex-direction: column; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: var(--transition); }
+.column.drag-over { border-color: var(--accent, var(--blue)); background: var(--accent-lt, var(--blue-lt)); box-shadow: 0 0 0 2px var(--accent, var(--blue)); }
 
-.col-header {
-  padding: 12px 14px 10px; border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 8px;
-  flex-shrink: 0; background: var(--surface);
-}
+.col-header { padding: 10px 12px 9px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px; flex-shrink: 0; background: var(--surface); flex-wrap: wrap; }
 .col-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
-.col-title { font-size: 13px; font-weight: 600; color: var(--txt); flex: 1; }
-.col-count {
-  font-size: 11px; font-weight: 600; color: var(--accent);
-  background: var(--accent-lt); padding: 2px 8px;
-  border-radius: 99px; min-width: 24px; text-align: center;
-}
+.col-title { font-size: 13px; font-weight: 600; color: var(--txt); flex: 1; white-space: nowrap; min-width: 0; }
+.col-count { font-size: 11px; font-weight: 600; color: var(--accent); background: var(--accent-lt); padding: 2px 8px; border-radius: 99px; min-width: 24px; text-align: center; flex-shrink: 0; }
 
-.col-body {
-  flex: 1; overflow-y: auto; padding: 10px 8px;
-  display: flex; flex-direction: column; gap: 7px;
-}
+/* Botão Baixar Entregues */
+.btn-baixar-entregues { display: flex; align-items: center; gap: 4px; background: var(--green); color: #fff; font-size: 10px; font-weight: 700; padding: 4px 9px; border-radius: 6px; transition: var(--transition); white-space: nowrap; letter-spacing: .01em; flex-shrink: 0; }
+.btn-baixar-entregues:hover { background: var(--green-dk); transform: translateY(-1px); box-shadow: 0 3px 10px rgba(5,150,105,.3); }
+.btn-baixar-entregues:active { transform: none; }
+
+.col-body { flex: 1; overflow-y: auto; padding: 10px 8px; display: flex; flex-direction: column; gap: 7px; }
 
 /* ═══════════════════════════════════════════
    CARD
 ═══════════════════════════════════════════ */
-.card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-left: 3px solid var(--accent); border-radius: var(--radius-sm);
-  padding: 10px 12px 9px; cursor: grab; user-select: none;
-  transition: box-shadow var(--transition), transform var(--transition), opacity var(--transition), border-color var(--transition), background var(--transition);
-  position: relative;
-  animation: cardIn .25s cubic-bezier(.34,1.56,.64,1) both;
-  overflow: hidden;
-}
+.card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius-sm); padding: 10px 12px 9px; cursor: grab; user-select: none; transition: box-shadow var(--transition), transform var(--transition), opacity var(--transition), background var(--transition); position: relative; animation: cardIn .25s cubic-bezier(.34,1.56,.64,1) both; }
 @keyframes cardIn { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
 .card:hover { box-shadow: var(--shadow); border-color: var(--border2); border-left-color: var(--accent); transform: translateY(-1px); }
 .card:active { cursor: grabbing; }
 .card.dragging { opacity: .35; transform: scale(.97); box-shadow: none; }
 
-/* ── ENTREGUE STATE ── */
-.card.entregue {
-  background: #F0FDF4;
-  border-color: #86EFAC;
-  border-left-color: var(--green) !important;
-}
-.card.entregue:hover {
-  border-color: #4ADE80;
-  border-left-color: var(--green) !important;
-  box-shadow: 0 2px 12px rgba(5,150,105,.15);
-}
+/* Estado ENTREGUE */
+.card.card-entregue { background: #f0fdf4; border-color: #bbf7d0; border-left-color: var(--green) !important; cursor: default; }
+.card.card-entregue:hover { transform: none; border-color: #bbf7d0; border-left-color: var(--green) !important; box-shadow: none; }
 
-/* ENTREGUE stamp / watermark */
-.card-stamp {
-  position: absolute;
-  top: 50%; right: -8px;
-  transform: translateY(-50%) rotate(20deg);
-  font-size: 13px; font-weight: 800;
-  letter-spacing: .18em;
-  color: rgba(5,150,105,.22);
-  pointer-events: none;
-  white-space: nowrap;
-  text-transform: uppercase;
-  font-family: var(--mono);
-}
-/* Smaller stamp badge top-right */
-.card-stamp-badge {
-  position: absolute;
-  top: 8px; right: 8px;
-  background: var(--green);
-  color: #fff;
-  font-size: 9px; font-weight: 800;
-  letter-spacing: .1em;
-  padding: 2px 7px;
-  border-radius: 4px;
-  transform: rotate(2deg);
-  box-shadow: 0 2px 8px rgba(5,150,105,.35);
-  pointer-events: none;
-  text-transform: uppercase;
-}
+.card-stamp { position: absolute; top: 8px; right: 10px; background: var(--green); color: #fff; font-size: 9px; font-weight: 800; letter-spacing: .12em; padding: 2px 7px; border-radius: 4px; transform: rotate(2deg); border: 1.5px solid var(--green-dk); text-transform: uppercase; box-shadow: 0 2px 6px rgba(5,150,105,.3); }
 
 .card-top { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 5px; }
 .card-nf { font-size: 13px; font-weight: 600; color: var(--accent); font-family: var(--mono); flex: 1; }
@@ -337,52 +178,26 @@ a { color: inherit; text-decoration: none; }
 .card-cli { font-size: 12px; color: var(--txt2); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .card-date { font-size: 11px; color: var(--txt3); font-family: var(--mono); }
-.card-obs-badge {
-  font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 99px;
-  background: var(--amber-lt); color: var(--amber-dk);
-  display: flex; align-items: center; gap: 3px;
-}
+.card-date.entregue-date { color: var(--green); font-weight: 600; font-family: var(--font); }
+.card-obs-badge { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 99px; background: var(--amber-lt); color: var(--amber-dk); display: flex; align-items: center; gap: 3px; }
 
-.card-actions {
-  display: flex; align-items: center; gap: 4px;
-  margin-top: 8px; padding-top: 8px;
-  border-top: 1px solid var(--border); flex-wrap: wrap;
-}
-.btn-action {
-  display: flex; align-items: center; gap: 4px;
-  font-size: 11px; font-weight: 600; padding: 4px 9px;
-  border-radius: 6px; transition: var(--transition);
-  color: var(--txt2); background: var(--surface2); border: 1px solid var(--border);
-}
+.card-actions { display: flex; align-items: center; gap: 4px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+.btn-action { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 6px; transition: var(--transition); color: var(--txt2); background: var(--surface2); border: 1px solid var(--border); }
 .btn-action:hover { background: var(--bg); border-color: var(--border2); }
 .btn-action svg { width: 11px; height: 11px; }
-.btn-action.xml  { color: var(--blue);  background: var(--blue-lt);  border-color: #BFDBFE; }
-.btn-action.xml:hover  { background: #DBEAFE; }
-.btn-action.pdf  { color: var(--red);   background: var(--red-lt);   border-color: #FECACA; }
-.btn-action.pdf:hover  { background: #FEE2E2; }
 .btn-action.obs  { color: var(--amber); background: var(--amber-lt); border-color: #FDE68A; }
 .btn-action.obs:hover  { background: #FEF3C7; }
-.btn-action.del  { color: var(--red);   background: var(--red-lt);   border-color: #FECACA; margin-left: auto; }
+.btn-action.del  { color: var(--red); background: var(--red-lt); border-color: #FECACA; margin-left: auto; }
 .btn-action.del:hover  { background: #FEE2E2; }
-
-/* Entregue button */
-.btn-action.entregar { color: var(--green); background: var(--green-lt); border-color: #6EE7B7; }
-.btn-action.entregar:hover { background: #D1FAE5; border-color: var(--green); }
-.btn-action.entregar.ativo { color: var(--green-dk); background: #D1FAE5; border-color: var(--green); }
+.btn-action.entregue { color: var(--green); background: var(--green-lt); border-color: #6ee7b7; font-weight: 700; }
+.btn-action.entregue:hover { background: #d1fae5; transform: translateY(-1px); }
+.btn-action.remover { color: var(--txt2); background: var(--surface2); border-color: var(--border2); margin-left: auto; }
+.btn-action.remover:hover { background: var(--red-lt); color: var(--red); border-color: #FECACA; }
 
 /* ═══════════════════════════════════════════
    DRAG GHOST
 ═══════════════════════════════════════════ */
-#drag-ghost {
-  position: fixed; pointer-events: none; z-index: 9999;
-  background: var(--surface); border-radius: var(--radius-sm);
-  padding: 8px 14px; box-shadow: var(--shadow-drag);
-  font-size: 13px; font-weight: 600;
-  display: flex; align-items: center; gap: 8px;
-  opacity: 0; transform: rotate(2deg) scale(1.04);
-  transition: opacity .12s; min-width: 120px;
-  border-left: 3px solid var(--ghost-color, #888);
-}
+#drag-ghost { position: fixed; pointer-events: none; z-index: 9999; background: var(--surface); border-radius: var(--radius-sm); padding: 8px 14px; box-shadow: var(--shadow-drag); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; opacity: 0; transform: rotate(2deg) scale(1.04); transition: opacity .12s; min-width: 120px; border-left: 3px solid var(--ghost-color, #888); }
 #drag-ghost.visible { opacity: 1; }
 #drag-ghost .ghost-nf { color: var(--ghost-color, #888); font-family: var(--mono); }
 #drag-ghost .ghost-cli { font-size: 11px; color: var(--txt3); font-weight: 400; }
@@ -390,39 +205,16 @@ a { color: inherit; text-decoration: none; }
 /* ═══════════════════════════════════════════
    MODALS
 ═══════════════════════════════════════════ */
-.modal-backdrop {
-  position: fixed; inset: 0;
-  background: rgba(15,20,35,.45); backdrop-filter: blur(4px);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 1000; opacity: 0; pointer-events: none; transition: opacity .2s;
-}
+.modal-backdrop { position: fixed; inset: 0; background: rgba(15,20,35,.45); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity .2s; }
 .modal-backdrop.open { opacity: 1; pointer-events: all; }
-
-.modal {
-  background: var(--surface); border-radius: var(--radius);
-  box-shadow: 0 20px 60px rgba(0,0,0,.2); padding: 24px;
-  width: 440px; max-width: 95vw;
-  transform: scale(.95) translateY(12px);
-  transition: transform .22s cubic-bezier(.34,1.56,.64,1);
-}
+.modal { background: var(--surface); border-radius: var(--radius); box-shadow: 0 20px 60px rgba(0,0,0,.2); padding: 24px; width: 440px; max-width: 95vw; max-height: 90vh; overflow-y: auto; transform: scale(.95) translateY(12px); transition: transform .22s cubic-bezier(.34,1.56,.64,1); }
 .modal-backdrop.open .modal { transform: scale(1) translateY(0); }
-
 .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
 .modal-sub   { font-size: 13px; color: var(--txt2); margin-bottom: 18px; }
-
-.modal-obs textarea {
-  width: 100%; height: 120px; padding: 10px 12px;
-  border: 1px solid var(--border); border-radius: var(--radius-sm);
-  font-size: 13px; color: var(--txt); background: var(--surface2);
-  resize: vertical; outline: none; transition: var(--transition); line-height: 1.6;
-}
+.modal-obs textarea { width: 100%; height: 120px; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--txt); background: var(--surface2); resize: vertical; outline: none; transition: var(--transition); line-height: 1.6; }
 .modal-obs textarea:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
-
 .modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
-.btn-modal {
-  padding: 8px 18px; border-radius: var(--radius-sm);
-  font-size: 13px; font-weight: 600; transition: var(--transition);
-}
+.btn-modal { padding: 8px 18px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; transition: var(--transition); }
 .btn-modal.cancel { background: var(--surface2); color: var(--txt2); border: 1px solid var(--border); }
 .btn-modal.cancel:hover { background: var(--bg); }
 .btn-modal.save { background: var(--blue); color: #fff; }
@@ -431,17 +223,43 @@ a { color: inherit; text-decoration: none; }
 .btn-modal.danger:hover { background: #B91C1C; }
 
 /* ═══════════════════════════════════════════
+   IMPORT MODAL — TABS
+═══════════════════════════════════════════ */
+.import-tabs { display: flex; margin-bottom: 14px; border-bottom: 2px solid var(--border); }
+.import-tab { padding: 8px 18px; font-size: 13px; font-weight: 600; color: var(--txt3); border-bottom: 2px solid transparent; margin-bottom: -2px; cursor: pointer; transition: var(--transition); background: none; border-top: none; border-left: none; border-right: none; }
+.import-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+.import-tab:hover:not(.active) { color: var(--txt2); }
+.import-panel { display: none; }
+.import-panel.active { display: block; }
+
+/* Upload area */
+.upload-area { border: 2px dashed var(--border2); border-radius: var(--radius-sm); padding: 20px; text-align: center; color: var(--txt3); font-size: 13px; transition: var(--transition); cursor: pointer; margin-bottom: 14px; }
+.upload-area:hover, .upload-area.dragover { border-color: var(--blue); background: var(--blue-lt); color: var(--blue); }
+.upload-area input { display: none; }
+.upload-files-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.upload-file-item { display: flex; align-items: center; gap: 8px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; font-size: 12px; }
+.upload-file-icon { font-size: 16px; flex-shrink: 0; }
+.upload-file-name { flex: 1; color: var(--txt); font-family: var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.upload-file-status { font-size: 11px; color: var(--txt3); }
+.upload-file-status.ok  { color: var(--green); font-weight: 600; }
+.upload-file-status.err { color: var(--red); font-weight: 600; }
+.upload-file-status.dup { color: var(--amber); font-weight: 600; }
+.progress-bar { width: 100%; height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 4px; }
+.progress-fill { height: 100%; background: var(--blue); border-radius: 99px; transition: width .3s; }
+
+/* Manual form */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 4px; }
+.form-field { display: flex; flex-direction: column; gap: 5px; }
+.form-field.full { grid-column: 1 / -1; }
+.form-label { font-size: 11px; font-weight: 700; color: var(--txt2); letter-spacing: .03em; }
+.form-input { padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--txt); background: var(--surface2); outline: none; transition: var(--transition); width: 100%; }
+.form-input:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+
+/* ═══════════════════════════════════════════
    TOAST
 ═══════════════════════════════════════════ */
 #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
-.toast {
-  background: var(--txt); color: #fff; padding: 10px 16px;
-  border-radius: var(--radius-sm); font-size: 13px; font-weight: 500;
-  box-shadow: 0 4px 20px rgba(0,0,0,.2);
-  display: flex; align-items: center; gap: 8px;
-  animation: toastIn .25s cubic-bezier(.34,1.56,.64,1) both;
-  pointer-events: all; max-width: 320px;
-}
+.toast { background: var(--txt); color: #fff; padding: 10px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; box-shadow: 0 4px 20px rgba(0,0,0,.2); display: flex; align-items: center; gap: 8px; animation: toastIn .25s cubic-bezier(.34,1.56,.64,1) both; pointer-events: all; max-width: 320px; }
 .toast.success { background: var(--green); }
 .toast.error   { background: var(--red); }
 .toast.warn    { background: var(--amber); }
@@ -451,45 +269,13 @@ a { color: inherit; text-decoration: none; }
 /* ═══════════════════════════════════════════
    EMPTY STATE
 ═══════════════════════════════════════════ */
-.empty {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 8px; padding: 24px 12px; text-align: center;
-  color: var(--txt3); font-size: 12px;
-}
+.empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px 12px; text-align: center; color: var(--txt3); font-size: 12px; }
 .empty-icon { font-size: 28px; opacity: .5; }
-
-/* upload area */
-.upload-area {
-  border: 2px dashed var(--border2); border-radius: var(--radius-sm);
-  padding: 20px; text-align: center; color: var(--txt3);
-  font-size: 13px; transition: var(--transition);
-  cursor: pointer; margin-bottom: 14px;
-}
-.upload-area:hover, .upload-area.dragover { border-color: var(--blue); background: var(--blue-lt); color: var(--blue); }
-.upload-area input { display: none; }
-
-.upload-files-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
-.upload-file-item {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--surface2); border: 1px solid var(--border);
-  border-radius: var(--radius-sm); padding: 8px 10px; font-size: 12px;
-}
-.upload-file-icon { font-size: 16px; flex-shrink: 0; }
-.upload-file-name { flex: 1; color: var(--txt); font-family: var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.upload-file-status { font-size: 11px; color: var(--txt3); }
-.upload-file-status.ok  { color: var(--green); font-weight: 600; }
-.upload-file-status.err { color: var(--red); font-weight: 600; }
-.upload-file-status.dup { color: var(--amber); font-weight: 600; }
-
-.progress-bar { width: 100%; height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 4px; }
-.progress-fill { height: 100%; background: var(--blue); border-radius: 99px; transition: width .3s; }
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════
-     LOGIN SCREEN
-════════════════════════════════════════ -->
+<!-- LOGIN SCREEN -->
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo">
@@ -501,34 +287,25 @@ a { color: inherit; text-decoration: none; }
     </div>
     <div class="login-title">Bem-vindo</div>
     <div class="login-sub">Digite a senha para acessar o sistema.</div>
-
     <div class="login-field">
       <label class="login-label">SENHA</label>
       <div class="login-input-wrap">
-        <!-- BUG 1 CORRIGIDO: era 'login-input' (id inexistente), agora 'login-pwd' -->
         <input class="login-input" type="password" id="login-pwd" placeholder="••••"
           onkeydown="if(event.key==='Enter') doLogin()"
           oninput="document.getElementById('login-pwd').classList.remove('error'); document.getElementById('login-err').classList.remove('show')">
         <span class="login-eye" onclick="togglePwd()" title="Mostrar senha">
           <svg id="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-            <circle cx="12" cy="12" r="3"/>
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
           </svg>
         </span>
       </div>
     </div>
-
     <div class="login-error" id="login-err">Senha incorreta. Tente novamente.</div>
-
-    <button class="btn-login" id="btn-login-submit" onclick="doLogin()">
-      Entrar →
-    </button>
+    <button class="btn-login" id="btn-login-submit" onclick="doLogin()">Entrar →</button>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════
-     APP
-════════════════════════════════════════ -->
+<!-- APP -->
 <div id="app">
 
   <!-- TOPBAR -->
@@ -538,20 +315,16 @@ a { color: inherit; text-decoration: none; }
       <span class="logo-text">Notas Fiscais</span>
     </div>
     <span id="status-msg">Conectando…</span>
-
     <div class="topbar-right">
       <span class="fb-dot connecting" id="fb-dot" title="Status Firebase"></span>
-
       <div class="search-wrap">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input id="search-input" type="text" placeholder="Buscar NF ou cliente…" oninput="renderAll()">
       </div>
-
       <button class="btn-import" onclick="openImport()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        Importar XML
+        Importar NF
       </button>
-
       <button class="btn-logout" onclick="doLogout()" title="Sair">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Sair
@@ -561,7 +334,7 @@ a { color: inherit; text-decoration: none; }
 
   <!-- BOARD -->
   <div id="board">
-    <div class="column" id="col-lancada"    style="--accent:var(--col-l);--accent-lt:var(--blue-lt)"   data-status="lancada">
+    <div class="column" id="col-lancada" style="--accent:var(--col-l);--accent-lt:var(--blue-lt)" data-status="lancada">
       <div class="col-header">
         <div class="col-dot"></div>
         <span class="col-title">📥 Lançadas</span>
@@ -569,6 +342,7 @@ a { color: inherit; text-decoration: none; }
       </div>
       <div class="col-body" id="body-lancada"></div>
     </div>
+
     <div class="column" id="col-aguardando" style="--accent:var(--col-a);--accent-lt:var(--amber-lt)" data-status="aguardando">
       <div class="col-header">
         <div class="col-dot"></div>
@@ -577,6 +351,7 @@ a { color: inherit; text-decoration: none; }
       </div>
       <div class="col-body" id="body-aguardando"></div>
     </div>
+
     <div class="column" id="col-solicitada" style="--accent:var(--col-s);--accent-lt:var(--violet-lt)" data-status="solicitada">
       <div class="col-header">
         <div class="col-dot"></div>
@@ -585,11 +360,15 @@ a { color: inherit; text-decoration: none; }
       </div>
       <div class="col-body" id="body-solicitada"></div>
     </div>
-    <div class="column" id="col-retirada"   style="--accent:var(--col-r);--accent-lt:var(--green-lt)"  data-status="retirada">
+
+    <div class="column" id="col-retirada" style="--accent:var(--col-r);--accent-lt:var(--green-lt)" data-status="retirada">
       <div class="col-header">
         <div class="col-dot"></div>
         <span class="col-title">✅ Retiradas</span>
         <span class="col-count" id="cnt-retirada">0</span>
+        <button class="btn-baixar-entregues" onclick="baixarEntregues()" title="Exportar entregues para PDF e remover da tela">
+          📥 Baixar Entregues
+        </button>
       </div>
       <div class="col-body" id="body-retirada"></div>
     </div>
@@ -605,7 +384,7 @@ a { color: inherit; text-decoration: none; }
 <!-- TOAST CONTAINER -->
 <div id="toast-container"></div>
 
-<!-- ── MODAL: OBS ── -->
+<!-- MODAL: OBS -->
 <div class="modal-backdrop" id="modal-obs">
   <div class="modal modal-obs">
     <div class="modal-title">📝 Observação</div>
@@ -619,7 +398,7 @@ a { color: inherit; text-decoration: none; }
   </div>
 </div>
 
-<!-- ── MODAL: DELETE ── -->
+<!-- MODAL: DELETE -->
 <div class="modal-backdrop" id="modal-del">
   <div class="modal">
     <div class="modal-title">🗑 Excluir nota</div>
@@ -631,48 +410,96 @@ a { color: inherit; text-decoration: none; }
   </div>
 </div>
 
-<!-- ── MODAL: IMPORT ── -->
+<!-- MODAL: IMPORT -->
 <div class="modal-backdrop" id="modal-import">
   <div class="modal" style="width:500px">
-    <div class="modal-title">📂 Importar Notas Fiscais</div>
-    <div class="modal-sub">Selecione os arquivos XML e/ou PDF das notas. Você pode importar múltiplos arquivos de uma vez.</div>
+    <div class="modal-title">📂 Importar Nota Fiscal</div>
+    <div class="modal-sub">Selecione um arquivo XML ou preencha os dados manualmente.</div>
 
-    <div class="upload-area" id="upload-area"
-      onclick="document.getElementById('file-input').click()"
-      ondragover="onUploadDragOver(event)"
-      ondragleave="onUploadDragLeave(event)"
-      ondrop="onUploadDrop(event)">
-      <input type="file" id="file-input" multiple accept=".xml,.pdf" onchange="onFileSelect(event)">
-      <div style="font-size:24px;margin-bottom:6px">📂</div>
-      <div style="font-weight:600;color:var(--txt2);margin-bottom:2px">Clique ou arraste arquivos aqui</div>
-      <div style="font-size:11px">Aceita .xml e .pdf · múltiplos arquivos</div>
+    <div class="import-tabs">
+      <button class="import-tab active" id="tab-xml" onclick="switchImportTab('xml')">📄 Importar XML</button>
+      <button class="import-tab" id="tab-manual" onclick="switchImportTab('manual')">✏️ Entrada Manual</button>
     </div>
 
-    <div class="upload-files-list" id="upload-files-list"></div>
-
-    <div id="import-progress" style="display:none">
-      <div style="font-size:12px;color:var(--txt2);margin-bottom:4px" id="import-progress-text">Importando…</div>
-      <div class="progress-bar"><div class="progress-fill" id="import-progress-fill" style="width:0%"></div></div>
+    <!-- Painel XML -->
+    <div class="import-panel active" id="import-panel-xml">
+      <div class="upload-area" id="upload-area"
+           onclick="document.getElementById('file-input').click()"
+           ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+        <input type="file" id="file-input" multiple accept=".xml" onchange="onFileSelect(event)">
+        <div style="font-size:24px;margin-bottom:6px">📄</div>
+        <div style="font-weight:600;color:var(--txt2);margin-bottom:2px">Clique ou arraste arquivos XML aqui</div>
+        <div style="font-size:11px;color:var(--txt3)">Aceita .xml · múltiplos arquivos</div>
+      </div>
+      <div class="upload-files-list" id="upload-files-list"></div>
+      <div id="import-progress" style="display:none">
+        <div style="font-size:12px;color:var(--txt2);margin-bottom:4px" id="import-progress-text">Importando…</div>
+        <div class="progress-bar"><div class="progress-fill" id="import-progress-fill" style="width:0%"></div></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal cancel" onclick="closeModal('modal-import');clearImport()">Fechar</button>
+        <button class="btn-modal save" id="btn-do-import" onclick="doImport()" disabled style="opacity:.5">Importar</button>
+      </div>
     </div>
 
-    <div class="modal-footer">
-      <button class="btn-modal cancel" onclick="closeModal('modal-import');clearImport()">Fechar</button>
-      <button class="btn-modal save" id="btn-do-import" onclick="doImport()" disabled style="opacity:.5">Importar</button>
+    <!-- Painel Manual -->
+    <div class="import-panel" id="import-panel-manual">
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label">Nº DA NOTA FISCAL *</label>
+          <input class="form-input" id="manual-nf" type="text" placeholder="Ex: 123456">
+        </div>
+        <div class="form-field">
+          <label class="form-label">VALOR (R$)</label>
+          <input class="form-input" id="manual-valor" type="text" placeholder="Ex: 1.500,00">
+        </div>
+        <div class="form-field full">
+          <label class="form-label">CLIENTE / DESTINATÁRIO *</label>
+          <input class="form-input" id="manual-cliente" type="text" placeholder="Nome completo do cliente">
+        </div>
+        <div class="form-field">
+          <label class="form-label">DATA DE EMISSÃO</label>
+          <input class="form-input" id="manual-data" type="date">
+        </div>
+        <div class="form-field">
+          <label class="form-label">CHAVE NF-e (opcional)</label>
+          <input class="form-input" id="manual-chave" type="text" placeholder="44 dígitos">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal cancel" onclick="closeModal('modal-import')">Fechar</button>
+        <button class="btn-modal save" onclick="doManualImport()">💾 Salvar Nota</button>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- ════════════════════════════════════════
-     UI SCRIPT (regular — executa imediatamente, sem depender do Firebase CDN)
-     BUG 2 CORRIGIDO: todo código de UI foi movido para cá, fora do módulo.
-     Funções de UI ficam disponíveis instantaneamente, sem esperar os imports
-     assíncronos do Firebase.
+     FIREBASE SDK (type=module)
+     
+     CORREÇÃO PRINCIPAL: todas as funções
+     internas são declaradas como const LOCAL
+     E também expostas em window.X — assim
+     funcionam dentro do módulo E em onclick=""
 ════════════════════════════════════════ -->
-<script>
-/* ────────────────────────────────────────
-   TOAST + STATUS
-──────────────────────────────────────── */
-window.toast = function(msg, type='') {
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ── CONFIG ── */
+const firebaseConfig = {
+  apiKey:            "AIzaSyDdjg1KhnGDUs5s-LUwRSsb6xRK-dnp3Ag",
+  authDomain:        "expedicao-ee9d1.firebaseapp.com",
+  projectId:         "expedicao-ee9d1",
+  storageBucket:     "expedicao-ee9d1.firebasestorage.app",
+  messagingSenderId: "556393614250",
+  appId:             "1:556393614250:web:471ecc4f44f5e79178b9d3",
+  measurementId:     "G-E07ZXV2X1P"
+};
+
+/* ── HELPERS (local + global) ── */
+const toast = window.toast = function(msg, type='') {
   const c = document.getElementById('toast-container');
   const t = document.createElement('div');
   t.className = 'toast ' + type;
@@ -685,26 +512,399 @@ window.toast = function(msg, type='') {
   }, 3200);
 };
 
-window.setStatus = msg => document.getElementById('status-msg').textContent = msg;
+const setStatus = window.setStatus = msg =>
+  document.getElementById('status-msg').textContent = msg;
 
-/* ────────────────────────────────────────
-   MODAL HELPERS
-──────────────────────────────────────── */
-window.openModal  = id => document.getElementById(id).classList.add('open');
-window.closeModal = id => document.getElementById(id).classList.remove('open');
+const openModal = window.openModal = id =>
+  document.getElementById(id).classList.add('open');
+
+const closeModal = window.closeModal = id =>
+  document.getElementById(id).classList.remove('open');
+
+/* ── STATE ── */
+window._state = { notas: [], db: null, unsubscribe: null };
+
+/* ── FIREBASE INIT ── */
+function setDot(state) {
+  const dot = document.getElementById('fb-dot');
+  dot.className = 'fb-dot' + (state==='ok' ? '' : state==='connecting' ? ' connecting' : ' offline');
+}
+
+(async function init() {
+  try {
+    const app = initializeApp(firebaseConfig);
+    window._state.db = getFirestore(app);
+    setDot('connecting');
+    setStatus('Conectando ao Firebase…');
+    startListener();
+  } catch(e) {
+    setDot('offline');
+    setStatus('Erro ao conectar: ' + e.message);
+    toast('Erro Firebase: ' + e.message, 'error');
+  }
+})();
+
+function startListener() {
+  const { db } = window._state;
+  if (!db) return;
+  if (window._state.unsubscribe) window._state.unsubscribe();
+  const q = query(collection(db, 'notas'), orderBy('numero_nf_int', 'asc'));
+  window._state.unsubscribe = onSnapshot(q, snap => {
+    window._state.notas = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    setDot('ok');
+    setStatus('Firebase conectado ✓ — ' + window._state.notas.length + ' nota(s)');
+    renderAll();
+  }, () => {
+    const q2 = collection(db, 'notas');
+    window._state.unsubscribe = onSnapshot(q2, snap => {
+      window._state.notas = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a,b) => (parseInt(a.numero_nf)||0) - (parseInt(b.numero_nf)||0));
+      setDot('ok');
+      setStatus('Firebase conectado ✓ — ' + window._state.notas.length + ' nota(s)');
+      renderAll();
+    }, err2 => { setDot('offline'); setStatus('Erro: ' + err2.message); });
+  });
+}
+
+/* ── CRUD ── */
+async function addNota(nota) {
+  nota.data_lancamento = new Date().toLocaleString('pt-BR');
+  nota.data_status     = nota.data_lancamento;
+  nota.status          = nota.status || 'lancada';
+  nota.observacao      = nota.observacao || '';
+  nota.numero_nf_int   = parseInt(nota.numero_nf) || 0;
+  nota.entregue        = false;
+  nota.arquivada       = false;
+  nota.data_entrega    = '';
+
+  // Verifica duplicata por chave NF-e
+  if (nota.chave && nota.chave.length > 10) {
+    if (window._state.notas.find(n => n.chave === nota.chave)) return 'dup';
+  }
+  // Verifica duplicata por número da NF
+  if (window._state.notas.find(n => n.numero_nf === nota.numero_nf && !n.arquivada)) return 'dup';
+
+  try {
+    await addDoc(collection(window._state.db, 'notas'), nota);
+    return 'ok';
+  } catch(e) { toast('Erro ao salvar: ' + e.message, 'error'); return 'err'; }
+}
+
+window._updateStatus = async function(id, status) {
+  const ts = new Date().toLocaleString('pt-BR');
+  try { await updateDoc(doc(window._state.db, 'notas', id), { status, data_status: ts }); }
+  catch(e) { toast('Erro: ' + e.message, 'error'); }
+};
+
+window._updateObs = async function(id, observacao) {
+  try { await updateDoc(doc(window._state.db, 'notas', id), { observacao }); }
+  catch(e) { toast('Erro: ' + e.message, 'error'); }
+};
+
+window._deleteNota = async function(id) {
+  try {
+    await deleteDoc(doc(window._state.db, 'notas', id));
+    toast('Nota excluída', 'warn');
+  } catch(e) { toast('Erro ao excluir: ' + e.message, 'error'); }
+};
+
+/* ── MARCAR ENTREGUE ── */
+window.markEntregue = async function(id) {
+  const ts = new Date().toLocaleString('pt-BR');
+  try {
+    await updateDoc(doc(window._state.db, 'notas', id), { entregue: true, data_entrega: ts });
+    toast('Nota marcada como Entregue ✅', 'success');
+  } catch(e) { toast('Erro: ' + e.message, 'error'); }
+};
+
+/* ── REMOVER ENTREGUE (arquivar) ── */
+window.archiveNota = async function(id) {
+  if (!confirm('Remover esta nota da tela? Ela será arquivada e não aparecerá mais no board.')) return;
+  try {
+    await updateDoc(doc(window._state.db, 'notas', id), { arquivada: true });
+    toast('Nota removida da tela', 'warn');
+  } catch(e) { toast('Erro: ' + e.message, 'error'); }
+};
+
+/* ── BAIXAR ENTREGUES → PDF + ARQUIVAR ── */
+window.baixarEntregues = async function() {
+  const entregues = window._state.notas.filter(n =>
+    n.status === 'retirada' && n.entregue && !n.arquivada
+  );
+
+  if (!entregues.length) {
+    toast('Nenhuma nota marcada como Entregue nesta coluna', 'warn');
+    return;
+  }
+
+  const total = entregues.reduce((s, n) => s + (parseFloat(n.valor)||0), 0)
+    .toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+  const rows = entregues.map(n => `
+    <tr>
+      <td><strong>${n.numero_nf}</strong></td>
+      <td>${n.cliente||'—'}</td>
+      <td>R$ ${parseFloat(n.valor||0).toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+      <td>${n.data_emissao||'—'}</td>
+      <td>${n.data_entrega||'—'}</td>
+    </tr>`).join('');
+
+  const printHTML = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+<title>Notas Entregues — ${new Date().toLocaleDateString('pt-BR')}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Arial,sans-serif;padding:28px;color:#111;font-size:13px}
+  header{margin-bottom:24px;border-bottom:3px solid #1d4ed8;padding-bottom:16px;display:flex;justify-content:space-between;align-items:flex-end}
+  h1{font-size:22px;font-weight:700;color:#1d4ed8;margin-bottom:4px}
+  .sub{font-size:12px;color:#6b7280}
+  .badge{background:#059669;color:#fff;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700}
+  table{width:100%;border-collapse:collapse;margin-bottom:16px}
+  thead tr{background:#1d4ed8;color:#fff}
+  th{padding:10px 12px;text-align:left;font-size:11px;letter-spacing:.05em;font-weight:700;text-transform:uppercase}
+  td{padding:9px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;vertical-align:middle}
+  tr:nth-child(even) td{background:#f9fafb}
+  .total-row td{font-weight:700;border-top:2px solid #1d4ed8;background:#eff4ff;color:#1d4ed8}
+  footer{margin-top:20px;font-size:11px;color:#9ca3af;text-align:center}
+  @media print{@page{margin:1cm;size:A4 landscape}}
+</style></head><body>
+<header>
+  <div>
+    <h1>📦 Notas Entregues</h1>
+    <div class="sub">Gerado em ${new Date().toLocaleString('pt-BR')}</div>
+  </div>
+  <div class="badge">${entregues.length} nota(s)</div>
+</header>
+<table>
+  <thead><tr><th>NF</th><th>Cliente</th><th>Valor</th><th>Emissão</th><th>Data de Entrega</th></tr></thead>
+  <tbody>${rows}
+    <tr class="total-row">
+      <td colspan="2">TOTAL</td>
+      <td>R$ ${total}</td>
+      <td colspan="2">${entregues.length} nota(s) entregue(s)</td>
+    </tr>
+  </tbody>
+</table>
+<footer>Sistema de Expedição — Notas Fiscais</footer>
+<script>window.onload=()=>{setTimeout(()=>window.print(),300)}<\/script>
+</body></html>`;
+
+  const w = window.open('', '_blank');
+  if (!w) { toast('Permita pop-ups para gerar o PDF', 'warn'); return; }
+  w.document.write(printHTML);
+  w.document.close();
+
+  // Arquivar todas após export
+  let count = 0;
+  for (const n of entregues) {
+    try {
+      await updateDoc(doc(window._state.db, 'notas', n.id), { arquivada: true });
+      count++;
+    } catch(e) { console.warn('Erro ao arquivar:', n.numero_nf, e); }
+  }
+  toast(`${count} nota(s) exportada(s) e removida(s) da tela ✅`, 'success');
+};
+
+/* ── PARSE XML (lê dados, não armazena o arquivo) ── */
+function parseXML(text) {
+  try {
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(text, 'application/xml');
+    const find = (...tags) => {
+      for (const t of tags) {
+        const el = xml.getElementsByTagNameNS('*', t)[0];
+        if (el && el.textContent) return el.textContent.trim();
+      }
+      return '';
+    };
+    const nf = find('nNF');
+    let ch = find('Id','chNFe');
+    if (ch.startsWith('NFe')) ch = ch.slice(3);
+    let cli = '';
+    const dests = xml.getElementsByTagNameNS('*', 'dest');
+    if (dests[0]) {
+      const xNome = dests[0].getElementsByTagNameNS('*', 'xNome')[0];
+      if (xNome) cli = xNome.textContent.trim();
+    }
+    const val  = find('vNF');
+    const dr   = find('dhEmi','dEmi');
+    const data = dr ? dr.slice(0,10).replace(/-/g,'/') : '';
+    if (!nf) return null;
+    return { numero_nf: nf, cliente: cli||'N/D', valor: val||'0.00', data_emissao: data, chave: ch||'' };
+  } catch { return null; }
+}
+
+/* ── IMPORT MODAL — XML ── */
+let _importFiles = [];
+
+window.openImport = () => { clearImport(); openModal('modal-import'); };
+
+window.switchImportTab = function(tab) {
+  document.getElementById('tab-xml').classList.toggle('active', tab==='xml');
+  document.getElementById('tab-manual').classList.toggle('active', tab==='manual');
+  document.getElementById('import-panel-xml').classList.toggle('active', tab==='xml');
+  document.getElementById('import-panel-manual').classList.toggle('active', tab==='manual');
+};
+
+window.onDragOver  = e => { e.preventDefault(); document.getElementById('upload-area').classList.add('dragover'); };
+window.onDragLeave = e => { document.getElementById('upload-area').classList.remove('dragover'); };
+window.onDrop = e => { e.preventDefault(); document.getElementById('upload-area').classList.remove('dragover'); handleFiles([...e.dataTransfer.files]); };
+window.onFileSelect = e => { handleFiles([...e.target.files]); e.target.value=''; };
+
+function handleFiles(files) {
+  files.forEach(f => {
+    if (f.name.split('.').pop().toLowerCase() !== 'xml') return;
+    _importFiles.push({ file: f, parsed: null, status: 'pending' });
+  });
+  const promises = _importFiles.filter(i=>!i.parsed&&i.status==='pending').map(item =>
+    item.file.text().then(text => {
+      item.parsed = parseXML(text);
+      item.status = item.parsed ? 'ready' : 'error';
+    })
+  );
+  Promise.all(promises).then(renderImportList);
+  renderImportList();
+}
+
+function renderImportList() {
+  const list = document.getElementById('upload-files-list');
+  if (!_importFiles.length) { list.innerHTML=''; return; }
+  list.innerHTML = _importFiles.map(item => {
+    let statusTxt='', statusClass='';
+    if (item.status==='ready')    { statusTxt='✓ Válido';    statusClass='ok'; }
+    if (item.status==='error')    { statusTxt='✗ Inválido';  statusClass='err'; }
+    if (item.status==='dup')      { statusTxt='Duplicado';   statusClass='dup'; }
+    if (item.status==='pending')  { statusTxt='Lendo…'; }
+    if (item.status==='imported') { statusTxt='✓ Importado'; statusClass='ok'; }
+    return `<div class="upload-file-item">
+      <span class="upload-file-icon">📄</span>
+      <span class="upload-file-name">${item.file.name}</span>
+      <span class="upload-file-status ${statusClass}">${statusTxt}</span>
+    </div>`;
+  }).join('');
+  const hasReady = _importFiles.some(i=>i.status==='ready');
+  const btn = document.getElementById('btn-do-import');
+  btn.disabled = !hasReady;
+  btn.style.opacity = hasReady ? '1' : '.5';
+}
+
+function clearImport() {
+  _importFiles = [];
+  renderImportList();
+  document.getElementById('import-progress').style.display='none';
+  document.getElementById('import-progress-fill').style.width='0%';
+}
+
+window.doImport = async function() {
+  const xmlItems = _importFiles.filter(i=>i.status==='ready');
+  if (!xmlItems.length) return;
+
+  document.getElementById('import-progress').style.display='block';
+  const progFill = document.getElementById('import-progress-fill');
+  const progText = document.getElementById('import-progress-text');
+  document.getElementById('btn-do-import').disabled = true;
+
+  let ok=0, dup=0, err=0;
+  for (let idx=0; idx<xmlItems.length; idx++) {
+    const item = xmlItems[idx];
+    progText.textContent = `Importando ${idx+1}/${xmlItems.length}…`;
+    progFill.style.width = ((idx+1)/xmlItems.length*100)+'%';
+    // Salva apenas os dados extraídos — sem upload de arquivo ao Storage
+    const result = await addNota({ ...item.parsed });
+    if (result==='ok')  { ok++;  item.status='imported'; }
+    if (result==='dup') { dup++; item.status='dup'; }
+    if (result==='err') { err++; item.status='error'; }
+    renderImportList();
+  }
+
+  progText.textContent='Concluído!';
+  const parts=[];
+  if (ok)  parts.push(`✅ ${ok} importada(s)`);
+  if (dup) parts.push(`⚠️ ${dup} duplicada(s)`);
+  if (err) parts.push(`❌ ${err} erro(s)`);
+  toast(parts.join(' · '), ok ? 'success' : 'warn');
+  setStatus(parts.join(' | ') + ' — ' + new Date().toLocaleTimeString('pt-BR'));
+  document.getElementById('btn-do-import').disabled = false;
+};
+
+/* ── IMPORT MANUAL ── */
+window.doManualImport = async function() {
+  const nf      = document.getElementById('manual-nf').value.trim();
+  const cliente = document.getElementById('manual-cliente').value.trim();
+  const valorRaw= document.getElementById('manual-valor').value.replace(/\./g,'').replace(',','.').trim();
+  const data    = document.getElementById('manual-data').value;
+  const chave   = document.getElementById('manual-chave').value.trim();
+
+  if (!nf)      { toast('Preencha o Nº da Nota Fiscal', 'warn'); return; }
+  if (!cliente) { toast('Preencha o nome do cliente', 'warn');    return; }
+
+  const dataFormatada = data ? data.split('-').reverse().join('/') : '';
+  const valor = isNaN(parseFloat(valorRaw)) ? '0.00' : parseFloat(valorRaw).toFixed(2);
+
+  const result = await addNota({
+    numero_nf: nf,
+    cliente,
+    valor,
+    data_emissao: dataFormatada,
+    chave: chave || ('manual-' + nf),
+  });
+
+  if (result === 'ok') {
+    toast(`NF ${nf} adicionada com sucesso ✅`, 'success');
+    ['manual-nf','manual-cliente','manual-valor','manual-data','manual-chave']
+      .forEach(id => { document.getElementById(id).value = ''; });
+    closeModal('modal-import');
+  } else if (result === 'dup') {
+    toast(`NF ${nf} já existe no sistema`, 'warn');
+  } else {
+    toast('Erro ao salvar a nota', 'error');
+  }
+};
+
+/* ── OBS MODAL ── */
+let _obsId = null;
+window.openObsModal = (id, numero_nf, obs) => {
+  _obsId = id;
+  document.getElementById('obs-subtitle').textContent = `NF ${numero_nf}`;
+  document.getElementById('obs-text').value = obs || '';
+  openModal('modal-obs');
+};
+window.clearObs = () => { document.getElementById('obs-text').value=''; };
+window.saveObs  = async () => {
+  const txt = document.getElementById('obs-text').value.trim();
+  await window._updateObs(_obsId, txt);
+  closeModal('modal-obs');
+  toast('Observação salva', 'success');
+};
+
+/* ── DELETE MODAL ── */
+let _delId = null;
+window.openDelModal = (id, numero_nf) => {
+  _delId = id;
+  document.getElementById('del-subtitle').textContent =
+    `Tem certeza que deseja excluir a NF ${numero_nf}? Esta ação não pode ser desfeita.`;
+  openModal('modal-del');
+};
+window.confirmDelete = async () => {
+  await window._deleteNota(_delId);
+  closeModal('modal-del');
+};
+
+/* ── FECHAR MODAL CLICANDO FORA ── */
 document.querySelectorAll('.modal-backdrop').forEach(b => {
   b.addEventListener('click', e => { if (e.target===b) b.classList.remove('open'); });
 });
 
-/* ────────────────────────────────────────
-   RENDER
-──────────────────────────────────────── */
+/* ── RENDER ── */
 const STATUS_ORDER = ['lancada','aguardando','solicitada','retirada'];
-const ACCENT = { lancada:'var(--col-l)', aguardando:'var(--col-a)', solicitada:'var(--col-s)', retirada:'var(--col-r)' };
+const ACCENT = {
+  lancada:'var(--col-l)', aguardando:'var(--col-a)',
+  solicitada:'var(--col-s)', retirada:'var(--col-r)'
+};
 
-window.renderAll = function() {
+const renderAll = window.renderAll = function() {
   const q = document.getElementById('search-input').value.toLowerCase().trim();
-  let notas = (window._state && window._state.notas) ? window._state.notas : [];
+  // arquivadas ficam ocultas no board
+  let notas = window._state.notas.filter(n => !n.arquivada);
   if (q) notas = notas.filter(n =>
     (n.numero_nf||'').toLowerCase().includes(q) ||
     (n.cliente||'').toLowerCase().includes(q)
@@ -718,7 +918,6 @@ window.renderAll = function() {
 
     const existing = {};
     body.querySelectorAll('.card[data-id]').forEach(el => existing[el.dataset.id]=el);
-
     const idsNow = new Set(mine.map(n=>n.id));
     Object.keys(existing).forEach(id => { if (!idsNow.has(id)) existing[id].remove(); });
 
@@ -730,10 +929,10 @@ window.renderAll = function() {
 
     if (!mine.length) {
       if (!body.querySelector('.empty')) {
-        const e = document.createElement('div');
-        e.className = 'empty';
-        e.innerHTML = '<div class="empty-icon">🗂</div><div>Nenhuma nota</div>';
-        body.appendChild(e);
+        const el = document.createElement('div');
+        el.className = 'empty';
+        el.innerHTML = '<div class="empty-icon">🗂</div><div>Nenhuma nota</div>';
+        body.appendChild(el);
       }
     } else { body.querySelector('.empty')?.remove(); }
   });
@@ -746,44 +945,50 @@ function fmtVal(v) {
 
 function buildCard(nota) {
   const card = document.createElement('div');
-  card.className = 'card' + (nota.entregue ? ' entregue' : '');
+  const isEntregue = !!nota.entregue;
+  card.className = 'card' + (isEntregue ? ' card-entregue' : '');
   card.dataset.id = nota.id;
   card.style.setProperty('--accent', ACCENT[nota.status] || ACCENT.lancada);
-  card.draggable = true;
+  card.draggable = !isEntregue;
   card.innerHTML = cardHTML(nota);
-  card.addEventListener('dragstart', e => onDragStart(e, nota.id, nota.numero_nf, nota.cliente, nota.status));
-  card.addEventListener('dragend',   e => onDragEnd(e));
+  if (!isEntregue) {
+    card.addEventListener('dragstart', e => onDragStart(e, nota.id, nota.numero_nf, nota.cliente, nota.status));
+    card.addEventListener('dragend',   e => onDragEnd(e));
+  }
   return card;
 }
 
 function cardHTML(nota) {
-  const { id, numero_nf, cliente, valor, data_emissao, status, observacao, xml_url, pdf_url, entregue } = nota;
+  const { id, numero_nf, cliente, valor, data_emissao, status, observacao, entregue, data_entrega } = nota;
   const hasObs = !!(observacao && observacao.trim());
   const cli = (cliente||'').length>32 ? (cliente||'').slice(0,32)+'…' : (cliente||'');
+  const obsJSON = JSON.stringify(observacao||'');
 
-  const dlXml = xml_url ? `<button class="btn-action xml" onclick="dlFile('${xml_url}','NF-${numero_nf}.xml')" title="Baixar XML">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-    XML</button>` : '';
+  const stamp = entregue
+    ? `<div class="card-stamp">ENTREGUE</div>` : '';
 
-  const dlPdf = pdf_url ? `<button class="btn-action pdf" onclick="dlFile('${pdf_url}','NF-${numero_nf}.pdf')" title="Baixar PDF">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-    PDF</button>` : '';
-
-  /* Botão Entregue */
-  const btnEntregue = entregue
-    ? `<button class="btn-action entregar ativo" onclick="toggleEntregue('${id}', false)" title="Desmarcar entrega">
+  // Botão "Entregue" — só na coluna Retiradas e se ainda não entregue
+  const entregarBtn = (status==='retirada' && !entregue)
+    ? `<button class="btn-action entregue" onclick="markEntregue('${id}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         Entregue
-       </button>`
-    : `<button class="btn-action entregar" onclick="toggleEntregue('${id}', true)" title="Marcar como entregue">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
-        Entregar
-       </button>`;
+       </button>` : '';
 
-  /* Carimbo visual quando entregue */
-  const stamp = entregue
-    ? `<div class="card-stamp-badge">ENTREGUE</div><div class="card-stamp">ENTREGUE</div>`
-    : '';
+  // Botão "Remover" — só quando entregue (usuário decide)
+  const removerBtn = (status==='retirada' && entregue)
+    ? `<button class="btn-action remover" onclick="archiveNota('${id}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+        Remover
+       </button>` : '';
+
+  // Botão excluir — só se não estiver entregue
+  const deleteBtn = !entregue
+    ? `<button class="btn-action del" onclick="openDelModal('${id}','${numero_nf}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+       </button>` : '';
+
+  const entreguneDateBadge = (entregue && data_entrega)
+    ? `<span class="card-date entregue-date">🕐 ${data_entrega}</span>` : '';
 
   return `
     ${stamp}
@@ -794,38 +999,32 @@ function cardHTML(nota) {
     <div class="card-cli" title="${cliente||''}">${cli}</div>
     <div class="card-meta">
       ${data_emissao ? `<span class="card-date">${data_emissao}</span>` : ''}
+      ${entreguneDateBadge}
       ${hasObs ? `<span class="card-obs-badge">● Obs</span>` : ''}
     </div>
     <div class="card-actions">
-      ${dlXml}${dlPdf}
-      ${btnEntregue}
-      <button class="btn-action obs" onclick="openObsModal('${id}','${numero_nf}',${JSON.stringify(observacao||'')})">
+      ${entregarBtn}${removerBtn}
+      <button class="btn-action obs" onclick="openObsModal('${id}','${numero_nf}',${obsJSON})">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         Obs
       </button>
-      <button class="btn-action del" onclick="openDelModal('${id}','${numero_nf}')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-      </button>
+      ${deleteBtn}
     </div>`;
 }
 
 function updateCardInPlace(card, nota) {
-  card.className = 'card' + (nota.entregue ? ' entregue' : '');
+  const isEntregue = !!nota.entregue;
+  card.className = 'card' + (isEntregue ? ' card-entregue' : '');
+  card.draggable = !isEntregue;
   card.style.setProperty('--accent', ACCENT[nota.status] || ACCENT.lancada);
   card.innerHTML = cardHTML(nota);
-  card.addEventListener('dragstart', e => onDragStart(e, nota.id, nota.numero_nf, nota.cliente, nota.status));
-  card.addEventListener('dragend',   e => onDragEnd(e));
+  if (!isEntregue) {
+    card.addEventListener('dragstart', e => onDragStart(e, nota.id, nota.numero_nf, nota.cliente, nota.status));
+    card.addEventListener('dragend',   e => onDragEnd(e));
+  }
 }
 
-window.dlFile = function(url, filename) {
-  const a = document.createElement('a');
-  a.href = url; a.download = filename; a.target = '_blank';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-};
-
-/* ────────────────────────────────────────
-   DRAG & DROP (board)
-──────────────────────────────────────── */
+/* ── DRAG & DROP ── */
 let _dragId = null, _dragStatus = null;
 
 function onDragStart(e, id, nf, cli, status) {
@@ -839,7 +1038,7 @@ function onDragStart(e, id, nf, cli, status) {
   e.dataTransfer.setDragImage(ghost, 0, 0);
   setTimeout(()=>ghost.remove(), 0);
 
-  const g   = document.getElementById('drag-ghost');
+  const g = document.getElementById('drag-ghost');
   document.getElementById('ghost-nf').textContent  = 'NF ' + nf;
   document.getElementById('ghost-cli').textContent = (cli||'').length>24 ? (cli||'').slice(0,24)+'…' : (cli||'');
   g.style.setProperty('--ghost-color', ACCENT[status] || '#888');
@@ -874,7 +1073,7 @@ document.querySelectorAll('.column').forEach(col => {
     col.classList.remove('drag-over');
     const newStatus = col.dataset.status;
     if (_dragId && newStatus && newStatus !== _dragStatus) {
-      if (window._updateStatus) window._updateStatus(_dragId, newStatus);
+      window._updateStatus(_dragId, newStatus);
       const labels = { lancada:'Lançadas', aguardando:'Separado', solicitada:'Coleta Solicitada', retirada:'Retiradas' };
       toast(`NF movida para ${labels[newStatus]}`, 'success');
     }
@@ -882,387 +1081,16 @@ document.querySelectorAll('.column').forEach(col => {
   });
 });
 
-/* ────────────────────────────────────────
-   ENTREGUE
-──────────────────────────────────────── */
-window.toggleEntregue = async function(id, val) {
-  if (!window._updateEntregue) { toast('Firebase ainda carregando…', 'warn'); return; }
-  await window._updateEntregue(id, val);
-  if (val) toast('✅ Nota marcada como ENTREGUE', 'success');
-  else toast('Entrega desmarcada', '');
-};
-
-/* ────────────────────────────────────────
-   OBS MODAL
-──────────────────────────────────────── */
-let _obsId = null;
-window.openObsModal = (id, numero_nf, obs) => {
-  _obsId = id;
-  document.getElementById('obs-subtitle').textContent = `NF ${numero_nf}`;
-  document.getElementById('obs-text').value = obs || '';
-  openModal('modal-obs');
-};
-window.clearObs = () => { document.getElementById('obs-text').value=''; };
-window.saveObs  = async () => {
-  const txt = document.getElementById('obs-text').value.trim();
-  await window._updateObs(_obsId, txt);
-  closeModal('modal-obs');
-  toast('Observação salva', 'success');
-};
-
-/* ────────────────────────────────────────
-   DELETE MODAL
-──────────────────────────────────────── */
-let _delId = null;
-window.openDelModal = (id, numero_nf) => {
-  _delId = id;
-  document.getElementById('del-subtitle').textContent = `Tem certeza que deseja excluir a NF ${numero_nf}? Esta ação não pode ser desfeita.`;
-  openModal('modal-del');
-};
-window.confirmDelete = async () => {
-  await window._deleteNota(_delId);
-  closeModal('modal-del');
-};
-
-/* ────────────────────────────────────────
-   PARSE XML  (sem dependência do Firebase)
-──────────────────────────────────────── */
-function parseXML(text) {
-  try {
-    const parser = new DOMParser();
-    const xml = parser.parseFromString(text, 'application/xml');
-
-    /* Verifica erro de parse */
-    if (xml.querySelector('parsererror')) return null;
-
-    const find = (...tags) => {
-      for (const t of tags) {
-        /* tenta com namespace wildcard */
-        const el = xml.getElementsByTagNameNS('*', t)[0] || xml.getElementsByTagName(t)[0];
-        if (el && el.textContent) return el.textContent.trim();
-      }
-      return '';
-    };
-
-    const nf = find('nNF');
-    if (!nf) return null;
-
-    let ch = find('Id','chNFe');
-    if (ch.startsWith('NFe')) ch = ch.slice(3);
-
-    let cli = '';
-    const dests = xml.getElementsByTagNameNS('*', 'dest');
-    if (dests[0]) {
-      const xNome = dests[0].getElementsByTagNameNS('*', 'xNome')[0]
-                  || dests[0].getElementsByTagName('xNome')[0];
-      if (xNome) cli = xNome.textContent.trim();
-    }
-
-    const val  = find('vNF');
-    const dr   = find('dhEmi','dEmi');
-    const data = dr ? dr.slice(0,10).replace(/-/g,'/') : '';
-
-    return { numero_nf: nf, cliente: cli||'N/D', valor: val||'0.00', data_emissao: data, chave: ch||'' };
-  } catch { return null; }
-}
-
-/* ────────────────────────────────────────
-   IMPORT MODAL  (BUG 2 CORRIGIDO: saiu do módulo)
-──────────────────────────────────────── */
-let _importFiles = [];
-
-window.openImport = function() {
-  clearImport();
-  openModal('modal-import');
-};
-
-/* Drag sobre a área de upload (nomes distintos para não conflitar com eventos globais) */
-window.onUploadDragOver  = function(e) { e.preventDefault(); document.getElementById('upload-area').classList.add('dragover'); };
-window.onUploadDragLeave = function(e) { document.getElementById('upload-area').classList.remove('dragover'); };
-window.onUploadDrop = function(e) {
-  e.preventDefault();
-  document.getElementById('upload-area').classList.remove('dragover');
-  handleFiles([...e.dataTransfer.files]);
-};
-window.onFileSelect = function(e) { handleFiles([...e.target.files]); e.target.value=''; };
-
-function handleFiles(files) {
-  files.forEach(f => {
-    const ext = f.name.split('.').pop().toLowerCase();
-    if (ext !== 'xml' && ext !== 'pdf') return;
-    /* evita duplicatas na mesma sessão */
-    if (_importFiles.find(i => i.file.name === f.name)) return;
-    _importFiles.push({ file: f, type: ext, parsed: null, status: 'pending' });
-  });
-
-  /* Parseia XMLs novos */
-  const promises = _importFiles
-    .filter(i => i.type === 'xml' && !i.parsed && i.status === 'pending')
-    .map(item =>
-      item.file.text().then(text => {
-        item.parsed = parseXML(text);
-        item.status = item.parsed ? 'ready' : 'error';
-      }).catch(() => { item.status = 'error'; })
-    );
-
-  renderImportList();
-  Promise.all(promises).then(renderImportList);
-}
-
-function renderImportList() {
-  const list = document.getElementById('upload-files-list');
-  if (!_importFiles.length) { list.innerHTML=''; return; }
-  list.innerHTML = _importFiles.map((item) => {
-    const icon = item.type==='xml' ? '📄' : '📕';
-    let statusTxt='', statusClass='';
-    if (item.type==='xml') {
-      if (item.status==='ready')    { statusTxt='✓ Válido';    statusClass='ok'; }
-      if (item.status==='error')    { statusTxt='✗ Inválido';  statusClass='err'; }
-      if (item.status==='dup')      { statusTxt='Duplicado';   statusClass='dup'; }
-      if (item.status==='pending')  { statusTxt='Lendo…'; }
-      if (item.status==='imported') { statusTxt='✓ Importado'; statusClass='ok'; }
-    } else {
-      statusTxt  = item.status==='imported' ? '✓ Enviado' : 'PDF';
-      statusClass= item.status==='imported' ? 'ok' : '';
-    }
-    return `<div class="upload-file-item">
-      <span class="upload-file-icon">${icon}</span>
-      <span class="upload-file-name">${item.file.name}</span>
-      <span class="upload-file-status ${statusClass}">${statusTxt}</span>
-    </div>`;
-  }).join('');
-
-  const hasReady = _importFiles.some(i=>i.type==='xml'&&i.status==='ready');
-  const btn = document.getElementById('btn-do-import');
-  btn.disabled = !hasReady;
-  btn.style.opacity = hasReady ? '1' : '.5';
-}
-
-function clearImport() {
-  _importFiles = [];
-  renderImportList();
-  const prog = document.getElementById('import-progress');
-  if (prog) prog.style.display='none';
-  const fill = document.getElementById('import-progress-fill');
-  if (fill) fill.style.width='0%';
-}
-
-window.doImport = async function() {
-  const xmlItems = _importFiles.filter(i=>i.type==='xml'&&i.status==='ready');
-  if (!xmlItems.length) return;
-
-  if (!window._addNota) {
-    toast('Firebase ainda inicializando. Aguarde e tente novamente.', 'warn');
-    return;
-  }
-
-  document.getElementById('import-progress').style.display='block';
-  const progFill = document.getElementById('import-progress-fill');
-  const progText = document.getElementById('import-progress-text');
-  document.getElementById('btn-do-import').disabled = true;
-
-  let ok=0, dup=0, err=0;
-  for (let idx=0; idx<xmlItems.length; idx++) {
-    const item = xmlItems[idx];
-    progText.textContent = `Importando ${idx+1}/${xmlItems.length}…`;
-    progFill.style.width = ((idx+1)/xmlItems.length*100)+'%';
-
-    const baseName = item.file.name.replace(/\.xml$/i,'');
-    const pdfItem  = _importFiles.find(i=>i.type==='pdf'&&i.file.name.replace(/\.pdf$/i,'')=== baseName);
-
-    let xml_url='', pdf_url='';
-
-    /* Upload para Firebase Storage (se disponível) */
-    if (window._uploadFile) {
-      try {
-        xml_url = await window._uploadFile(item.file, `notas/${item.parsed.numero_nf}/nota.xml`);
-      } catch(e) { console.warn('Falha upload XML:', e); }
-
-      if (pdfItem) {
-        try {
-          pdf_url = await window._uploadFile(pdfItem.file, `notas/${item.parsed.numero_nf}/nota.pdf`);
-          pdfItem.status = 'imported';
-        } catch(e) { console.warn('Falha upload PDF:', e); }
-      }
-    }
-
-    const result = await window._addNota({ ...item.parsed, xml_url, pdf_url });
-    if (result==='ok')  { ok++; item.status='imported'; }
-    if (result==='dup') { dup++; item.status='dup'; }
-    if (result==='err') { err++; item.status='error'; }
-    renderImportList();
-  }
-
-  progText.textContent='Concluído!';
-  const parts=[];
-  if (ok)  parts.push(`✅ ${ok} importada(s)`);
-  if (dup) parts.push(`⚠️ ${dup} duplicada(s)`);
-  if (err) parts.push(`❌ ${err} erro(s)`);
-  toast(parts.join(' · '), ok ? 'success' : (err ? 'error' : 'warn'));
-  setStatus(parts.join(' | ') + ' — ' + new Date().toLocaleTimeString('pt-BR'));
-  document.getElementById('btn-do-import').disabled = false;
-};
 </script>
 
-<!-- ════════════════════════════════════════
-     FIREBASE SDK  (módulo isolado — apenas CRUD/Storage)
-════════════════════════════════════════ -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-
-/* ────────────────────────────────────────
-   FIREBASE CONFIG
-──────────────────────────────────────── */
-const firebaseConfig = {
-  apiKey:            "AIzaSyDdjg1KhnGDUs5s-LUwRSsb6xRK-dnp3Ag",
-  authDomain:        "expedicao-ee9d1.firebaseapp.com",
-  projectId:         "expedicao-ee9d1",
-  storageBucket:     "expedicao-ee9d1.firebasestorage.app",
-  messagingSenderId: "556393614250",
-  appId:             "1:556393614250:web:471ecc4f44f5e79178b9d3",
-  measurementId:     "G-E07ZXV2X1P"
-};
-
-/* ────────────────────────────────────────
-   STATE
-──────────────────────────────────────── */
-window._state = {
-  notas: [],
-  db: null,
-  storage: null,
-  app: null,
-  unsubscribe: null,
-};
-
-/* ────────────────────────────────────────
-   INIT
-──────────────────────────────────────── */
-function setDot(state) {
-  const dot = document.getElementById('fb-dot');
-  dot.className = 'fb-dot' + (state==='ok' ? '' : state==='connecting' ? ' connecting' : ' offline');
-}
-
-(async function init() {
-  try {
-    const app = initializeApp(firebaseConfig);
-    window._state.app     = app;
-    window._state.db      = getFirestore(app);
-    window._state.storage = getStorage(app);
-    setDot('connecting');
-    setStatus('Conectando ao Firebase…');
-    startListener();
-  } catch(e) {
-    setDot('offline');
-    setStatus('Erro ao conectar: ' + e.message);
-    toast('Erro Firebase: ' + e.message, 'error');
-  }
-})();
-
-function startListener() {
-  const { db } = window._state;
-  if (!db) return;
-  if (window._state.unsubscribe) window._state.unsubscribe();
-
-  const q = query(collection(db, 'notas'), orderBy('numero_nf_int', 'asc'));
-  window._state.unsubscribe = onSnapshot(q, snap => {
-    window._state.notas = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    setDot('ok');
-    setStatus('Firebase conectado ✓ — ' + window._state.notas.length + ' nota(s)');
-    renderAll();
-  }, () => {
-    /* Fallback sem orderBy (índice ainda não criado) */
-    const q2 = collection(db, 'notas');
-    window._state.unsubscribe = onSnapshot(q2, snap => {
-      window._state.notas = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-        .sort((a,b) => (parseInt(a.numero_nf)||0) - (parseInt(b.numero_nf)||0));
-      setDot('ok');
-      setStatus('Firebase conectado ✓ — ' + window._state.notas.length + ' nota(s)');
-      renderAll();
-    }, err2 => {
-      setDot('offline');
-      setStatus('Erro de conexão: ' + err2.message);
-    });
-  });
-}
-
-/* ────────────────────────────────────────
-   CRUD
-──────────────────────────────────────── */
-async function addNota(nota) {
-  nota.data_lancamento = new Date().toLocaleString('pt-BR');
-  nota.data_status     = nota.data_lancamento;
-  nota.status          = nota.status || 'lancada';
-  nota.observacao      = nota.observacao || '';
-  nota.xml_url         = nota.xml_url || '';
-  nota.pdf_url         = nota.pdf_url || '';
-  nota.entregue        = false;   /* campo novo */
-  nota.numero_nf_int   = parseInt(nota.numero_nf) || 0;
-
-  if (nota.chave) {
-    const exists = window._state.notas.find(n => n.chave === nota.chave);
-    if (exists) return 'dup';
-  }
-  try {
-    await addDoc(collection(window._state.db, 'notas'), nota);
-    return 'ok';
-  } catch(e) {
-    toast('Erro ao salvar: ' + e.message, 'error');
-    return 'err';
-  }
-}
-
-/* Expõe addNota para o script de UI */
-window._addNota = addNota;
-
-window._updateStatus = async function(id, status) {
-  const ts = new Date().toLocaleString('pt-BR');
-  try { await updateDoc(doc(window._state.db, 'notas', id), { status, data_status: ts }); }
-  catch(e) { toast('Erro: ' + e.message, 'error'); }
-};
-
-window._updateObs = async function(id, observacao) {
-  try { await updateDoc(doc(window._state.db, 'notas', id), { observacao }); }
-  catch(e) { toast('Erro: ' + e.message, 'error'); }
-};
-
-/* Novo: atualiza campo entregue */
-window._updateEntregue = async function(id, entregue) {
-  try { await updateDoc(doc(window._state.db, 'notas', id), { entregue }); }
-  catch(e) { toast('Erro: ' + e.message, 'error'); }
-};
-
-window._deleteNota = async function(id) {
-  try {
-    const nota = window._state.notas.find(n => n.id === id);
-    if (nota && window._state.storage) {
-      if (nota.xml_url) { try { await deleteObject(sRef(window._state.storage, `notas/${nota.numero_nf}/nota.xml`)); } catch {} }
-      if (nota.pdf_url) { try { await deleteObject(sRef(window._state.storage, `notas/${nota.numero_nf}/nota.pdf`)); } catch {} }
-    }
-    await deleteDoc(doc(window._state.db, 'notas', id));
-    toast('Nota excluída', 'warn');
-  } catch(e) { toast('Erro ao excluir: ' + e.message, 'error'); }
-};
-
-/* Upload helper exposto para o script de UI */
-window._uploadFile = async function(file, storagePath) {
-  const ref  = sRef(window._state.storage, storagePath);
-  const snap = await uploadBytes(ref, file);
-  return await getDownloadURL(snap.ref);
-};
-</script>
-
-<!-- ════════════════════════════════════════
-     LOGIN LOGIC
-════════════════════════════════════════ -->
+<!-- LOGIN LOGIC -->
 <script>
-const SESSION_KEY  = 'nf_auth_v1';
+const SESSION_KEY = 'nf_auth_v1';
 const SENHA_CORRETA = '1234';
 
 (function checkSession() {
-  const ok = sessionStorage.getItem(SESSION_KEY) === 'ok';
-  if (ok) document.getElementById('login-screen').classList.add('hidden');
+  if (sessionStorage.getItem(SESSION_KEY) === 'ok')
+    document.getElementById('login-screen').classList.add('hidden');
 })();
 
 window.doLogin = function() {
@@ -1273,22 +1101,14 @@ window.doLogin = function() {
 
   if (pwd === SENHA_CORRETA) {
     sessionStorage.setItem(SESSION_KEY, 'ok');
-    btn.textContent = 'Entrando…';
-    btn.disabled = true;
-    setTimeout(() => {
-      document.getElementById('login-screen').classList.add('hidden');
-    }, 300);
+    btn.textContent = 'Entrando…'; btn.disabled = true;
+    setTimeout(() => document.getElementById('login-screen').classList.add('hidden'), 300);
   } else {
-    inp.classList.add('error');
-    err.classList.add('show');
-    inp.focus();
+    inp.classList.add('error'); err.classList.add('show'); inp.focus();
     inp.animate([
-      { transform: 'translateX(0)' },
-      { transform: 'translateX(-8px)' },
-      { transform: 'translateX(8px)' },
-      { transform: 'translateX(-5px)' },
-      { transform: 'translateX(0)' }
-    ], { duration: 300, easing: 'ease-out' });
+      {transform:'translateX(0)'},{transform:'translateX(-8px)'},
+      {transform:'translateX(8px)'},{transform:'translateX(-5px)'},{transform:'translateX(0)'}
+    ], {duration:300, easing:'ease-out'});
   }
 };
 
@@ -1303,7 +1123,7 @@ window.doLogout = function() {
 };
 
 window.togglePwd = function() {
-  const inp  = document.getElementById('login-pwd');
+  const inp = document.getElementById('login-pwd');
   const icon = document.getElementById('eye-icon');
   if (inp.type === 'password') {
     inp.type = 'text';
@@ -1314,6 +1134,5 @@ window.togglePwd = function() {
   }
 };
 </script>
-
 </body>
 </html>
