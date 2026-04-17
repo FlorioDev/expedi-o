@@ -280,14 +280,56 @@ a { color: inherit; text-decoration: none; }
   background: var(--surface); border: 1px solid var(--border);
   border-left: 3px solid var(--accent); border-radius: var(--radius-sm);
   padding: 10px 12px 9px; cursor: grab; user-select: none;
-  transition: box-shadow var(--transition), transform var(--transition), opacity var(--transition), border-color var(--transition);
+  transition: box-shadow var(--transition), transform var(--transition), opacity var(--transition), border-color var(--transition), background var(--transition);
   position: relative;
   animation: cardIn .25s cubic-bezier(.34,1.56,.64,1) both;
+  overflow: hidden;
 }
 @keyframes cardIn { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
 .card:hover { box-shadow: var(--shadow); border-color: var(--border2); border-left-color: var(--accent); transform: translateY(-1px); }
 .card:active { cursor: grabbing; }
 .card.dragging { opacity: .35; transform: scale(.97); box-shadow: none; }
+
+/* ── ENTREGUE STATE ── */
+.card.entregue {
+  background: #F0FDF4;
+  border-color: #86EFAC;
+  border-left-color: var(--green) !important;
+}
+.card.entregue:hover {
+  border-color: #4ADE80;
+  border-left-color: var(--green) !important;
+  box-shadow: 0 2px 12px rgba(5,150,105,.15);
+}
+
+/* ENTREGUE stamp / watermark */
+.card-stamp {
+  position: absolute;
+  top: 50%; right: -8px;
+  transform: translateY(-50%) rotate(20deg);
+  font-size: 13px; font-weight: 800;
+  letter-spacing: .18em;
+  color: rgba(5,150,105,.22);
+  pointer-events: none;
+  white-space: nowrap;
+  text-transform: uppercase;
+  font-family: var(--mono);
+}
+/* Smaller stamp badge top-right */
+.card-stamp-badge {
+  position: absolute;
+  top: 8px; right: 8px;
+  background: var(--green);
+  color: #fff;
+  font-size: 9px; font-weight: 800;
+  letter-spacing: .1em;
+  padding: 2px 7px;
+  border-radius: 4px;
+  transform: rotate(2deg);
+  box-shadow: 0 2px 8px rgba(5,150,105,.35);
+  pointer-events: none;
+  text-transform: uppercase;
+}
 
 .card-top { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 5px; }
 .card-nf { font-size: 13px; font-weight: 600; color: var(--accent); font-family: var(--mono); flex: 1; }
@@ -322,6 +364,11 @@ a { color: inherit; text-decoration: none; }
 .btn-action.obs:hover  { background: #FEF3C7; }
 .btn-action.del  { color: var(--red);   background: var(--red-lt);   border-color: #FECACA; margin-left: auto; }
 .btn-action.del:hover  { background: #FEE2E2; }
+
+/* Entregue button */
+.btn-action.entregar { color: var(--green); background: var(--green-lt); border-color: #6EE7B7; }
+.btn-action.entregar:hover { background: #D1FAE5; border-color: var(--green); }
+.btn-action.entregar.ativo { color: var(--green-dk); background: #D1FAE5; border-color: var(--green); }
 
 /* ═══════════════════════════════════════════
    DRAG GHOST
@@ -458,9 +505,10 @@ a { color: inherit; text-decoration: none; }
     <div class="login-field">
       <label class="login-label">SENHA</label>
       <div class="login-input-wrap">
+        <!-- BUG 1 CORRIGIDO: era 'login-input' (id inexistente), agora 'login-pwd' -->
         <input class="login-input" type="password" id="login-pwd" placeholder="••••"
           onkeydown="if(event.key==='Enter') doLogin()"
-          oninput="document.getElementById('login-input').classList.remove('error'); document.getElementById('login-err').classList.remove('show')">
+          oninput="document.getElementById('login-pwd').classList.remove('error'); document.getElementById('login-err').classList.remove('show')">
         <span class="login-eye" onclick="togglePwd()" title="Mostrar senha">
           <svg id="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -589,7 +637,11 @@ a { color: inherit; text-decoration: none; }
     <div class="modal-title">📂 Importar Notas Fiscais</div>
     <div class="modal-sub">Selecione os arquivos XML e/ou PDF das notas. Você pode importar múltiplos arquivos de uma vez.</div>
 
-    <div class="upload-area" id="upload-area" onclick="document.getElementById('file-input').click()" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+    <div class="upload-area" id="upload-area"
+      onclick="document.getElementById('file-input').click()"
+      ondragover="onUploadDragOver(event)"
+      ondragleave="onUploadDragLeave(event)"
+      ondrop="onUploadDrop(event)">
       <input type="file" id="file-input" multiple accept=".xml,.pdf" onchange="onFileSelect(event)">
       <div style="font-size:24px;margin-bottom:6px">📂</div>
       <div style="font-weight:600;color:var(--txt2);margin-bottom:2px">Clique ou arraste arquivos aqui</div>
@@ -611,318 +663,29 @@ a { color: inherit; text-decoration: none; }
 </div>
 
 <!-- ════════════════════════════════════════
-     FIREBASE SDK
+     UI SCRIPT (regular — executa imediatamente, sem depender do Firebase CDN)
+     BUG 2 CORRIGIDO: todo código de UI foi movido para cá, fora do módulo.
+     Funções de UI ficam disponíveis instantaneamente, sem esperar os imports
+     assíncronos do Firebase.
 ════════════════════════════════════════ -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-
+<script>
 /* ────────────────────────────────────────
-   FIREBASE CONFIG (hardcoded)
+   TOAST + STATUS
 ──────────────────────────────────────── */
-const firebaseConfig = {
-  apiKey:            "AIzaSyDdjg1KhnGDUs5s-LUwRSsb6xRK-dnp3Ag",
-  authDomain:        "expedicao-ee9d1.firebaseapp.com",
-  projectId:         "expedicao-ee9d1",
-  storageBucket:     "expedicao-ee9d1.firebasestorage.app",
-  messagingSenderId: "556393614250",
-  appId:             "1:556393614250:web:471ecc4f44f5e79178b9d3",
-  measurementId:     "G-E07ZXV2X1P"
+window.toast = function(msg, type='') {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  const icons = { success:'✓', error:'✗', warn:'⚠' };
+  t.innerHTML = `<span>${icons[type]||'ℹ'}</span> ${msg}`;
+  c.appendChild(t);
+  setTimeout(() => {
+    t.style.animation = 'toastOut .25s forwards';
+    setTimeout(()=>t.remove(), 260);
+  }, 3200);
 };
 
-/* ────────────────────────────────────────
-   STATE
-──────────────────────────────────────── */
-window._state = {
-  notas: [],
-  db: null,
-  storage: null,
-  app: null,
-  unsubscribe: null,
-};
-
-/* ────────────────────────────────────────
-   INIT FIREBASE
-──────────────────────────────────────── */
-function setDot(state) {
-  const dot = document.getElementById('fb-dot');
-  dot.className = 'fb-dot' + (state === 'ok' ? '' : state === 'connecting' ? ' connecting' : ' offline');
-}
-
-(async function init() {
-  try {
-    const app = initializeApp(firebaseConfig);
-    window._state.app     = app;
-    window._state.db      = getFirestore(app);
-    window._state.storage = getStorage(app);
-    setDot('connecting');
-    setStatus('Conectando ao Firebase…');
-    startListener();
-  } catch(e) {
-    setDot('offline');
-    setStatus('Erro ao conectar: ' + e.message);
-    toast('Erro Firebase: ' + e.message, 'error');
-  }
-})();
-
-function startListener() {
-  const { db } = window._state;
-  if (!db) return;
-  if (window._state.unsubscribe) window._state.unsubscribe();
-
-  const q = query(collection(db, 'notas'), orderBy('numero_nf_int', 'asc'));
-  window._state.unsubscribe = onSnapshot(q, snap => {
-    window._state.notas = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    setDot('ok');
-    setStatus('Firebase conectado ✓ — ' + window._state.notas.length + ' nota(s)');
-    renderAll();
-  }, err => {
-    // Fallback sem orderBy (índice ainda não criado)
-    const q2 = collection(db, 'notas');
-    window._state.unsubscribe = onSnapshot(q2, snap => {
-      window._state.notas = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-        .sort((a,b) => (parseInt(a.numero_nf)||0) - (parseInt(b.numero_nf)||0));
-      setDot('ok');
-      setStatus('Firebase conectado ✓ — ' + window._state.notas.length + ' nota(s)');
-      renderAll();
-    }, err2 => {
-      setDot('offline');
-      setStatus('Erro de conexão: ' + err2.message);
-    });
-  });
-}
-
-/* ────────────────────────────────────────
-   CRUD
-──────────────────────────────────────── */
-async function addNota(nota) {
-  nota.data_lancamento = new Date().toLocaleString('pt-BR');
-  nota.data_status     = nota.data_lancamento;
-  nota.status          = nota.status || 'lancada';
-  nota.observacao      = nota.observacao || '';
-  nota.xml_url         = nota.xml_url || '';
-  nota.pdf_url         = nota.pdf_url || '';
-  nota.numero_nf_int   = parseInt(nota.numero_nf) || 0;
-
-  if (nota.chave) {
-    const exists = window._state.notas.find(n => n.chave === nota.chave);
-    if (exists) return 'dup';
-  }
-  try {
-    await addDoc(collection(window._state.db, 'notas'), nota);
-    return 'ok';
-  } catch(e) {
-    toast('Erro ao salvar: ' + e.message, 'error');
-    return 'err';
-  }
-}
-
-window._updateStatus = async function(id, status) {
-  const ts = new Date().toLocaleString('pt-BR');
-  try { await updateDoc(doc(window._state.db, 'notas', id), { status, data_status: ts }); }
-  catch(e) { toast('Erro: ' + e.message, 'error'); }
-};
-
-window._updateObs = async function(id, observacao) {
-  try { await updateDoc(doc(window._state.db, 'notas', id), { observacao }); }
-  catch(e) { toast('Erro: ' + e.message, 'error'); }
-};
-
-window._deleteNota = async function(id) {
-  try {
-    const nota = window._state.notas.find(n => n.id === id);
-    if (nota && window._state.storage) {
-      if (nota.xml_url) { try { await deleteObject(sRef(window._state.storage, `notas/${nota.numero_nf}/nota.xml`)); } catch {} }
-      if (nota.pdf_url) { try { await deleteObject(sRef(window._state.storage, `notas/${nota.numero_nf}/nota.pdf`)); } catch {} }
-    }
-    await deleteDoc(doc(window._state.db, 'notas', id));
-    toast('Nota excluída', 'warn');
-  } catch(e) { toast('Erro ao excluir: ' + e.message, 'error'); }
-};
-
-/* ────────────────────────────────────────
-   PARSE XML
-──────────────────────────────────────── */
-function parseXML(text) {
-  try {
-    const parser = new DOMParser();
-    const xml = parser.parseFromString(text, 'application/xml');
-    const find = (...tags) => {
-      for (const t of tags) {
-        const el = xml.getElementsByTagNameNS('*', t)[0];
-        if (el && el.textContent) return el.textContent.trim();
-      }
-      return '';
-    };
-    const nf = find('nNF');
-    let ch = find('Id','chNFe');
-    if (ch.startsWith('NFe')) ch = ch.slice(3);
-    let cli = '';
-    const dests = xml.getElementsByTagNameNS('*', 'dest');
-    if (dests[0]) {
-      const xNome = dests[0].getElementsByTagNameNS('*', 'xNome')[0];
-      if (xNome) cli = xNome.textContent.trim();
-    }
-    const val  = find('vNF');
-    const dr   = find('dhEmi','dEmi');
-    const data = dr ? dr.slice(0,10).replace(/-/g,'/') : '';
-    if (!nf) return null;
-    return { numero_nf: nf, cliente: cli||'N/D', valor: val||'0.00', data_emissao: data, chave: ch||'' };
-  } catch { return null; }
-}
-
-/* ────────────────────────────────────────
-   IMPORT MODAL
-──────────────────────────────────────── */
-let _importFiles = [];
-
-window.openImport = () => { clearImport(); openModal('modal-import'); };
-window.onDragOver  = e => { e.preventDefault(); document.getElementById('upload-area').classList.add('dragover'); };
-window.onDragLeave = e => { document.getElementById('upload-area').classList.remove('dragover'); };
-window.onDrop = e => {
-  e.preventDefault();
-  document.getElementById('upload-area').classList.remove('dragover');
-  handleFiles([...e.dataTransfer.files]);
-};
-window.onFileSelect = e => { handleFiles([...e.target.files]); e.target.value=''; };
-
-function handleFiles(files) {
-  files.forEach(f => {
-    const ext = f.name.split('.').pop().toLowerCase();
-    if (ext !== 'xml' && ext !== 'pdf') return;
-    _importFiles.push({ file: f, type: ext, parsed: null, status: 'pending' });
-  });
-  let promises = _importFiles.filter(i=>i.type==='xml'&&!i.parsed).map(item =>
-    item.file.text().then(text => {
-      item.parsed = parseXML(text);
-      item.status = item.parsed ? 'ready' : 'error';
-    })
-  );
-  Promise.all(promises).then(renderImportList);
-  renderImportList();
-}
-
-function renderImportList() {
-  const list = document.getElementById('upload-files-list');
-  if (!_importFiles.length) { list.innerHTML=''; return; }
-  list.innerHTML = _importFiles.map((item,i) => {
-    const icon = item.type==='xml' ? '📄' : '📕';
-    let statusTxt='', statusClass='';
-    if (item.type==='xml') {
-      if (item.status==='ready')    { statusTxt='✓ Válido';    statusClass='ok'; }
-      if (item.status==='error')    { statusTxt='✗ Inválido';  statusClass='err'; }
-      if (item.status==='dup')      { statusTxt='Duplicado';   statusClass='dup'; }
-      if (item.status==='pending')  { statusTxt='Lendo…'; }
-      if (item.status==='imported') { statusTxt='✓ Importado'; statusClass='ok'; }
-    } else {
-      statusTxt  = item.status==='imported' ? '✓ Enviado' : 'PDF';
-      statusClass= item.status==='imported' ? 'ok' : '';
-    }
-    return `<div class="upload-file-item">
-      <span class="upload-file-icon">${icon}</span>
-      <span class="upload-file-name">${item.file.name}</span>
-      <span class="upload-file-status ${statusClass}">${statusTxt}</span>
-    </div>`;
-  }).join('');
-  const hasReady = _importFiles.some(i=>i.type==='xml'&&i.status==='ready');
-  const btn = document.getElementById('btn-do-import');
-  btn.disabled = !hasReady;
-  btn.style.opacity = hasReady ? '1' : '.5';
-}
-
-function clearImport() {
-  _importFiles = [];
-  renderImportList();
-  document.getElementById('import-progress').style.display='none';
-  document.getElementById('import-progress-fill').style.width='0%';
-}
-
-window.doImport = async function() {
-  const xmlItems = _importFiles.filter(i=>i.type==='xml'&&i.status==='ready');
-  if (!xmlItems.length) return;
-
-  document.getElementById('import-progress').style.display='block';
-  const progFill = document.getElementById('import-progress-fill');
-  const progText = document.getElementById('import-progress-text');
-  document.getElementById('btn-do-import').disabled = true;
-
-  let ok=0, dup=0, err=0;
-  for (let idx=0; idx<xmlItems.length; idx++) {
-    const item = xmlItems[idx];
-    progText.textContent = `Importando ${idx+1}/${xmlItems.length}…`;
-    progFill.style.width = ((idx+1)/xmlItems.length*100)+'%';
-
-    const baseName = item.file.name.replace(/\.xml$/i,'');
-    const pdfItem  = _importFiles.find(i=>i.type==='pdf'&&i.file.name.replace(/\.pdf$/i,'')=== baseName);
-
-    let xml_url='', pdf_url='';
-    if (window._state.storage) {
-      try {
-        const xmlRef  = sRef(window._state.storage, `notas/${item.parsed.numero_nf}/nota.xml`);
-        const xmlSnap = await uploadBytes(xmlRef, item.file);
-        xml_url = await getDownloadURL(xmlSnap.ref);
-        item.status = 'imported';
-      } catch(e) { console.warn('Storage XML upload failed:', e); }
-
-      if (pdfItem) {
-        try {
-          const pdfRef  = sRef(window._state.storage, `notas/${item.parsed.numero_nf}/nota.pdf`);
-          const pdfSnap = await uploadBytes(pdfRef, pdfItem.file);
-          pdf_url = await getDownloadURL(pdfSnap.ref);
-          pdfItem.status = 'imported';
-        } catch(e) { console.warn('Storage PDF upload failed:', e); }
-      }
-    }
-
-    const result = await addNota({ ...item.parsed, xml_url, pdf_url });
-    if (result==='ok')  { ok++; item.status='imported'; }
-    if (result==='dup') { dup++; item.status='dup'; }
-    if (result==='err') { err++; item.status='error'; }
-    renderImportList();
-  }
-
-  progText.textContent='Concluído!';
-  const parts=[];
-  if (ok)  parts.push(`✅ ${ok} importada(s)`);
-  if (dup) parts.push(`⚠️ ${dup} duplicada(s)`);
-  if (err) parts.push(`❌ ${err} erro(s)`);
-  toast(parts.join(' · '), ok ? 'success' : 'warn');
-  setStatus(parts.join(' | ') + ' — ' + new Date().toLocaleTimeString('pt-BR'));
-  document.getElementById('btn-do-import').disabled = false;
-};
-
-/* ────────────────────────────────────────
-   OBS MODAL
-──────────────────────────────────────── */
-let _obsId = null;
-window.openObsModal = (id, numero_nf, obs) => {
-  _obsId = id;
-  document.getElementById('obs-subtitle').textContent = `NF ${numero_nf}`;
-  document.getElementById('obs-text').value = obs || '';
-  openModal('modal-obs');
-};
-window.clearObs = () => { document.getElementById('obs-text').value=''; };
-window.saveObs  = async () => {
-  const txt = document.getElementById('obs-text').value.trim();
-  await window._updateObs(_obsId, txt);
-  closeModal('modal-obs');
-  toast('Observação salva', 'success');
-};
-
-/* ────────────────────────────────────────
-   DELETE MODAL
-──────────────────────────────────────── */
-let _delId = null;
-window.openDelModal = (id, numero_nf) => {
-  _delId = id;
-  document.getElementById('del-subtitle').textContent = `Tem certeza que deseja excluir a NF ${numero_nf}? Esta ação não pode ser desfeita.`;
-  openModal('modal-del');
-};
-window.confirmDelete = async () => {
-  await window._deleteNota(_delId);
-  closeModal('modal-del');
-};
+window.setStatus = msg => document.getElementById('status-msg').textContent = msg;
 
 /* ────────────────────────────────────────
    MODAL HELPERS
@@ -941,7 +704,7 @@ const ACCENT = { lancada:'var(--col-l)', aguardando:'var(--col-a)', solicitada:'
 
 window.renderAll = function() {
   const q = document.getElementById('search-input').value.toLowerCase().trim();
-  let notas = window._state.notas;
+  let notas = (window._state && window._state.notas) ? window._state.notas : [];
   if (q) notas = notas.filter(n =>
     (n.numero_nf||'').toLowerCase().includes(q) ||
     (n.cliente||'').toLowerCase().includes(q)
@@ -983,7 +746,7 @@ function fmtVal(v) {
 
 function buildCard(nota) {
   const card = document.createElement('div');
-  card.className = 'card';
+  card.className = 'card' + (nota.entregue ? ' entregue' : '');
   card.dataset.id = nota.id;
   card.style.setProperty('--accent', ACCENT[nota.status] || ACCENT.lancada);
   card.draggable = true;
@@ -994,9 +757,9 @@ function buildCard(nota) {
 }
 
 function cardHTML(nota) {
-  const { id, numero_nf, cliente, valor, data_emissao, status, observacao, xml_url, pdf_url } = nota;
+  const { id, numero_nf, cliente, valor, data_emissao, status, observacao, xml_url, pdf_url, entregue } = nota;
   const hasObs = !!(observacao && observacao.trim());
-  const cli = cliente.length>32 ? cliente.slice(0,32)+'…' : cliente;
+  const cli = (cliente||'').length>32 ? (cliente||'').slice(0,32)+'…' : (cliente||'');
 
   const dlXml = xml_url ? `<button class="btn-action xml" onclick="dlFile('${xml_url}','NF-${numero_nf}.xml')" title="Baixar XML">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -1006,18 +769,36 @@ function cardHTML(nota) {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     PDF</button>` : '';
 
+  /* Botão Entregue */
+  const btnEntregue = entregue
+    ? `<button class="btn-action entregar ativo" onclick="toggleEntregue('${id}', false)" title="Desmarcar entrega">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Entregue
+       </button>`
+    : `<button class="btn-action entregar" onclick="toggleEntregue('${id}', true)" title="Marcar como entregue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>
+        Entregar
+       </button>`;
+
+  /* Carimbo visual quando entregue */
+  const stamp = entregue
+    ? `<div class="card-stamp-badge">ENTREGUE</div><div class="card-stamp">ENTREGUE</div>`
+    : '';
+
   return `
+    ${stamp}
     <div class="card-top">
       <span class="card-nf">NF ${numero_nf}</span>
       <span class="card-valor">${fmtVal(valor)}</span>
     </div>
-    <div class="card-cli" title="${cliente}">${cli}</div>
+    <div class="card-cli" title="${cliente||''}">${cli}</div>
     <div class="card-meta">
       ${data_emissao ? `<span class="card-date">${data_emissao}</span>` : ''}
       ${hasObs ? `<span class="card-obs-badge">● Obs</span>` : ''}
     </div>
     <div class="card-actions">
       ${dlXml}${dlPdf}
+      ${btnEntregue}
       <button class="btn-action obs" onclick="openObsModal('${id}','${numero_nf}',${JSON.stringify(observacao||'')})">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         Obs
@@ -1029,6 +810,7 @@ function cardHTML(nota) {
 }
 
 function updateCardInPlace(card, nota) {
+  card.className = 'card' + (nota.entregue ? ' entregue' : '');
   card.style.setProperty('--accent', ACCENT[nota.status] || ACCENT.lancada);
   card.innerHTML = cardHTML(nota);
   card.addEventListener('dragstart', e => onDragStart(e, nota.id, nota.numero_nf, nota.cliente, nota.status));
@@ -1042,7 +824,7 @@ window.dlFile = function(url, filename) {
 };
 
 /* ────────────────────────────────────────
-   DRAG & DROP
+   DRAG & DROP (board)
 ──────────────────────────────────────── */
 let _dragId = null, _dragStatus = null;
 
@@ -1059,7 +841,7 @@ function onDragStart(e, id, nf, cli, status) {
 
   const g   = document.getElementById('drag-ghost');
   document.getElementById('ghost-nf').textContent  = 'NF ' + nf;
-  document.getElementById('ghost-cli').textContent = cli.length>24 ? cli.slice(0,24)+'…' : cli;
+  document.getElementById('ghost-cli').textContent = (cli||'').length>24 ? (cli||'').slice(0,24)+'…' : (cli||'');
   g.style.setProperty('--ghost-color', ACCENT[status] || '#888');
   g.classList.add('visible');
   e.currentTarget.classList.add('dragging');
@@ -1092,7 +874,7 @@ document.querySelectorAll('.column').forEach(col => {
     col.classList.remove('drag-over');
     const newStatus = col.dataset.status;
     if (_dragId && newStatus && newStatus !== _dragStatus) {
-      window._updateStatus(_dragId, newStatus);
+      if (window._updateStatus) window._updateStatus(_dragId, newStatus);
       const labels = { lancada:'Lançadas', aguardando:'Separado', solicitada:'Coleta Solicitada', retirada:'Retiradas' };
       toast(`NF movida para ${labels[newStatus]}`, 'success');
     }
@@ -1101,42 +883,386 @@ document.querySelectorAll('.column').forEach(col => {
 });
 
 /* ────────────────────────────────────────
-   TOAST
+   ENTREGUE
 ──────────────────────────────────────── */
-window.toast = function(msg, type='') {
-  const c = document.getElementById('toast-container');
-  const t = document.createElement('div');
-  t.className = 'toast ' + type;
-  const icons = { success:'✓', error:'✗', warn:'⚠' };
-  t.innerHTML = `<span>${icons[type]||'ℹ'}</span> ${msg}`;
-  c.appendChild(t);
-  setTimeout(() => {
-    t.style.animation = 'toastOut .25s forwards';
-    setTimeout(()=>t.remove(), 260);
-  }, 3200);
+window.toggleEntregue = async function(id, val) {
+  if (!window._updateEntregue) { toast('Firebase ainda carregando…', 'warn'); return; }
+  await window._updateEntregue(id, val);
+  if (val) toast('✅ Nota marcada como ENTREGUE', 'success');
+  else toast('Entrega desmarcada', '');
 };
 
 /* ────────────────────────────────────────
-   STATUS BAR
+   OBS MODAL
 ──────────────────────────────────────── */
-window.setStatus = msg => document.getElementById('status-msg').textContent = msg;
+let _obsId = null;
+window.openObsModal = (id, numero_nf, obs) => {
+  _obsId = id;
+  document.getElementById('obs-subtitle').textContent = `NF ${numero_nf}`;
+  document.getElementById('obs-text').value = obs || '';
+  openModal('modal-obs');
+};
+window.clearObs = () => { document.getElementById('obs-text').value=''; };
+window.saveObs  = async () => {
+  const txt = document.getElementById('obs-text').value.trim();
+  await window._updateObs(_obsId, txt);
+  closeModal('modal-obs');
+  toast('Observação salva', 'success');
+};
 
+/* ────────────────────────────────────────
+   DELETE MODAL
+──────────────────────────────────────── */
+let _delId = null;
+window.openDelModal = (id, numero_nf) => {
+  _delId = id;
+  document.getElementById('del-subtitle').textContent = `Tem certeza que deseja excluir a NF ${numero_nf}? Esta ação não pode ser desfeita.`;
+  openModal('modal-del');
+};
+window.confirmDelete = async () => {
+  await window._deleteNota(_delId);
+  closeModal('modal-del');
+};
+
+/* ────────────────────────────────────────
+   PARSE XML  (sem dependência do Firebase)
+──────────────────────────────────────── */
+function parseXML(text) {
+  try {
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(text, 'application/xml');
+
+    /* Verifica erro de parse */
+    if (xml.querySelector('parsererror')) return null;
+
+    const find = (...tags) => {
+      for (const t of tags) {
+        /* tenta com namespace wildcard */
+        const el = xml.getElementsByTagNameNS('*', t)[0] || xml.getElementsByTagName(t)[0];
+        if (el && el.textContent) return el.textContent.trim();
+      }
+      return '';
+    };
+
+    const nf = find('nNF');
+    if (!nf) return null;
+
+    let ch = find('Id','chNFe');
+    if (ch.startsWith('NFe')) ch = ch.slice(3);
+
+    let cli = '';
+    const dests = xml.getElementsByTagNameNS('*', 'dest');
+    if (dests[0]) {
+      const xNome = dests[0].getElementsByTagNameNS('*', 'xNome')[0]
+                  || dests[0].getElementsByTagName('xNome')[0];
+      if (xNome) cli = xNome.textContent.trim();
+    }
+
+    const val  = find('vNF');
+    const dr   = find('dhEmi','dEmi');
+    const data = dr ? dr.slice(0,10).replace(/-/g,'/') : '';
+
+    return { numero_nf: nf, cliente: cli||'N/D', valor: val||'0.00', data_emissao: data, chave: ch||'' };
+  } catch { return null; }
+}
+
+/* ────────────────────────────────────────
+   IMPORT MODAL  (BUG 2 CORRIGIDO: saiu do módulo)
+──────────────────────────────────────── */
+let _importFiles = [];
+
+window.openImport = function() {
+  clearImport();
+  openModal('modal-import');
+};
+
+/* Drag sobre a área de upload (nomes distintos para não conflitar com eventos globais) */
+window.onUploadDragOver  = function(e) { e.preventDefault(); document.getElementById('upload-area').classList.add('dragover'); };
+window.onUploadDragLeave = function(e) { document.getElementById('upload-area').classList.remove('dragover'); };
+window.onUploadDrop = function(e) {
+  e.preventDefault();
+  document.getElementById('upload-area').classList.remove('dragover');
+  handleFiles([...e.dataTransfer.files]);
+};
+window.onFileSelect = function(e) { handleFiles([...e.target.files]); e.target.value=''; };
+
+function handleFiles(files) {
+  files.forEach(f => {
+    const ext = f.name.split('.').pop().toLowerCase();
+    if (ext !== 'xml' && ext !== 'pdf') return;
+    /* evita duplicatas na mesma sessão */
+    if (_importFiles.find(i => i.file.name === f.name)) return;
+    _importFiles.push({ file: f, type: ext, parsed: null, status: 'pending' });
+  });
+
+  /* Parseia XMLs novos */
+  const promises = _importFiles
+    .filter(i => i.type === 'xml' && !i.parsed && i.status === 'pending')
+    .map(item =>
+      item.file.text().then(text => {
+        item.parsed = parseXML(text);
+        item.status = item.parsed ? 'ready' : 'error';
+      }).catch(() => { item.status = 'error'; })
+    );
+
+  renderImportList();
+  Promise.all(promises).then(renderImportList);
+}
+
+function renderImportList() {
+  const list = document.getElementById('upload-files-list');
+  if (!_importFiles.length) { list.innerHTML=''; return; }
+  list.innerHTML = _importFiles.map((item) => {
+    const icon = item.type==='xml' ? '📄' : '📕';
+    let statusTxt='', statusClass='';
+    if (item.type==='xml') {
+      if (item.status==='ready')    { statusTxt='✓ Válido';    statusClass='ok'; }
+      if (item.status==='error')    { statusTxt='✗ Inválido';  statusClass='err'; }
+      if (item.status==='dup')      { statusTxt='Duplicado';   statusClass='dup'; }
+      if (item.status==='pending')  { statusTxt='Lendo…'; }
+      if (item.status==='imported') { statusTxt='✓ Importado'; statusClass='ok'; }
+    } else {
+      statusTxt  = item.status==='imported' ? '✓ Enviado' : 'PDF';
+      statusClass= item.status==='imported' ? 'ok' : '';
+    }
+    return `<div class="upload-file-item">
+      <span class="upload-file-icon">${icon}</span>
+      <span class="upload-file-name">${item.file.name}</span>
+      <span class="upload-file-status ${statusClass}">${statusTxt}</span>
+    </div>`;
+  }).join('');
+
+  const hasReady = _importFiles.some(i=>i.type==='xml'&&i.status==='ready');
+  const btn = document.getElementById('btn-do-import');
+  btn.disabled = !hasReady;
+  btn.style.opacity = hasReady ? '1' : '.5';
+}
+
+function clearImport() {
+  _importFiles = [];
+  renderImportList();
+  const prog = document.getElementById('import-progress');
+  if (prog) prog.style.display='none';
+  const fill = document.getElementById('import-progress-fill');
+  if (fill) fill.style.width='0%';
+}
+
+window.doImport = async function() {
+  const xmlItems = _importFiles.filter(i=>i.type==='xml'&&i.status==='ready');
+  if (!xmlItems.length) return;
+
+  if (!window._addNota) {
+    toast('Firebase ainda inicializando. Aguarde e tente novamente.', 'warn');
+    return;
+  }
+
+  document.getElementById('import-progress').style.display='block';
+  const progFill = document.getElementById('import-progress-fill');
+  const progText = document.getElementById('import-progress-text');
+  document.getElementById('btn-do-import').disabled = true;
+
+  let ok=0, dup=0, err=0;
+  for (let idx=0; idx<xmlItems.length; idx++) {
+    const item = xmlItems[idx];
+    progText.textContent = `Importando ${idx+1}/${xmlItems.length}…`;
+    progFill.style.width = ((idx+1)/xmlItems.length*100)+'%';
+
+    const baseName = item.file.name.replace(/\.xml$/i,'');
+    const pdfItem  = _importFiles.find(i=>i.type==='pdf'&&i.file.name.replace(/\.pdf$/i,'')=== baseName);
+
+    let xml_url='', pdf_url='';
+
+    /* Upload para Firebase Storage (se disponível) */
+    if (window._uploadFile) {
+      try {
+        xml_url = await window._uploadFile(item.file, `notas/${item.parsed.numero_nf}/nota.xml`);
+      } catch(e) { console.warn('Falha upload XML:', e); }
+
+      if (pdfItem) {
+        try {
+          pdf_url = await window._uploadFile(pdfItem.file, `notas/${item.parsed.numero_nf}/nota.pdf`);
+          pdfItem.status = 'imported';
+        } catch(e) { console.warn('Falha upload PDF:', e); }
+      }
+    }
+
+    const result = await window._addNota({ ...item.parsed, xml_url, pdf_url });
+    if (result==='ok')  { ok++; item.status='imported'; }
+    if (result==='dup') { dup++; item.status='dup'; }
+    if (result==='err') { err++; item.status='error'; }
+    renderImportList();
+  }
+
+  progText.textContent='Concluído!';
+  const parts=[];
+  if (ok)  parts.push(`✅ ${ok} importada(s)`);
+  if (dup) parts.push(`⚠️ ${dup} duplicada(s)`);
+  if (err) parts.push(`❌ ${err} erro(s)`);
+  toast(parts.join(' · '), ok ? 'success' : (err ? 'error' : 'warn'));
+  setStatus(parts.join(' | ') + ' — ' + new Date().toLocaleTimeString('pt-BR'));
+  document.getElementById('btn-do-import').disabled = false;
+};
 </script>
 
 <!-- ════════════════════════════════════════
-     LOGIN LOGIC (non-module, runs first)
+     FIREBASE SDK  (módulo isolado — apenas CRUD/Storage)
+════════════════════════════════════════ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+/* ────────────────────────────────────────
+   FIREBASE CONFIG
+──────────────────────────────────────── */
+const firebaseConfig = {
+  apiKey:            "AIzaSyDdjg1KhnGDUs5s-LUwRSsb6xRK-dnp3Ag",
+  authDomain:        "expedicao-ee9d1.firebaseapp.com",
+  projectId:         "expedicao-ee9d1",
+  storageBucket:     "expedicao-ee9d1.firebasestorage.app",
+  messagingSenderId: "556393614250",
+  appId:             "1:556393614250:web:471ecc4f44f5e79178b9d3",
+  measurementId:     "G-E07ZXV2X1P"
+};
+
+/* ────────────────────────────────────────
+   STATE
+──────────────────────────────────────── */
+window._state = {
+  notas: [],
+  db: null,
+  storage: null,
+  app: null,
+  unsubscribe: null,
+};
+
+/* ────────────────────────────────────────
+   INIT
+──────────────────────────────────────── */
+function setDot(state) {
+  const dot = document.getElementById('fb-dot');
+  dot.className = 'fb-dot' + (state==='ok' ? '' : state==='connecting' ? ' connecting' : ' offline');
+}
+
+(async function init() {
+  try {
+    const app = initializeApp(firebaseConfig);
+    window._state.app     = app;
+    window._state.db      = getFirestore(app);
+    window._state.storage = getStorage(app);
+    setDot('connecting');
+    setStatus('Conectando ao Firebase…');
+    startListener();
+  } catch(e) {
+    setDot('offline');
+    setStatus('Erro ao conectar: ' + e.message);
+    toast('Erro Firebase: ' + e.message, 'error');
+  }
+})();
+
+function startListener() {
+  const { db } = window._state;
+  if (!db) return;
+  if (window._state.unsubscribe) window._state.unsubscribe();
+
+  const q = query(collection(db, 'notas'), orderBy('numero_nf_int', 'asc'));
+  window._state.unsubscribe = onSnapshot(q, snap => {
+    window._state.notas = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    setDot('ok');
+    setStatus('Firebase conectado ✓ — ' + window._state.notas.length + ' nota(s)');
+    renderAll();
+  }, () => {
+    /* Fallback sem orderBy (índice ainda não criado) */
+    const q2 = collection(db, 'notas');
+    window._state.unsubscribe = onSnapshot(q2, snap => {
+      window._state.notas = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a,b) => (parseInt(a.numero_nf)||0) - (parseInt(b.numero_nf)||0));
+      setDot('ok');
+      setStatus('Firebase conectado ✓ — ' + window._state.notas.length + ' nota(s)');
+      renderAll();
+    }, err2 => {
+      setDot('offline');
+      setStatus('Erro de conexão: ' + err2.message);
+    });
+  });
+}
+
+/* ────────────────────────────────────────
+   CRUD
+──────────────────────────────────────── */
+async function addNota(nota) {
+  nota.data_lancamento = new Date().toLocaleString('pt-BR');
+  nota.data_status     = nota.data_lancamento;
+  nota.status          = nota.status || 'lancada';
+  nota.observacao      = nota.observacao || '';
+  nota.xml_url         = nota.xml_url || '';
+  nota.pdf_url         = nota.pdf_url || '';
+  nota.entregue        = false;   /* campo novo */
+  nota.numero_nf_int   = parseInt(nota.numero_nf) || 0;
+
+  if (nota.chave) {
+    const exists = window._state.notas.find(n => n.chave === nota.chave);
+    if (exists) return 'dup';
+  }
+  try {
+    await addDoc(collection(window._state.db, 'notas'), nota);
+    return 'ok';
+  } catch(e) {
+    toast('Erro ao salvar: ' + e.message, 'error');
+    return 'err';
+  }
+}
+
+/* Expõe addNota para o script de UI */
+window._addNota = addNota;
+
+window._updateStatus = async function(id, status) {
+  const ts = new Date().toLocaleString('pt-BR');
+  try { await updateDoc(doc(window._state.db, 'notas', id), { status, data_status: ts }); }
+  catch(e) { toast('Erro: ' + e.message, 'error'); }
+};
+
+window._updateObs = async function(id, observacao) {
+  try { await updateDoc(doc(window._state.db, 'notas', id), { observacao }); }
+  catch(e) { toast('Erro: ' + e.message, 'error'); }
+};
+
+/* Novo: atualiza campo entregue */
+window._updateEntregue = async function(id, entregue) {
+  try { await updateDoc(doc(window._state.db, 'notas', id), { entregue }); }
+  catch(e) { toast('Erro: ' + e.message, 'error'); }
+};
+
+window._deleteNota = async function(id) {
+  try {
+    const nota = window._state.notas.find(n => n.id === id);
+    if (nota && window._state.storage) {
+      if (nota.xml_url) { try { await deleteObject(sRef(window._state.storage, `notas/${nota.numero_nf}/nota.xml`)); } catch {} }
+      if (nota.pdf_url) { try { await deleteObject(sRef(window._state.storage, `notas/${nota.numero_nf}/nota.pdf`)); } catch {} }
+    }
+    await deleteDoc(doc(window._state.db, 'notas', id));
+    toast('Nota excluída', 'warn');
+  } catch(e) { toast('Erro ao excluir: ' + e.message, 'error'); }
+};
+
+/* Upload helper exposto para o script de UI */
+window._uploadFile = async function(file, storagePath) {
+  const ref  = sRef(window._state.storage, storagePath);
+  const snap = await uploadBytes(ref, file);
+  return await getDownloadURL(snap.ref);
+};
+</script>
+
+<!-- ════════════════════════════════════════
+     LOGIN LOGIC
 ════════════════════════════════════════ -->
 <script>
-const SESSION_KEY = 'nf_auth_v1';
+const SESSION_KEY  = 'nf_auth_v1';
 const SENHA_CORRETA = '1234';
 
-/* Verifica sessão salva */
 (function checkSession() {
   const ok = sessionStorage.getItem(SESSION_KEY) === 'ok';
-  if (ok) {
-    document.getElementById('login-screen').classList.add('hidden');
-  }
-  // Se não autenticado, a tela de login já aparece por padrão
+  if (ok) document.getElementById('login-screen').classList.add('hidden');
 })();
 
 window.doLogin = function() {
@@ -1156,9 +1282,6 @@ window.doLogin = function() {
     inp.classList.add('error');
     err.classList.add('show');
     inp.focus();
-    // Pequena animação de shake
-    inp.style.animation = 'none';
-    inp.offsetHeight; // reflow
     inp.animate([
       { transform: 'translateX(0)' },
       { transform: 'translateX(-8px)' },
