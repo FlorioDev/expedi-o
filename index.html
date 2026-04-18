@@ -200,12 +200,26 @@ a { color: inherit; text-decoration: none; }
 .card.card-has-obs { border-left-width: 4px; background: #fffdf5; }
 .card.card-has-obs .card-nf::after { content: ' 📝'; font-size: 11px; opacity: .8; }
 
+/* ── Obs Inline ── */
+.card-obs-section { margin-top: 8px; }
+.card-obs-display { background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; padding: 6px 9px; font-size: 11px; color: var(--amber-dk); line-height: 1.5; cursor: pointer; position: relative; white-space: pre-wrap; word-break: break-word; }
+.card-obs-display::after { content: ' ✏'; opacity: .5; font-size: 10px; }
+.card-obs-display:hover { background: #fef3c7; border-color: var(--amber); }
+.card-obs-placeholder { background: var(--surface2); border: 1px dashed var(--border2); border-radius: 6px; padding: 5px 9px; font-size: 11px; color: var(--txt3); cursor: pointer; transition: var(--transition); }
+.card-obs-placeholder:hover { background: #fffbeb; border-color: #fde68a; color: var(--amber-dk); }
+.card-obs-editor { display: none; flex-direction: column; gap: 5px; }
+.card-obs-editor.open { display: flex; }
+.card-obs-textarea { width: 100%; padding: 6px 9px; border: 1.5px solid var(--blue); border-radius: 6px; font-size: 11px; color: var(--txt); background: var(--surface); resize: vertical; outline: none; line-height: 1.5; min-height: 60px; font-family: var(--font); }
+.card-obs-footer { display: flex; gap: 5px; justify-content: flex-end; }
+.btn-obs-save   { font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 5px; background: var(--blue); color: #fff; transition: var(--transition); }
+.btn-obs-save:hover { background: var(--blue-dk); }
+.btn-obs-cancel { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 5px; background: var(--surface2); color: var(--txt2); border: 1px solid var(--border); transition: var(--transition); }
+.btn-obs-cancel:hover { background: var(--bg); }
+
 .card-actions { display: flex; align-items: center; gap: 4px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); flex-wrap: wrap; }
 .btn-action { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 6px; transition: var(--transition); color: var(--txt2); background: var(--surface2); border: 1px solid var(--border); }
 .btn-action:hover { background: var(--bg); border-color: var(--border2); }
 .btn-action svg { width: 11px; height: 11px; }
-.btn-action.obs  { color: var(--amber); background: var(--amber-lt); border-color: #FDE68A; }
-.btn-action.obs:hover  { background: #FEF3C7; }
 .btn-action.del  { color: var(--red); background: var(--red-lt); border-color: #FECACA; margin-left: auto; }
 .btn-action.del:hover  { background: #FEE2E2; }
 .btn-action.entregue { color: var(--green); background: var(--green-lt); border-color: #6ee7b7; font-weight: 700; }
@@ -379,7 +393,7 @@ a { color: inherit; text-decoration: none; }
 
       <!-- Abas de navegação -->
       <div class="nav-tabs">
-        <button class="nav-tab active" id="nav-board" onclick="switchPage('board')">📋 Board</button>
+        <button class="nav-tab active" id="nav-board" onclick="switchPage('board')">📋 Operação</button>
         <button class="nav-tab" id="nav-rel" onclick="switchPage('relatorios')">📊 Relatórios</button>
       </div>
 
@@ -536,22 +550,6 @@ a { color: inherit; text-decoration: none; }
 
 <!-- TOAST CONTAINER -->
 <div id="toast-container"></div>
-
-<!-- MODAL: OBS -->
-<div class="modal-backdrop" id="modal-obs">
-  <div class="modal">
-    <div class="modal-title">📝 Observação</div>
-    <div class="modal-sub" id="obs-subtitle">NF —</div>
-    <div class="modal-obs-body">
-      <textarea id="obs-text" placeholder="Digite sua observação…"></textarea>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-modal cancel" onclick="closeModal('modal-obs')">Cancelar</button>
-      <button class="btn-modal cancel" onclick="clearObs()">Limpar</button>
-      <button class="btn-modal save" onclick="saveObs()">💾 Salvar</button>
-    </div>
-  </div>
-</div>
 
 <!-- MODAL: DELETE -->
 <div class="modal-backdrop" id="modal-del">
@@ -1117,20 +1115,37 @@ window.doManualImport = async function() {
   }
 };
 
-/* ── OBS MODAL ── */
-let _obsId = null;
-window.openObsModal = (id, numero_nf, obs) => {
-  _obsId = id;
-  document.getElementById('obs-subtitle').textContent = `NF ${numero_nf}`;
-  document.getElementById('obs-text').value = obs || '';
-  openModal('modal-obs');
+/* ── OBS INLINE ── */
+// Abre o editor inline dentro do card
+window.openObsInline = function(id) {
+  // Fecha qualquer editor aberto
+  document.querySelectorAll('.card-obs-editor.open').forEach(el => {
+    if (el.dataset.id !== id) closeObsInline(el.dataset.id, false);
+  });
+  const editor = document.getElementById('obs-editor-' + id);
+  const display = document.getElementById('obs-display-' + id);
+  if (!editor) return;
+  editor.classList.add('open');
+  if (display) display.style.display = 'none';
+  const ta = editor.querySelector('textarea');
+  if (ta) { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }
 };
-window.clearObs = () => { document.getElementById('obs-text').value=''; };
-window.saveObs  = async () => {
-  const txt = document.getElementById('obs-text').value.trim();
-  await window._updateObs(_obsId, txt);
-  closeModal('modal-obs');
-  toast('Observação salva', 'success');
+
+window.closeObsInline = function(id, restoreDisplay = true) {
+  const editor = document.getElementById('obs-editor-' + id);
+  const display = document.getElementById('obs-display-' + id);
+  if (editor) editor.classList.remove('open');
+  if (display && restoreDisplay) display.style.display = '';
+};
+
+window.saveObsInline = async function(id) {
+  const editor = document.getElementById('obs-editor-' + id);
+  if (!editor) return;
+  const ta = editor.querySelector('textarea');
+  const txt = ta ? ta.value.trim() : '';
+  await window._updateObs(id, txt);
+  // O onSnapshot vai re-renderizar o card com o novo valor
+  toast('Observação salva ✅', 'success');
 };
 
 /* ── DELETE MODAL ── */
@@ -1419,14 +1434,16 @@ function buildCard(nota) {
   card.className = 'card' + (isEntregue ? ' card-entregue' : '') + (hasObs ? ' card-has-obs' : '');
   card.dataset.id = nota.id;
   card.style.setProperty('--accent', ACCENT[nota.status] || ACCENT.lancada);
-  // Carta entregue em coluna não-retirada ainda pode ser arrastada após devolução
-  // Apenas cartas entregue=true E status=retirada ficam imóveis
   const locked = isEntregue && nota.status === 'retirada';
   card.draggable = !locked;
   card.innerHTML = cardHTML(nota);
   if (!locked) {
-    card.addEventListener('dragstart', e => onDragStart(e, nota.id, nota.numero_nf, nota.cliente, nota.status));
-    card.addEventListener('dragend',   e => onDragEnd(e));
+    card.addEventListener('dragstart', e => {
+      // Não inicia drag se o clique veio da área de obs
+      if (e.target.closest('.card-obs-section')) { e.preventDefault(); return; }
+      onDragStart(e, nota.id, nota.numero_nf, nota.cliente, nota.status);
+    });
+    card.addEventListener('dragend', e => onDragEnd(e));
   }
   return card;
 }
@@ -1435,10 +1452,29 @@ function updateCardInPlace(card, nota) {
   const isEntregue = !!nota.entregue;
   const hasObs = !!(nota.observacao && nota.observacao.trim());
   const locked = isEntregue && nota.status === 'retirada';
+
+  // Salva estado do editor aberto antes de re-renderizar
+  const editorOpen = card.querySelector('.card-obs-editor.open');
+  const wasOpen = !!editorOpen;
+  const draftText = wasOpen ? (editorOpen.querySelector('textarea')?.value || '') : null;
+
   card.className = 'card' + (isEntregue ? ' card-entregue' : '') + (hasObs ? ' card-has-obs' : '');
   card.draggable = !locked;
   card.style.setProperty('--accent', ACCENT[nota.status] || ACCENT.lancada);
   card.innerHTML = cardHTML(nota);
+
+  // Restaura editor aberto se estava editando
+  if (wasOpen) {
+    const newEditor = card.querySelector('.card-obs-editor');
+    const newDisplay = card.querySelector('.card-obs-display, .card-obs-placeholder');
+    if (newEditor) {
+      newEditor.classList.add('open');
+      const ta = newEditor.querySelector('textarea');
+      if (ta && draftText !== null) { ta.value = draftText; ta.focus(); }
+    }
+    if (newDisplay) newDisplay.style.display = 'none';
+  }
+
   if (!locked) {
     card.addEventListener('dragstart', e => onDragStart(e, nota.id, nota.numero_nf, nota.cliente, nota.status));
     card.addEventListener('dragend',   e => onDragEnd(e));
@@ -1449,8 +1485,10 @@ function cardHTML(nota) {
   const { id, numero_nf, cliente, valor, data_emissao, status, observacao, entregue, data_entrega, tentativas_entrega } = nota;
   const hasObs = !!(observacao && observacao.trim());
   const cli = (cliente||'').length>32 ? (cliente||'').slice(0,32)+'…' : (cliente||'');
-  const obsJSON = JSON.stringify(observacao||'');
   const tentativas = tentativas_entrega || 0;
+  // Escapa a obs para uso no textarea (evita quebra de HTML)
+  const obsEscaped = (observacao||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const obsDisplay = (observacao||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
 
   const stamp = entregue
     ? `<div class="card-stamp">ENTREGUE</div>` : '';
@@ -1480,7 +1518,7 @@ function cardHTML(nota) {
         Remover
        </button>` : '';
 
-  // Botão excluir — sempre disponível (inclusive para notas presas)
+  // Botão excluir — sempre disponível
   const deleteBtn = `<button class="btn-action del" onclick="openDelModal('${id}','${numero_nf}')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
      </button>`;
@@ -1488,9 +1526,21 @@ function cardHTML(nota) {
   const entreguneDateBadge = (entregue && data_entrega)
     ? `<span class="card-date entregue-date">🕐 ${data_entrega}</span>` : '';
 
-  // Badge Obs clicável para visualizar
-  const obsBadge = hasObs
-    ? `<span class="card-obs-badge" onclick="openObsModal('${id}','${numero_nf}',${obsJSON})" title="Ver observação">✏ Obs</span>` : '';
+  // Seção de obs inline
+  const obsSection = `
+    <div class="card-obs-section">
+      ${hasObs
+        ? `<div class="card-obs-display" id="obs-display-${id}" onclick="openObsInline('${id}')">${obsDisplay}</div>`
+        : `<div class="card-obs-placeholder" id="obs-display-${id}" onclick="openObsInline('${id}')">+ Adicionar observação</div>`
+      }
+      <div class="card-obs-editor" id="obs-editor-${id}" data-id="${id}">
+        <textarea class="card-obs-textarea" placeholder="Digite a observação…">${obsEscaped}</textarea>
+        <div class="card-obs-footer">
+          <button class="btn-obs-cancel" onclick="closeObsInline('${id}')">Cancelar</button>
+          <button class="btn-obs-save" onclick="saveObsInline('${id}')">💾 Salvar</button>
+        </div>
+      </div>
+    </div>`;
 
   return `
     ${stamp}
@@ -1502,15 +1552,11 @@ function cardHTML(nota) {
     <div class="card-meta">
       ${data_emissao ? `<span class="card-date">${data_emissao}</span>` : ''}
       ${entreguneDateBadge}
-      ${obsBadge}
       ${tentativaBadge}
     </div>
+    ${obsSection}
     <div class="card-actions">
       ${entregarBtn}${devolverBtn}${removerBtn}
-      <button class="btn-action obs" onclick="openObsModal('${id}','${numero_nf}',${obsJSON})">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        Obs
-      </button>
       ${deleteBtn}
     </div>`;
 }
