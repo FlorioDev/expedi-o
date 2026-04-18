@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Controle de Notas Fiscais</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 /* ═══════════════════════════════════════════
@@ -50,8 +48,9 @@
   --radius-sm:  8px;
   --shadow:     0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.05);
   --shadow-drag:0 12px 40px rgba(0,0,0,.18);
-  --font:       'DM Sans', sans-serif;
-  --mono:       'DM Mono', monospace;
+  /* FONTES NORMAIS - Arial, Calibri */
+  --font:       'Segoe UI', 'Arial', 'Calibri', system-ui, -apple-system, sans-serif;
+  --mono:       'Courier New', 'Consolas', monospace;
   --transition: 180ms cubic-bezier(.4,0,.2,1);
 }
 
@@ -186,8 +185,23 @@ a { color: inherit; text-decoration: none; }
 /* Badge tentativa de entrega anterior */
 .card-tentativa-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 9px; font-weight: 700; color: var(--amber-dk); background: var(--amber-lt); border: 1px solid #FDE68A; border-radius: 4px; padding: 1px 5px; white-space: nowrap; }
 
-.card-top { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 5px; }
-.card-nf { font-size: 13px; font-weight: 600; color: var(--accent); font-family: var(--mono); flex: 1; }
+.card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+
+/* NF MAIS DESTACADO */
+.card-nf { 
+  font-size: 14px; 
+  font-weight: 800; 
+  color: var(--accent); 
+  font-family: var(--mono); 
+  flex: 1;
+  background: var(--accent-lt);
+  padding: 2px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  width: fit-content;
+}
+
 .card-valor { font-size: 12px; color: var(--txt2); font-weight: 500; white-space: nowrap; }
 .card-cli { font-size: 12px; color: var(--txt2); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
@@ -198,7 +212,6 @@ a { color: inherit; text-decoration: none; }
 
 /* Card com observação — destaque visual */
 .card.card-has-obs { border-left-width: 4px; background: #fffdf5; }
-.card.card-has-obs .card-nf::after { content: ' 📝'; font-size: 11px; opacity: .8; }
 
 /* ── Obs Inline ── */
 .card-obs-section { margin-top: 8px; }
@@ -209,7 +222,7 @@ a { color: inherit; text-decoration: none; }
 .card-obs-placeholder:hover { background: #fffbeb; border-color: #fde68a; color: var(--amber-dk); }
 .card-obs-editor { display: none; flex-direction: column; gap: 5px; }
 .card-obs-editor.open { display: flex; }
-.card-obs-textarea { width: 100%; padding: 6px 9px; border: 1.5px solid var(--blue); border-radius: 6px; font-size: 11px; color: var(--txt); background: var(--surface); resize: vertical; outline: none; line-height: 1.5; min-height: 60px; font-family: var(--font); }
+.card-obs-textarea { width: 100%; padding: 6px 9px; border: 1.5px solid var(--blue); border-radius: 6px; font-size: 11px; color: var(--txt); background: var(--surface); resize: vertical; outline: none; min-height: 60px; font-family: var(--font); }
 .card-obs-footer { display: flex; gap: 5px; justify-content: flex-end; }
 .btn-obs-save   { font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 5px; background: var(--blue); color: #fff; transition: var(--transition); }
 .btn-obs-save:hover { background: var(--blue-dk); }
@@ -1144,7 +1157,8 @@ window.saveObsInline = async function(id) {
   const ta = editor.querySelector('textarea');
   const txt = ta ? ta.value.trim() : '';
   await window._updateObs(id, txt);
-  // O onSnapshot vai re-renderizar o card com o novo valor
+  // Fecha o editor imediatamente após salvar
+  closeObsInline(id, true);
   toast('Observação salva ✅', 'success');
 };
 
