@@ -105,6 +105,27 @@ a { color: inherit; text-decoration: none; }
 .btn-login:disabled { opacity: .6; pointer-events: none; }
 
 /* ═══════════════════════════════════════════
+   ADMIN MODAL
+═══════════════════════════════════════════ */
+.admin-creator { cursor: pointer; transition: all 0.2s ease; }
+.admin-creator:hover { opacity: 0.7; background: var(--surface2); border-radius: 8px; padding: 2px 6px; margin: -2px -6px; }
+
+#admin-modal .modal { width: 500px; }
+.admin-stats { background: var(--surface2); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 16px; }
+.admin-stat-item { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.admin-stat-item:last-child { border-bottom: none; }
+.admin-stat-label { font-weight: 600; color: var(--txt2); }
+.admin-stat-value { font-family: var(--mono); color: var(--blue); font-weight: 700; }
+.admin-actions { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.btn-admin { flex: 1; padding: 10px; border-radius: var(--radius-sm); font-weight: 600; font-size: 13px; transition: var(--transition); }
+.btn-admin.danger { background: var(--red); color: #fff; }
+.btn-admin.danger:hover { background: #B91C1C; transform: translateY(-1px); }
+.btn-admin.warning { background: var(--amber); color: #fff; }
+.btn-admin.warning:hover { background: var(--amber-dk); transform: translateY(-1px); }
+.btn-admin.secondary { background: var(--surface2); color: var(--txt2); border: 1px solid var(--border); }
+.btn-admin.secondary:hover { background: var(--bg); }
+
+/* ═══════════════════════════════════════════
    LAYOUT
 ═══════════════════════════════════════════ */
 #app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
@@ -121,7 +142,8 @@ a { color: inherit; text-decoration: none; }
 
 /* Info criador */
 .topbar-creator { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; font-size: 10px; color: var(--txt3); line-height: 1.3; padding-right: 4px; border-right: 1px solid var(--border); margin-right: 4px; }
-.topbar-creator-name { font-weight: 600; color: var(--txt2); }
+.topbar-creator-name { font-weight: 600; color: var(--txt2); cursor: pointer; transition: all 0.2s ease; }
+.topbar-creator-name:hover { color: var(--blue); text-decoration: underline; }
 .topbar-creator-version { font-weight: 800; color: var(--blue); font-family: var(--mono); letter-spacing: .02em; }
 
 .search-wrap { position: relative; display: flex; align-items: center; }
@@ -205,8 +227,8 @@ a { color: inherit; text-decoration: none; }
 .card-valor { font-size: 12px; color: var(--txt2); font-weight: 500; white-space: nowrap; }
 .card-cli { font-size: 12px; color: var(--txt2); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.card-date { font-size: 11px; color: var(--txt3); font-family: var(--mono); }
-.card-date.entregue-date { color: var(--green); font-weight: 600; font-family: var(--font); }
+.card-date { font-size: 11px; color: var(--txt3); font-family: var(--font); }
+.card-date.entregue-date { color: var(--green); font-weight: 600; }
 .card-obs-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--amber); color: #fff; display: flex; align-items: center; gap: 3px; box-shadow: 0 1px 4px rgba(217,119,6,.35); cursor: pointer; }
 .card-obs-badge:hover { background: var(--amber-dk); }
 
@@ -294,6 +316,15 @@ a { color: inherit; text-decoration: none; }
 .upload-file-status.dup { color: var(--amber); font-weight: 600; }
 .progress-bar { width: 100%; height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 4px; }
 .progress-fill { height: 100%; background: var(--blue); border-radius: 99px; transition: width .3s; }
+
+/* Duplicate warning */
+.dup-warning { background: var(--amber-lt); border: 2px solid var(--amber); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 14px; }
+.dup-warning-title { font-weight: 700; color: var(--amber-dk); margin-bottom: 8px; font-size: 13px; }
+.dup-warning-list { max-height: 200px; overflow-y: auto; margin-bottom: 12px; font-size: 12px; }
+.dup-item { display: flex; align-items: center; gap: 8px; padding: 6px; border-bottom: 1px solid #FDE68A; }
+.dup-item input { margin-right: 8px; }
+.dup-item .dup-nf { font-weight: 700; font-family: var(--mono); min-width: 80px; }
+.dup-item .dup-cli { color: var(--txt2); flex: 1; }
 
 /* Manual form */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 4px; }
@@ -391,6 +422,79 @@ a { color: inherit; text-decoration: none; }
   </div>
 </div>
 
+<!-- ADMIN LOGIN MODAL -->
+<div class="modal-backdrop" id="admin-login-modal">
+  <div class="modal">
+    <div class="modal-title">🔐 Acesso Administrador</div>
+    <div class="modal-sub">Digite a senha de administrador para acessar as ferramentas.</div>
+    <div class="login-field">
+      <label class="login-label">SENHA ADMIN</label>
+      <input class="form-input" type="password" id="admin-pwd" placeholder="••••••" onkeydown="if(event.key==='Enter') checkAdminLogin()">
+    </div>
+    <div class="login-error" id="admin-login-err" style="display:none">Senha incorreta. Tente novamente.</div>
+    <div class="modal-footer">
+      <button class="btn-modal cancel" onclick="closeModal('admin-login-modal')">Cancelar</button>
+      <button class="btn-modal save" onclick="checkAdminLogin()">Acessar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL MODAL -->
+<div class="modal-backdrop" id="admin-modal">
+  <div class="modal" style="width:500px">
+    <div class="modal-title">🛠️ Painel Administrativo</div>
+    <div class="modal-sub">Ferramentas de gerenciamento do banco de dados.</div>
+    
+    <div class="admin-stats">
+      <div class="admin-stat-item">
+        <span class="admin-stat-label">Total de notas no sistema:</span>
+        <span class="admin-stat-value" id="admin-total-notas">0</span>
+      </div>
+      <div class="admin-stat-item">
+        <span class="admin-stat-label">Notas ativas (não arquivadas):</span>
+        <span class="admin-stat-value" id="admin-ativas-notas">0</span>
+      </div>
+      <div class="admin-stat-item">
+        <span class="admin-stat-label">Notas arquivadas:</span>
+        <span class="admin-stat-value" id="admin-arquivadas-notas">0</span>
+      </div>
+      <div class="admin-stat-item">
+        <span class="admin-stat-label">Notas entregues:</span>
+        <span class="admin-stat-value" id="admin-entregues-notas">0</span>
+      </div>
+    </div>
+    
+    <div class="admin-actions">
+      <button class="btn-admin warning" onclick="limparNotasTeste()">🧹 Limpar Notas de Teste</button>
+      <button class="btn-admin danger" onclick="confirmDeleteAll()">⚠️ Excluir TODAS as Notas</button>
+    </div>
+    <div class="admin-actions" style="margin-top:8px">
+      <button class="btn-admin secondary" onclick="fecharAdminPanel()">Fechar</button>
+    </div>
+    <div class="modal-sub" style="margin-top:12px; font-size:11px; color:var(--red);">
+      ⚠️ Atenção: As ações acima são irreversíveis!
+    </div>
+  </div>
+</div>
+
+<!-- DUPICATE WARNING MODAL -->
+<div class="modal-backdrop" id="dup-modal">
+  <div class="modal" style="width:550px">
+    <div class="modal-title">⚠️ Notas Duplicadas Detectadas</div>
+    <div class="modal-sub">As seguintes notas já existem no sistema. Selecione as que deseja importar mesmo assim:</div>
+    <div class="dup-warning">
+      <div class="dup-warning-title">📋 Notas duplicadas encontradas:</div>
+      <div class="dup-warning-list" id="dup-list"></div>
+      <div class="dup-warning-title" style="margin-top:8px">🆕 Notas novas (serão importadas normalmente):</div>
+      <div class="dup-warning-list" id="new-list"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal cancel" onclick="cancelDuplicateImport()">Cancelar Importação</button>
+      <button class="btn-modal save" onclick="confirmDuplicateImport()">✅ Importar Selecionadas</button>
+    </div>
+  </div>
+</div>
+
 <!-- APP -->
 <div id="app">
 
@@ -419,10 +523,10 @@ a { color: inherit; text-decoration: none; }
         Importar NF
       </button>
 
-      <!-- Dados do criador -->
+      <!-- Dados do criador - com clique duplo -->
       <div class="topbar-creator">
-        <span class="topbar-creator-name">Criado por: Leandro NP</span>
-        <span class="topbar-creator-version">Versão 1.0</span>
+        <span class="topbar-creator-name" id="creator-name" ondblclick="openAdminLogin()">Criado por: Leandro NP</span>
+        <span class="topbar-creator-version">Versão 2.0</span>
       </div>
 
       <button class="btn-logout" onclick="doLogout()" title="Sair">
@@ -593,7 +697,7 @@ a { color: inherit; text-decoration: none; }
 
 <!-- MODAL: IMPORT -->
 <div class="modal-backdrop" id="modal-import">
-  <div class="modal" style="width:500px">
+  <div class="modal" style="width:550px">
     <div class="modal-title">📂 Importar Nota Fiscal</div>
     <div class="modal-sub">Selecione um arquivo XML ou preencha os dados manualmente.</div>
 
@@ -654,6 +758,259 @@ a { color: inherit; text-decoration: none; }
     </div>
   </div>
 </div>
+
+<script>
+// ============================================
+// FUNÇÕES DE UTILIDADE PARA DATAS (FORMATO BR)
+// ============================================
+function formatDateBR(dateString) {
+  if (!dateString) return '';
+  // Se já estiver no formato DD/MM/AAAA, retorna
+  if (dateString.match(/^\d{2}\/\d{2}\/\d{4}/)) return dateString;
+  // Tenta converter de YYYY-MM-DD
+  const parts = dateString.split('-');
+  if (parts.length === 3 && parts[0].length === 4) {
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  }
+  // Tenta converter de YYYY/MM/DD
+  const parts2 = dateString.split('/');
+  if (parts2.length === 3 && parts2[0].length === 4) {
+    return `${parts2[2]}/${parts2[1]}/${parts2[0]}`;
+  }
+  return dateString;
+}
+
+function formatDateToInput(dateBR) {
+  if (!dateBR) return '';
+  const parts = dateBR.split('/');
+  if (parts.length === 3) {
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+  }
+  return dateBR;
+}
+
+// ============================================
+// ADMIN FUNCTIONS
+// ============================================
+const ADMIN_SENHA = '@Ln2020!';
+let isAdminLogged = false;
+
+window.openAdminLogin = function() {
+  document.getElementById('admin-pwd').value = '';
+  document.getElementById('admin-login-err').style.display = 'none';
+  openModal('admin-login-modal');
+};
+
+window.checkAdminLogin = function() {
+  const pwd = document.getElementById('admin-pwd').value;
+  if (pwd === ADMIN_SENHA) {
+    isAdminLogged = true;
+    closeModal('admin-login-modal');
+    openAdminPanel();
+  } else {
+    document.getElementById('admin-login-err').style.display = 'block';
+  }
+};
+
+window.openAdminPanel = function() {
+  if (!isAdminLogged) return;
+  
+  // Atualizar estatísticas
+  const notas = window._state?.notas || [];
+  const ativas = notas.filter(n => !n.arquivada);
+  const arquivadas = notas.filter(n => n.arquivada);
+  const entregues = notas.filter(n => n.entregue);
+  
+  document.getElementById('admin-total-notas').textContent = notas.length;
+  document.getElementById('admin-ativas-notas').textContent = ativas.length;
+  document.getElementById('admin-arquivadas-notas').textContent = arquivadas.length;
+  document.getElementById('admin-entregues-notas').textContent = entregues.length;
+  
+  openModal('admin-modal');
+};
+
+window.fecharAdminPanel = function() {
+  closeModal('admin-modal');
+};
+
+window.limparNotasTeste = async function() {
+  if (!isAdminLogged) return;
+  if (!confirm('⚠️ ATENÇÃO: Isso irá remover TODAS as notas que contenham "teste" no nome do cliente ou na observação.\n\nDeseja continuar?')) return;
+  
+  const notas = window._state.notas;
+  const notasTeste = notas.filter(n => 
+    (n.cliente && n.cliente.toLowerCase().includes('teste')) ||
+    (n.observacao && n.observacao.toLowerCase().includes('teste')) ||
+    (n.numero_nf && n.numero_nf.toString().startsWith('999'))
+  );
+  
+  if (notasTeste.length === 0) {
+    toast('Nenhuma nota de teste encontrada', 'warn');
+    return;
+  }
+  
+  if (!confirm(`Foram encontradas ${notasTeste.length} nota(s) de teste. Confirmar exclusão?`)) return;
+  
+  let count = 0;
+  for (const nota of notasTeste) {
+    try {
+      await window._deleteNota(nota.id);
+      count++;
+    } catch(e) { console.error('Erro ao deletar:', e); }
+  }
+  
+  toast(`${count} nota(s) de teste removidas com sucesso!`, 'success');
+  openAdminPanel(); // Atualiza estatísticas
+};
+
+window.confirmDeleteAll = async function() {
+  if (!isAdminLogged) return;
+  if (!confirm('⚠️⚠️⚠️ ATENÇÃO TOTAL: Isso irá remover TODAS as notas do sistema!\n\nEsta ação é IRREVERSÍVEL!\n\nDigite "CONFIRMAR" para prosseguir.')) return;
+  
+  const confirmText = prompt('Digite CONFIRMAR para excluir todas as notas:');
+  if (confirmText !== 'CONFIRMAR') {
+    toast('Exclusão cancelada', 'warn');
+    return;
+  }
+  
+  const notas = window._state.notas;
+  if (notas.length === 0) {
+    toast('Nenhuma nota para excluir', 'warn');
+    return;
+  }
+  
+  let count = 0;
+  for (const nota of notas) {
+    try {
+      await window._deleteNota(nota.id);
+      count++;
+    } catch(e) { console.error('Erro ao deletar:', e); }
+  }
+  
+  toast(`${count} nota(s) removidas permanentemente!`, 'success');
+  openAdminPanel();
+};
+
+// ============================================
+// DUPLICATE HANDLING
+// ============================================
+let pendingImportItems = [];
+let pendingImportCallback = null;
+
+async function checkDuplicatesBeforeImport(items) {
+  const duplicates = [];
+  const newItems = [];
+  
+  for (const item of items) {
+    const exists = window._state.notas.some(n => 
+      n.numero_nf === item.parsed.numero_nf && !n.arquivada
+    );
+    if (exists) {
+      duplicates.push(item);
+    } else {
+      newItems.push(item);
+    }
+  }
+  
+  if (duplicates.length === 0) {
+    // Sem duplicatas, importa tudo diretamente
+    await executeImport(newItems);
+  } else {
+    // Mostra modal para escolher quais duplicatas importar
+    pendingImportItems = { duplicates, newItems };
+    showDuplicateModal(duplicates, newItems);
+  }
+}
+
+function showDuplicateModal(duplicates, newItems) {
+  const dupList = document.getElementById('dup-list');
+  const newList = document.getElementById('new-list');
+  
+  dupList.innerHTML = duplicates.map((dup, idx) => `
+    <div class="dup-item">
+      <input type="checkbox" id="dup-${idx}" data-idx="${idx}" checked>
+      <span class="dup-nf">NF ${dup.parsed.numero_nf}</span>
+      <span class="dup-cli">${dup.parsed.cliente || '—'}</span>
+    </div>
+  `).join('');
+  
+  newList.innerHTML = newItems.map(item => `
+    <div class="dup-item">
+      <span class="dup-nf">NF ${item.parsed.numero_nf}</span>
+      <span class="dup-cli">${item.parsed.cliente || '—'}</span>
+      <span style="color:var(--green)">✓ Será importada</span>
+    </div>
+  `).join('');
+  
+  if (newItems.length === 0) {
+    newList.innerHTML = '<div style="padding:8px;color:var(--txt3);">Nenhuma nota nova</div>';
+  }
+  
+  openModal('dup-modal');
+}
+
+window.cancelDuplicateImport = function() {
+  pendingImportItems = null;
+  closeModal('dup-modal');
+  toast('Importação cancelada', 'warn');
+};
+
+window.confirmDuplicateImport = function() {
+  const selectedDuplicates = [];
+  const checkboxes = document.querySelectorAll('#dup-list input[type="checkbox"]');
+  checkboxes.forEach(cb => {
+    if (cb.checked) {
+      const idx = parseInt(cb.dataset.idx);
+      selectedDuplicates.push(pendingImportItems.duplicates[idx]);
+    }
+  });
+  
+  const allToImport = [...pendingImportItems.newItems, ...selectedDuplicates];
+  executeImport(allToImport);
+  closeModal('dup-modal');
+  pendingImportItems = null;
+};
+
+async function executeImport(items) {
+  if (!items.length) {
+    toast('Nenhuma nota para importar', 'warn');
+    return;
+  }
+  
+  document.getElementById('import-progress').style.display = 'block';
+  const progFill = document.getElementById('import-progress-fill');
+  const progText = document.getElementById('import-progress-text');
+  
+  let ok = 0, err = 0;
+  for (let idx = 0; idx < items.length; idx++) {
+    const item = items[idx];
+    progText.textContent = `Importando ${idx+1}/${items.length}…`;
+    progFill.style.width = ((idx+1)/items.length * 100) + '%';
+    
+    const result = await addNota({ ...item.parsed });
+    if (result === 'ok') {
+      ok++;
+      item.status = 'imported';
+    } else {
+      err++;
+      item.status = 'error';
+    }
+    renderImportList();
+  }
+  
+  progText.textContent = 'Concluído!';
+  toast(`✅ ${ok} nota(s) importada(s)${err ? ` · ❌ ${err} erro(s)` : ''}`, ok ? 'success' : 'error');
+  setStatus(`${ok} nota(s) importada(s) — ${new Date().toLocaleTimeString('pt-BR')}`);
+  
+  setTimeout(() => {
+    document.getElementById('import-progress').style.display = 'none';
+    progFill.style.width = '0%';
+  }, 2000);
+  
+  clearImport();
+  if (ok > 0) closeModal('modal-import');
+}
+</script>
 
 <!-- FIREBASE SDK (type=module) -->
 <script type="module">
@@ -776,7 +1133,6 @@ window._updateObs = async function(id, observacao) {
 };
 
 window._deleteNota = async function(id) {
-  // Registra evento no histórico global antes de deletar
   const nota = window._state.notas.find(n => n.id === id);
   if (nota) {
     const ev = {
@@ -798,19 +1154,17 @@ window._deleteNota = async function(id) {
   } catch(e) { toast('Erro ao excluir: ' + e.message, 'error'); }
 };
 
-/* Histórico global em localStorage (até 1 ano) */
 function _registrarEventoHistorico(ev) {
   try {
     let hist = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]');
     hist.push(ev);
-    // Limitar a 1 ano
     const limite = Date.now() - (365 * 24 * 60 * 60 * 1000);
     hist = hist.filter(e => (e.ts || 0) > limite);
     localStorage.setItem('nf_historico_v1', JSON.stringify(hist));
   } catch(e) { console.warn('Erro ao salvar histórico:', e); }
 }
 
-/* ── MARCAR ENTREGUE — apenas coluna Retiradas ── */
+/* ── MARCAR ENTREGUE ── */
 window.markEntregue = async function(id) {
   const ts = new Date().toLocaleString('pt-BR');
   const nota = window._state.notas.find(n => n.id === id);
@@ -821,7 +1175,6 @@ window.markEntregue = async function(id) {
   }
   try {
     await updateDoc(doc(window._state.db, 'notas', id), { entregue: true, data_entrega: ts });
-    // Registra no histórico global
     _registrarEventoHistorico({
       tipo: 'entregue',
       numero_nf: nota.numero_nf,
@@ -837,7 +1190,6 @@ window.markEntregue = async function(id) {
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
-/* ── REMOVER ENTREGUE (arquivar) ── */
 window.archiveNota = async function(id) {
   if (!confirm('Remover esta nota da tela? Ela será arquivada e não aparecerá mais no board.')) return;
   try {
@@ -864,7 +1216,6 @@ window.confirmDevolver = async function() {
   const ts = new Date().toLocaleString('pt-BR');
   const tentativas = (nota.tentativas_entrega || 0) + 1;
 
-  // Monta log resumido
   const logTentativa = `↩ Tentativa ${tentativas} em ${ts}${motivo ? ': ' + motivo : ''}`;
   const obsAtual = nota.observacao || '';
   const novaObs = obsAtual ? obsAtual + '\n' + logTentativa : logTentativa;
@@ -878,7 +1229,6 @@ window.confirmDevolver = async function() {
       observacao: novaObs,
       data_status: ts
     });
-    // Registra no histórico global
     _registrarEventoHistorico({
       tipo: 'tentativa',
       numero_nf: nota.numero_nf,
@@ -895,7 +1245,7 @@ window.confirmDevolver = async function() {
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
-/* ── BAIXAR ENTREGUES → PDF + ARQUIVAR ── */
+/* ── BAIXAR ENTREGUES ── */
 window.baixarEntregues = async function() {
   const entregues = window._state.notas.filter(n =>
     n.status === 'retirada' && n.entregue && !n.arquivada
@@ -914,8 +1264,8 @@ window.baixarEntregues = async function() {
       <td><strong>${n.numero_nf}</strong></td>
       <td>${n.cliente||'—'}</td>
       <td>R$ ${parseFloat(n.valor||0).toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
-      <td>${n.data_emissao||'—'}</td>
-      <td>${n.data_entrega||'—'}</td>
+      <td>${n.data_emissao || '—'}</td>
+      <td>${n.data_entrega || '—'}</td>
       <td>${n.tentativas_entrega > 0 ? n.tentativas_entrega + ' tentativa(s)' : '1ª entrega'}</td>
     </tr>`).join('');
 
@@ -1064,34 +1414,11 @@ function clearImport() {
 }
 
 window.doImport = async function() {
-  const xmlItems = _importFiles.filter(i=>i.status==='ready');
-  if (!xmlItems.length) return;
-
-  document.getElementById('import-progress').style.display='block';
-  const progFill = document.getElementById('import-progress-fill');
-  const progText = document.getElementById('import-progress-text');
-  document.getElementById('btn-do-import').disabled = true;
-
-  let ok=0, dup=0, err=0;
-  for (let idx=0; idx<xmlItems.length; idx++) {
-    const item = xmlItems[idx];
-    progText.textContent = `Importando ${idx+1}/${xmlItems.length}…`;
-    progFill.style.width = ((idx+1)/xmlItems.length*100)+'%';
-    const result = await addNota({ ...item.parsed });
-    if (result==='ok')  { ok++;  item.status='imported'; }
-    if (result==='dup') { dup++; item.status='dup'; }
-    if (result==='err') { err++; item.status='error'; }
-    renderImportList();
-  }
-
-  progText.textContent='Concluído!';
-  const parts=[];
-  if (ok)  parts.push(`✅ ${ok} importada(s)`);
-  if (dup) parts.push(`⚠️ ${dup} duplicada(s)`);
-  if (err) parts.push(`❌ ${err} erro(s)`);
-  toast(parts.join(' · '), ok ? 'success' : 'warn');
-  setStatus(parts.join(' | ') + ' — ' + new Date().toLocaleTimeString('pt-BR'));
-  document.getElementById('btn-do-import').disabled = false;
+  const readyItems = _importFiles.filter(i => i.status === 'ready');
+  if (!readyItems.length) return;
+  
+  // Verifica duplicatas antes de importar
+  await checkDuplicatesBeforeImport(readyItems);
 };
 
 /* ── IMPORT MANUAL ── */
@@ -1105,8 +1432,16 @@ window.doManualImport = async function() {
   if (!nf)      { toast('Preencha o Nº da Nota Fiscal', 'warn'); return; }
   if (!cliente) { toast('Preencha o nome do cliente', 'warn');    return; }
 
-  const dataFormatada = data ? data.split('-').reverse().join('/') : '';
+  const dataFormatada = data ? formatDateBR(data) : '';
   const valor = isNaN(parseFloat(valorRaw)) ? '0.00' : parseFloat(valorRaw).toFixed(2);
+
+  // Verifica duplicata manual
+  const exists = window._state.notas.some(n => n.numero_nf === nf && !n.arquivada);
+  if (exists) {
+    if (!confirm(`⚠️ A nota fiscal ${nf} já existe no sistema!\n\nDeseja importar mesmo assim?`)) {
+      return;
+    }
+  }
 
   const result = await addNota({
     numero_nf: nf,
@@ -1129,9 +1464,7 @@ window.doManualImport = async function() {
 };
 
 /* ── OBS INLINE ── */
-// Abre o editor inline dentro do card
 window.openObsInline = function(id) {
-  // Fecha qualquer editor aberto
   document.querySelectorAll('.card-obs-editor.open').forEach(el => {
     if (el.dataset.id !== id) closeObsInline(el.dataset.id, false);
   });
@@ -1157,7 +1490,6 @@ window.saveObsInline = async function(id) {
   const ta = editor.querySelector('textarea');
   const txt = ta ? ta.value.trim() : '';
   await window._updateObs(id, txt);
-  // Fecha o editor imediatamente após salvar
   closeObsInline(id, true);
   toast('Observação salva ✅', 'success');
 };
@@ -1203,7 +1535,6 @@ window.switchPage = function(page) {
     navRel.classList.add('active');
     searchWrap.style.display = 'none';
     btnImport.style.display = 'none';
-    // Definir datas padrão: mês atual
     const hoje = new Date();
     const ini = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
     const fim = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
@@ -1225,41 +1556,32 @@ window.gerarRelatorio = function() {
   const fim = new Date(fimStr + 'T23:59:59');
   if (ini > fim) { toast('Data início deve ser anterior à data fim', 'warn'); return; }
 
-  // Carrega histórico do localStorage
   let hist = [];
   try { hist = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]'); } catch {}
 
-  // Filtra pelo período
   const eventos = hist.filter(e => {
     const t = e.ts || 0;
     return t >= ini.getTime() && t <= fim.getTime();
   });
 
-  // Também considera notas ainda no board
   const notasBoard = window._state.notas.filter(n => !n.arquivada && n.entregue);
-  // Evita duplicata com histórico
   const idsHist = new Set(hist.map(e => e.numero_nf));
   notasBoard.forEach(n => {
-    if (!idsHist.has(n.numero_nf)) {
-      // Tenta incluir se data_entrega cair no período
-      if (n.data_entrega) {
-        // data_entrega é string localizada, difícil parsear — incluímos sem filtro de data mas marcamos
-        eventos.push({
-          tipo: 'entregue',
-          numero_nf: n.numero_nf,
-          cliente: n.cliente || '',
-          valor: n.valor || '0',
-          data_emissao: n.data_emissao || '',
-          observacao: n.observacao || '',
-          tentativas_entrega: n.tentativas_entrega || 0,
-          data_evento: n.data_entrega,
-          ts: ini.getTime() // Assume período
-        });
-      }
+    if (!idsHist.has(n.numero_nf) && n.data_entrega) {
+      eventos.push({
+        tipo: 'entregue',
+        numero_nf: n.numero_nf,
+        cliente: n.cliente || '',
+        valor: n.valor || '0',
+        data_emissao: n.data_emissao || '',
+        observacao: n.observacao || '',
+        tentativas_entrega: n.tentativas_entrega || 0,
+        data_evento: n.data_entrega,
+        ts: ini.getTime()
+      });
     }
   });
 
-  // Deduplicar por número da NF + tipo (mantém mais recente)
   const dedup = {};
   eventos.forEach(e => {
     const k = e.numero_nf + '|' + e.tipo;
@@ -1267,7 +1589,6 @@ window.gerarRelatorio = function() {
   });
   const evs = Object.values(dedup).sort((a,b) => b.ts - a.ts);
 
-  // KPIs
   const entregues   = evs.filter(e => e.tipo === 'entregue');
   const tentativas  = evs.filter(e => e.tipo === 'tentativa');
   const deletadas   = evs.filter(e => e.tipo === 'deletada');
@@ -1279,7 +1600,7 @@ window.gerarRelatorio = function() {
   document.getElementById('kpi-total').textContent      = evs.length;
   document.getElementById('kpi-valor').textContent      = 'R$ ' + valorTotal.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
 
-  const fmtData = s => s ? s.slice(0,10).split('-').reverse().join('/') : '—';
+  const fmtData = s => s ? formatDateBR(s) : '—';
   document.getElementById('rel-periodo-label').textContent =
     `${fmtData(iniStr)} até ${fmtData(fimStr)} — ${evs.length} evento(s)`;
 
@@ -1308,7 +1629,7 @@ window.gerarRelatorio = function() {
       <td style="font-family:var(--mono);font-weight:600">${e.numero_nf}</td>
       <td>${e.cliente || '—'}</td>
       <td style="font-weight:500">${valFmt}</td>
-      <td>${e.data_emissao || '—'}</td>
+      <td>${formatDateBR(e.data_emissao) || '—'}</td>
       <td>${(badgeMap[e.tipo]||e.tipo)}${sitExtra}</td>
       <td style="font-size:11px;color:var(--txt3)">${e.data_evento || '—'}</td>
       <td style="max-width:220px;font-size:11px;color:var(--txt2)">${obsTxt}</td>
@@ -1326,7 +1647,7 @@ window.exportarRelatorio = function() {
   const evs = window._relEventos;
   if (!evs || !evs.length) { toast('Gere o relatório primeiro', 'warn'); return; }
   const { ini, fim } = window._relPeriodo || {};
-  const fmtData = s => s ? s.slice(0,10).split('-').reverse().join('/') : '—';
+  const fmtData = s => s ? formatDateBR(s) : '—';
 
   const entregues  = evs.filter(e => e.tipo === 'entregue');
   const tentativas = evs.filter(e => e.tipo === 'tentativa');
@@ -1340,7 +1661,7 @@ window.exportarRelatorio = function() {
       <td><strong>${e.numero_nf}</strong></td>
       <td>${e.cliente||'—'}</td>
       <td>${parseFloat(e.valor||0) ? 'R$ '+parseFloat(e.valor).toLocaleString('pt-BR',{minimumFractionDigits:2}) : '—'}</td>
-      <td>${e.data_emissao||'—'}</td>
+      <td>${fmtData(e.data_emissao)}</td>
       <td>${situacaoTxt[e.tipo]||e.tipo}${e.tentativas_entrega>1?' ('+e.tentativas_entrega+'ª)':''}</td>
       <td>${e.data_evento||'—'}</td>
       <td style="max-width:200px;font-size:11px">${e.observacao||'—'}</td>
@@ -1453,7 +1774,6 @@ function buildCard(nota) {
   card.innerHTML = cardHTML(nota);
   if (!locked) {
     card.addEventListener('dragstart', e => {
-      // Não inicia drag se o clique veio da área de obs
       if (e.target.closest('.card-obs-section')) { e.preventDefault(); return; }
       onDragStart(e, nota.id, nota.numero_nf, nota.cliente, nota.status);
     });
@@ -1467,7 +1787,6 @@ function updateCardInPlace(card, nota) {
   const hasObs = !!(nota.observacao && nota.observacao.trim());
   const locked = isEntregue && nota.status === 'retirada';
 
-  // Salva estado do editor aberto antes de re-renderizar
   const editorOpen = card.querySelector('.card-obs-editor.open');
   const wasOpen = !!editorOpen;
   const draftText = wasOpen ? (editorOpen.querySelector('textarea')?.value || '') : null;
@@ -1477,7 +1796,6 @@ function updateCardInPlace(card, nota) {
   card.style.setProperty('--accent', ACCENT[nota.status] || ACCENT.lancada);
   card.innerHTML = cardHTML(nota);
 
-  // Restaura editor aberto se estava editando
   if (wasOpen) {
     const newEditor = card.querySelector('.card-obs-editor');
     const newDisplay = card.querySelector('.card-obs-display, .card-obs-placeholder');
@@ -1500,47 +1818,18 @@ function cardHTML(nota) {
   const hasObs = !!(observacao && observacao.trim());
   const cli = (cliente||'').length>32 ? (cliente||'').slice(0,32)+'…' : (cliente||'');
   const tentativas = tentativas_entrega || 0;
-  // Escapa a obs para uso no textarea (evita quebra de HTML)
   const obsEscaped = (observacao||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const obsDisplay = (observacao||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
 
-  const stamp = entregue
-    ? `<div class="card-stamp">ENTREGUE</div>` : '';
+  const stamp = entregue ? `<div class="card-stamp">ENTREGUE</div>` : '';
+  const tentativaBadge = (tentativas > 0 && !entregue) ? `<span class="card-tentativa-badge">↩ ${tentativas}ª tentativa</span>` : '';
+  const entregarBtn = (status === 'retirada' && !entregue) ? `<button class="btn-action entregue" onclick="markEntregue('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Entregue</button>` : '';
+  const devolverBtn = (status === 'retirada') ? `<button class="btn-action devolver" onclick="openDevolverModal('${id}','${numero_nf}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>Devolução</button>` : '';
+  const removerBtn = (status === 'retirada' && entregue) ? `<button class="btn-action remover" onclick="archiveNota('${id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>Remover</button>` : '';
+  const deleteBtn = `<button class="btn-action del" onclick="openDelModal('${id}','${numero_nf}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>`;
+  const entregueDateBadge = (entregue && data_entrega) ? `<span class="card-date entregue-date">🕐 ${data_entrega}</span>` : '';
+  const dataEmissaoFormatada = formatDateBR(data_emissao);
 
-  // Badge tentativa anterior (resumido)
-  const tentativaBadge = (tentativas > 0 && !entregue)
-    ? `<span class="card-tentativa-badge">↩ ${tentativas}ª tentativa</span>` : '';
-
-  // Botão "Entregue" — apenas coluna Retiradas E se ainda não entregue
-  const entregarBtn = (status === 'retirada' && !entregue)
-    ? `<button class="btn-action entregue" onclick="markEntregue('${id}')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        Entregue
-       </button>` : '';
-
-  // Botão "Devolução" — apenas coluna Retiradas (entregue ou não)
-  const devolverBtn = (status === 'retirada')
-    ? `<button class="btn-action devolver" onclick="openDevolverModal('${id}','${numero_nf}')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
-        Devolução
-       </button>` : '';
-
-  // Botão "Remover" — só quando entregue em Retiradas
-  const removerBtn = (status === 'retirada' && entregue)
-    ? `<button class="btn-action remover" onclick="archiveNota('${id}')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
-        Remover
-       </button>` : '';
-
-  // Botão excluir — sempre disponível
-  const deleteBtn = `<button class="btn-action del" onclick="openDelModal('${id}','${numero_nf}')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-     </button>`;
-
-  const entreguneDateBadge = (entregue && data_entrega)
-    ? `<span class="card-date entregue-date">🕐 ${data_entrega}</span>` : '';
-
-  // Seção de obs inline
   const obsSection = `
     <div class="card-obs-section">
       ${hasObs
@@ -1564,8 +1853,8 @@ function cardHTML(nota) {
     </div>
     <div class="card-cli" title="${cliente||''}">${cli}</div>
     <div class="card-meta">
-      ${data_emissao ? `<span class="card-date">${data_emissao}</span>` : ''}
-      ${entreguneDateBadge}
+      ${dataEmissaoFormatada ? `<span class="card-date">${dataEmissaoFormatada}</span>` : ''}
+      ${entregueDateBadge}
       ${tentativaBadge}
     </div>
     ${obsSection}
@@ -1665,6 +1954,7 @@ window.doLogin = function() {
 
 window.doLogout = function() {
   sessionStorage.removeItem(SESSION_KEY);
+  isAdminLogged = false;
   document.getElementById('login-pwd').value = '';
   document.getElementById('login-err').classList.remove('show');
   document.getElementById('login-pwd').classList.remove('error');
