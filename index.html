@@ -120,10 +120,21 @@ a { color: inherit; text-decoration: none; }
 
 .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 
+/* Info criador */
+.topbar-creator { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; font-size: 10px; color: var(--txt3); line-height: 1.3; padding-right: 4px; border-right: 1px solid var(--border); margin-right: 4px; }
+.topbar-creator-name { font-weight: 600; color: var(--txt2); }
+.topbar-creator-version { font-weight: 800; color: var(--blue); font-family: var(--mono); letter-spacing: .02em; }
+
 .search-wrap { position: relative; display: flex; align-items: center; }
 .search-wrap svg { position: absolute; left: 10px; color: var(--txt3); pointer-events: none; }
 #search-input { padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--txt); background: var(--surface2); width: 200px; transition: var(--transition); outline: none; }
 #search-input:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+
+/* Nav tabs (Board / Relatórios) */
+.nav-tabs { display: flex; gap: 2px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 2px; }
+.nav-tab { padding: 5px 14px; font-size: 12px; font-weight: 600; border-radius: 6px; color: var(--txt3); transition: var(--transition); cursor: pointer; white-space: nowrap; }
+.nav-tab.active { background: var(--surface); color: var(--txt); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.nav-tab:hover:not(.active) { color: var(--txt2); }
 
 .btn-import { display: flex; align-items: center; gap: 7px; background: var(--blue); color: #fff; font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: var(--radius-sm); transition: var(--transition); white-space: nowrap; }
 .btn-import:hover { background: var(--blue-dk); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,.25); }
@@ -172,6 +183,9 @@ a { color: inherit; text-decoration: none; }
 
 .card-stamp { position: absolute; top: 8px; right: 10px; background: var(--green); color: #fff; font-size: 9px; font-weight: 800; letter-spacing: .12em; padding: 2px 7px; border-radius: 4px; transform: rotate(2deg); border: 1.5px solid var(--green-dk); text-transform: uppercase; box-shadow: 0 2px 6px rgba(5,150,105,.3); }
 
+/* Badge tentativa de entrega anterior */
+.card-tentativa-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 9px; font-weight: 700; color: var(--amber-dk); background: var(--amber-lt); border: 1px solid #FDE68A; border-radius: 4px; padding: 1px 5px; white-space: nowrap; }
+
 .card-top { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 5px; }
 .card-nf { font-size: 13px; font-weight: 600; color: var(--accent); font-family: var(--mono); flex: 1; }
 .card-valor { font-size: 12px; color: var(--txt2); font-weight: 500; white-space: nowrap; }
@@ -179,7 +193,8 @@ a { color: inherit; text-decoration: none; }
 .card-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .card-date { font-size: 11px; color: var(--txt3); font-family: var(--mono); }
 .card-date.entregue-date { color: var(--green); font-weight: 600; font-family: var(--font); }
-.card-obs-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--amber); color: #fff; display: flex; align-items: center; gap: 3px; box-shadow: 0 1px 4px rgba(217,119,6,.35); }
+.card-obs-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--amber); color: #fff; display: flex; align-items: center; gap: 3px; box-shadow: 0 1px 4px rgba(217,119,6,.35); cursor: pointer; }
+.card-obs-badge:hover { background: var(--amber-dk); }
 
 /* Card com observação — destaque visual */
 .card.card-has-obs { border-left-width: 4px; background: #fffdf5; }
@@ -195,6 +210,8 @@ a { color: inherit; text-decoration: none; }
 .btn-action.del:hover  { background: #FEE2E2; }
 .btn-action.entregue { color: var(--green); background: var(--green-lt); border-color: #6ee7b7; font-weight: 700; }
 .btn-action.entregue:hover { background: #d1fae5; transform: translateY(-1px); }
+.btn-action.devolver { color: var(--amber-dk); background: var(--amber-lt); border-color: #FDE68A; font-weight: 700; }
+.btn-action.devolver:hover { background: #FEF3C7; transform: translateY(-1px); }
 .btn-action.remover { color: var(--txt2); background: var(--surface2); border-color: var(--border2); margin-left: auto; }
 .btn-action.remover:hover { background: var(--red-lt); color: var(--red); border-color: #FECACA; }
 
@@ -275,6 +292,44 @@ a { color: inherit; text-decoration: none; }
 ═══════════════════════════════════════════ */
 .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px 12px; text-align: center; color: var(--txt3); font-size: 12px; }
 .empty-icon { font-size: 28px; opacity: .5; }
+
+/* ═══════════════════════════════════════════
+   PÁGINA RELATÓRIOS
+═══════════════════════════════════════════ */
+#page-relatorios { flex: 1; overflow-y: auto; padding: 20px; display: none; flex-direction: column; gap: 16px; }
+#page-relatorios.active { display: flex; }
+
+.rel-header-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
+.rel-field { display: flex; flex-direction: column; gap: 5px; }
+.rel-label { font-size: 11px; font-weight: 700; color: var(--txt2); letter-spacing: .03em; }
+.rel-input { padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--txt); background: var(--surface2); outline: none; transition: var(--transition); }
+.rel-input:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+.btn-rel { display: flex; align-items: center; gap: 7px; background: var(--blue); color: #fff; font-size: 13px; font-weight: 600; padding: 9px 18px; border-radius: var(--radius-sm); transition: var(--transition); white-space: nowrap; }
+.btn-rel:hover { background: var(--blue-dk); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,.25); }
+.btn-rel.secondary { background: var(--surface2); color: var(--txt2); border: 1px solid var(--border); }
+.btn-rel.secondary:hover { background: var(--bg); transform: translateY(-1px); }
+
+/* KPI cards */
+.rel-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.rel-kpi { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; border-top: 3px solid var(--kpi-color, var(--blue)); }
+.rel-kpi-label { font-size: 11px; font-weight: 700; color: var(--txt3); letter-spacing: .04em; text-transform: uppercase; margin-bottom: 8px; }
+.rel-kpi-value { font-size: 24px; font-weight: 700; color: var(--kpi-color, var(--txt)); line-height: 1; }
+.rel-kpi-sub { font-size: 11px; color: var(--txt3); margin-top: 4px; }
+
+/* Tabela relatório */
+.rel-table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.rel-table-title { padding: 14px 20px 12px; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
+.rel-table { width: 100%; border-collapse: collapse; }
+.rel-table thead tr { background: var(--surface2); }
+.rel-table th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700; color: var(--txt2); letter-spacing: .04em; text-transform: uppercase; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.rel-table td { padding: 9px 14px; font-size: 12px; color: var(--txt); border-bottom: 1px solid var(--border); vertical-align: middle; }
+.rel-table tbody tr:last-child td { border-bottom: none; }
+.rel-table tbody tr:hover td { background: var(--surface2); }
+.rel-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+.rel-badge.entregue { background: var(--green-lt); color: var(--green-dk); }
+.rel-badge.tentativa { background: var(--amber-lt); color: var(--amber-dk); }
+.rel-badge.deletada  { background: var(--red-lt); color: var(--red); }
+.rel-empty { padding: 40px; text-align: center; color: var(--txt3); font-size: 13px; }
 </style>
 </head>
 <body>
@@ -321,6 +376,13 @@ a { color: inherit; text-decoration: none; }
     <span id="status-msg">Conectando…</span>
     <div class="topbar-right">
       <span class="fb-dot connecting" id="fb-dot" title="Status Firebase"></span>
+
+      <!-- Abas de navegação -->
+      <div class="nav-tabs">
+        <button class="nav-tab active" id="nav-board" onclick="switchPage('board')">📋 Board</button>
+        <button class="nav-tab" id="nav-rel" onclick="switchPage('relatorios')">📊 Relatórios</button>
+      </div>
+
       <div class="search-wrap">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input id="search-input" type="text" placeholder="Buscar NF ou cliente…" oninput="renderAll()">
@@ -329,6 +391,13 @@ a { color: inherit; text-decoration: none; }
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         Importar NF
       </button>
+
+      <!-- Dados do criador -->
+      <div class="topbar-creator">
+        <span class="topbar-creator-name">Criado por: Leandro NP</span>
+        <span class="topbar-creator-version">Versão 1.0</span>
+      </div>
+
       <button class="btn-logout" onclick="doLogout()" title="Sair">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         Sair
@@ -377,6 +446,86 @@ a { color: inherit; text-decoration: none; }
       <div class="col-body" id="body-retirada"></div>
     </div>
   </div>
+
+  <!-- PÁGINA RELATÓRIOS -->
+  <div id="page-relatorios">
+    <div class="rel-header-card">
+      <div class="rel-field">
+        <label class="rel-label">DATA INÍCIO</label>
+        <input class="rel-input" type="date" id="rel-inicio">
+      </div>
+      <div class="rel-field">
+        <label class="rel-label">DATA FIM</label>
+        <input class="rel-input" type="date" id="rel-fim">
+      </div>
+      <button class="btn-rel" onclick="gerarRelatorio()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Gerar Relatório
+      </button>
+      <button class="btn-rel secondary" onclick="exportarRelatorio()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Exportar PDF
+      </button>
+    </div>
+
+    <!-- KPIs -->
+    <div class="rel-kpis" id="rel-kpis" style="display:none">
+      <div class="rel-kpi" style="--kpi-color:var(--green)">
+        <div class="rel-kpi-label">Entregas Realizadas</div>
+        <div class="rel-kpi-value" id="kpi-entregas">0</div>
+        <div class="rel-kpi-sub" id="kpi-entregas-sub">no período</div>
+      </div>
+      <div class="rel-kpi" style="--kpi-color:var(--amber)">
+        <div class="rel-kpi-label">Tentativas de Entrega</div>
+        <div class="rel-kpi-value" id="kpi-tentativas">0</div>
+        <div class="rel-kpi-sub">com devolução registrada</div>
+      </div>
+      <div class="rel-kpi" style="--kpi-color:var(--red)">
+        <div class="rel-kpi-label">Notas Deletadas</div>
+        <div class="rel-kpi-value" id="kpi-deletadas">0</div>
+        <div class="rel-kpi-sub">excluídas após tentativa</div>
+      </div>
+      <div class="rel-kpi" style="--kpi-color:var(--blue)">
+        <div class="rel-kpi-label">Valor Transportado</div>
+        <div class="rel-kpi-value" id="kpi-valor" style="font-size:16px;padding-top:4px">R$ 0</div>
+        <div class="rel-kpi-sub">soma das notas entregues</div>
+      </div>
+      <div class="rel-kpi" style="--kpi-color:var(--violet)">
+        <div class="rel-kpi-label">Total de Notas</div>
+        <div class="rel-kpi-value" id="kpi-total">0</div>
+        <div class="rel-kpi-sub">movimentadas no período</div>
+      </div>
+    </div>
+
+    <!-- Tabela -->
+    <div class="rel-table-wrap" id="rel-table-wrap" style="display:none">
+      <div class="rel-table-title">
+        <span>Histórico detalhado</span>
+        <span id="rel-periodo-label" style="font-size:12px;color:var(--txt3);font-weight:400"></span>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="rel-table">
+          <thead>
+            <tr>
+              <th>NF</th>
+              <th>Cliente</th>
+              <th>Valor</th>
+              <th>Emissão</th>
+              <th>Situação</th>
+              <th>Data Evento</th>
+              <th>Observações</th>
+            </tr>
+          </thead>
+          <tbody id="rel-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="rel-empty-state" style="display:none;padding:40px;text-align:center;color:var(--txt3);font-size:13px">
+      <div style="font-size:36px;margin-bottom:10px">📊</div>
+      <div>Nenhum evento encontrado no período selecionado.</div>
+    </div>
+  </div>
 </div>
 
 <!-- DRAG GHOST -->
@@ -412,6 +561,21 @@ a { color: inherit; text-decoration: none; }
     <div class="modal-footer">
       <button class="btn-modal cancel" onclick="closeModal('modal-del')">Cancelar</button>
       <button class="btn-modal danger" onclick="confirmDelete()">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DEVOLUÇÃO -->
+<div class="modal-backdrop" id="modal-devolver">
+  <div class="modal">
+    <div class="modal-title">↩️ Registrar Devolução</div>
+    <div class="modal-sub" id="devolver-subtitle">Esta nota será devolvida e voltará para Coleta Solicitada. Será registrado que houve uma tentativa de entrega.</div>
+    <div class="modal-obs-body" style="margin-bottom:0">
+      <textarea id="devolver-motivo" placeholder="Motivo da devolução (opcional)…" style="height:80px"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal cancel" onclick="closeModal('modal-devolver')">Cancelar</button>
+      <button class="btn-modal danger" onclick="confirmDevolver()">↩️ Confirmar Devolução</button>
     </div>
   </div>
 </div>
@@ -480,14 +644,7 @@ a { color: inherit; text-decoration: none; }
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     FIREBASE SDK (type=module)
-     
-     CORREÇÃO PRINCIPAL: todas as funções
-     internas são declaradas como const LOCAL
-     E também expostas em window.X — assim
-     funcionam dentro do módulo E em onclick=""
-════════════════════════════════════════ -->
+<!-- FIREBASE SDK (type=module) -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy }
@@ -582,12 +739,12 @@ async function addNota(nota) {
   nota.entregue        = false;
   nota.arquivada       = false;
   nota.data_entrega    = '';
+  nota.tentativas_entrega = 0;
+  nota.historico       = [];
 
-  // Verifica duplicata por chave NF-e
   if (nota.chave && nota.chave.length > 10) {
     if (window._state.notas.find(n => n.chave === nota.chave)) return 'dup';
   }
-  // Verifica duplicata por número da NF
   if (window._state.notas.find(n => n.numero_nf === nota.numero_nf && !n.arquivada)) return 'dup';
 
   try {
@@ -608,17 +765,63 @@ window._updateObs = async function(id, observacao) {
 };
 
 window._deleteNota = async function(id) {
+  // Registra evento no histórico global antes de deletar
+  const nota = window._state.notas.find(n => n.id === id);
+  if (nota) {
+    const ev = {
+      tipo: 'deletada',
+      numero_nf: nota.numero_nf,
+      cliente: nota.cliente || '',
+      valor: nota.valor || '0',
+      data_emissao: nota.data_emissao || '',
+      observacao: nota.observacao || '',
+      tentativas_entrega: nota.tentativas_entrega || 0,
+      data_evento: new Date().toLocaleString('pt-BR'),
+      ts: Date.now()
+    };
+    _registrarEventoHistorico(ev);
+  }
   try {
     await deleteDoc(doc(window._state.db, 'notas', id));
     toast('Nota excluída', 'warn');
   } catch(e) { toast('Erro ao excluir: ' + e.message, 'error'); }
 };
 
-/* ── MARCAR ENTREGUE ── */
+/* Histórico global em localStorage (até 1 ano) */
+function _registrarEventoHistorico(ev) {
+  try {
+    let hist = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]');
+    hist.push(ev);
+    // Limitar a 1 ano
+    const limite = Date.now() - (365 * 24 * 60 * 60 * 1000);
+    hist = hist.filter(e => (e.ts || 0) > limite);
+    localStorage.setItem('nf_historico_v1', JSON.stringify(hist));
+  } catch(e) { console.warn('Erro ao salvar histórico:', e); }
+}
+
+/* ── MARCAR ENTREGUE — apenas coluna Retiradas ── */
 window.markEntregue = async function(id) {
   const ts = new Date().toLocaleString('pt-BR');
+  const nota = window._state.notas.find(n => n.id === id);
+  if (!nota) return;
+  if (nota.status !== 'retirada') {
+    toast('Só é possível marcar como Entregue na coluna Retiradas', 'warn');
+    return;
+  }
   try {
     await updateDoc(doc(window._state.db, 'notas', id), { entregue: true, data_entrega: ts });
+    // Registra no histórico global
+    _registrarEventoHistorico({
+      tipo: 'entregue',
+      numero_nf: nota.numero_nf,
+      cliente: nota.cliente || '',
+      valor: nota.valor || '0',
+      data_emissao: nota.data_emissao || '',
+      observacao: nota.observacao || '',
+      tentativas_entrega: nota.tentativas_entrega || 0,
+      data_evento: ts,
+      ts: Date.now()
+    });
     toast('Nota marcada como Entregue ✅', 'success');
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
@@ -629,6 +832,55 @@ window.archiveNota = async function(id) {
   try {
     await updateDoc(doc(window._state.db, 'notas', id), { arquivada: true });
     toast('Nota removida da tela', 'warn');
+  } catch(e) { toast('Erro: ' + e.message, 'error'); }
+};
+
+/* ── DEVOLUÇÃO ── */
+let _devolId = null;
+window.openDevolverModal = function(id, numero_nf) {
+  _devolId = id;
+  document.getElementById('devolver-subtitle').textContent =
+    `NF ${numero_nf} — Esta nota voltará para Coleta Solicitada. A tentativa de entrega será registrada.`;
+  document.getElementById('devolver-motivo').value = '';
+  openModal('modal-devolver');
+};
+
+window.confirmDevolver = async function() {
+  if (!_devolId) return;
+  const nota = window._state.notas.find(n => n.id === _devolId);
+  if (!nota) return;
+  const motivo = document.getElementById('devolver-motivo').value.trim();
+  const ts = new Date().toLocaleString('pt-BR');
+  const tentativas = (nota.tentativas_entrega || 0) + 1;
+
+  // Monta log resumido
+  const logTentativa = `↩ Tentativa ${tentativas} em ${ts}${motivo ? ': ' + motivo : ''}`;
+  const obsAtual = nota.observacao || '';
+  const novaObs = obsAtual ? obsAtual + '\n' + logTentativa : logTentativa;
+
+  try {
+    await updateDoc(doc(window._state.db, 'notas', _devolId), {
+      status: 'solicitada',
+      entregue: false,
+      data_entrega: '',
+      tentativas_entrega: tentativas,
+      observacao: novaObs,
+      data_status: ts
+    });
+    // Registra no histórico global
+    _registrarEventoHistorico({
+      tipo: 'tentativa',
+      numero_nf: nota.numero_nf,
+      cliente: nota.cliente || '',
+      valor: nota.valor || '0',
+      data_emissao: nota.data_emissao || '',
+      observacao: motivo || '',
+      tentativas_entrega: tentativas,
+      data_evento: ts,
+      ts: Date.now()
+    });
+    closeModal('modal-devolver');
+    toast(`Devolução registrada — ${tentativas}ª tentativa`, 'warn');
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
@@ -653,6 +905,7 @@ window.baixarEntregues = async function() {
       <td>R$ ${parseFloat(n.valor||0).toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
       <td>${n.data_emissao||'—'}</td>
       <td>${n.data_entrega||'—'}</td>
+      <td>${n.tentativas_entrega > 0 ? n.tentativas_entrega + ' tentativa(s)' : '1ª entrega'}</td>
     </tr>`).join('');
 
   const printHTML = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
@@ -681,16 +934,16 @@ window.baixarEntregues = async function() {
   <div class="badge">${entregues.length} nota(s)</div>
 </header>
 <table>
-  <thead><tr><th>NF</th><th>Cliente</th><th>Valor</th><th>Emissão</th><th>Data de Entrega</th></tr></thead>
+  <thead><tr><th>NF</th><th>Cliente</th><th>Valor</th><th>Emissão</th><th>Data de Entrega</th><th>Tentativas</th></tr></thead>
   <tbody>${rows}
     <tr class="total-row">
       <td colspan="2">TOTAL</td>
       <td>R$ ${total}</td>
-      <td colspan="2">${entregues.length} nota(s) entregue(s)</td>
+      <td colspan="3">${entregues.length} nota(s) entregue(s)</td>
     </tr>
   </tbody>
 </table>
-<footer>Sistema de Expedição — Notas Fiscais</footer>
+<footer>Sistema de Expedição — Notas Fiscais | Criado por: Leandro NP</footer>
 <script>window.onload=()=>{setTimeout(()=>window.print(),300)}<\/script>
 </body></html>`;
 
@@ -699,7 +952,6 @@ window.baixarEntregues = async function() {
   w.document.write(printHTML);
   w.document.close();
 
-  // Arquivar todas após export
   let count = 0;
   for (const n of entregues) {
     try {
@@ -710,7 +962,7 @@ window.baixarEntregues = async function() {
   toast(`${count} nota(s) exportada(s) e removida(s) da tela ✅`, 'success');
 };
 
-/* ── PARSE XML (lê dados, não armazena o arquivo) ── */
+/* ── PARSE XML ── */
 function parseXML(text) {
   try {
     const parser = new DOMParser();
@@ -739,7 +991,7 @@ function parseXML(text) {
   } catch { return null; }
 }
 
-/* ── IMPORT MODAL — XML ── */
+/* ── IMPORT MODAL ── */
 let _importFiles = [];
 
 window.openImport = () => { clearImport(); openModal('modal-import'); };
@@ -814,7 +1066,6 @@ window.doImport = async function() {
     const item = xmlItems[idx];
     progText.textContent = `Importando ${idx+1}/${xmlItems.length}…`;
     progFill.style.width = ((idx+1)/xmlItems.length*100)+'%';
-    // Salva apenas os dados extraídos — sem upload de arquivo ao Storage
     const result = await addNota({ ...item.parsed });
     if (result==='ok')  { ok++;  item.status='imported'; }
     if (result==='dup') { dup++; item.status='dup'; }
@@ -900,6 +1151,219 @@ document.querySelectorAll('.modal-backdrop').forEach(b => {
   b.addEventListener('click', e => { if (e.target===b) b.classList.remove('open'); });
 });
 
+/* ── NAVEGAÇÃO DE PÁGINAS ── */
+window.switchPage = function(page) {
+  const board = document.getElementById('board');
+  const relPage = document.getElementById('page-relatorios');
+  const navBoard = document.getElementById('nav-board');
+  const navRel = document.getElementById('nav-rel');
+  const searchWrap = document.querySelector('.search-wrap');
+  const btnImport = document.querySelector('.btn-import');
+
+  if (page === 'board') {
+    board.style.display = '';
+    relPage.classList.remove('active');
+    navBoard.classList.add('active');
+    navRel.classList.remove('active');
+    searchWrap.style.display = '';
+    btnImport.style.display = '';
+  } else {
+    board.style.display = 'none';
+    relPage.classList.add('active');
+    navBoard.classList.remove('active');
+    navRel.classList.add('active');
+    searchWrap.style.display = 'none';
+    btnImport.style.display = 'none';
+    // Definir datas padrão: mês atual
+    const hoje = new Date();
+    const ini = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    const fim = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
+    const fmt = d => d.toISOString().slice(0,10);
+    if (!document.getElementById('rel-inicio').value)
+      document.getElementById('rel-inicio').value = fmt(ini);
+    if (!document.getElementById('rel-fim').value)
+      document.getElementById('rel-fim').value = fmt(fim);
+  }
+};
+
+/* ── RELATÓRIOS ── */
+window.gerarRelatorio = function() {
+  const iniStr = document.getElementById('rel-inicio').value;
+  const fimStr = document.getElementById('rel-fim').value;
+  if (!iniStr || !fimStr) { toast('Selecione as datas de início e fim', 'warn'); return; }
+
+  const ini = new Date(iniStr + 'T00:00:00');
+  const fim = new Date(fimStr + 'T23:59:59');
+  if (ini > fim) { toast('Data início deve ser anterior à data fim', 'warn'); return; }
+
+  // Carrega histórico do localStorage
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]'); } catch {}
+
+  // Filtra pelo período
+  const eventos = hist.filter(e => {
+    const t = e.ts || 0;
+    return t >= ini.getTime() && t <= fim.getTime();
+  });
+
+  // Também considera notas ainda no board
+  const notasBoard = window._state.notas.filter(n => !n.arquivada && n.entregue);
+  // Evita duplicata com histórico
+  const idsHist = new Set(hist.map(e => e.numero_nf));
+  notasBoard.forEach(n => {
+    if (!idsHist.has(n.numero_nf)) {
+      // Tenta incluir se data_entrega cair no período
+      if (n.data_entrega) {
+        // data_entrega é string localizada, difícil parsear — incluímos sem filtro de data mas marcamos
+        eventos.push({
+          tipo: 'entregue',
+          numero_nf: n.numero_nf,
+          cliente: n.cliente || '',
+          valor: n.valor || '0',
+          data_emissao: n.data_emissao || '',
+          observacao: n.observacao || '',
+          tentativas_entrega: n.tentativas_entrega || 0,
+          data_evento: n.data_entrega,
+          ts: ini.getTime() // Assume período
+        });
+      }
+    }
+  });
+
+  // Deduplicar por número da NF + tipo (mantém mais recente)
+  const dedup = {};
+  eventos.forEach(e => {
+    const k = e.numero_nf + '|' + e.tipo;
+    if (!dedup[k] || e.ts > dedup[k].ts) dedup[k] = e;
+  });
+  const evs = Object.values(dedup).sort((a,b) => b.ts - a.ts);
+
+  // KPIs
+  const entregues   = evs.filter(e => e.tipo === 'entregue');
+  const tentativas  = evs.filter(e => e.tipo === 'tentativa');
+  const deletadas   = evs.filter(e => e.tipo === 'deletada');
+  const valorTotal  = entregues.reduce((s,e) => s + (parseFloat(e.valor)||0), 0);
+
+  document.getElementById('kpi-entregas').textContent   = entregues.length;
+  document.getElementById('kpi-tentativas').textContent = tentativas.length;
+  document.getElementById('kpi-deletadas').textContent  = deletadas.length;
+  document.getElementById('kpi-total').textContent      = evs.length;
+  document.getElementById('kpi-valor').textContent      = 'R$ ' + valorTotal.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+  const fmtData = s => s ? s.slice(0,10).split('-').reverse().join('/') : '—';
+  document.getElementById('rel-periodo-label').textContent =
+    `${fmtData(iniStr)} até ${fmtData(fimStr)} — ${evs.length} evento(s)`;
+
+  const tbody = document.getElementById('rel-tbody');
+  if (!evs.length) {
+    tbody.innerHTML = '';
+    document.getElementById('rel-kpis').style.display = 'grid';
+    document.getElementById('rel-table-wrap').style.display = 'none';
+    document.getElementById('rel-empty-state').style.display = 'block';
+    return;
+  }
+
+  const badgeMap = {
+    entregue:  `<span class="rel-badge entregue">✓ Entregue</span>`,
+    tentativa: `<span class="rel-badge tentativa">↩ Devolução</span>`,
+    deletada:  `<span class="rel-badge deletada">🗑 Excluída</span>`
+  };
+
+  tbody.innerHTML = evs.map(e => {
+    let sitExtra = '';
+    if (e.tentativas_entrega > 1) sitExtra = ` <span style="font-size:10px;color:var(--amber-dk)">(${e.tentativas_entrega}ª tentativa)</span>`;
+    if (e.tipo === 'tentativa' && e.tentativas_entrega) sitExtra = ` <span style="font-size:10px;color:var(--amber-dk)">(tentativa ${e.tentativas_entrega})</span>`;
+    const valFmt = parseFloat(e.valor||0) ? 'R$ ' + parseFloat(e.valor).toLocaleString('pt-BR',{minimumFractionDigits:2}) : '—';
+    const obsTxt = e.observacao ? e.observacao.replace(/</g,'&lt;').replace(/\n/g,'<br>') : '<span style="color:var(--txt3)">—</span>';
+    return `<tr>
+      <td style="font-family:var(--mono);font-weight:600">${e.numero_nf}</td>
+      <td>${e.cliente || '—'}</td>
+      <td style="font-weight:500">${valFmt}</td>
+      <td>${e.data_emissao || '—'}</td>
+      <td>${(badgeMap[e.tipo]||e.tipo)}${sitExtra}</td>
+      <td style="font-size:11px;color:var(--txt3)">${e.data_evento || '—'}</td>
+      <td style="max-width:220px;font-size:11px;color:var(--txt2)">${obsTxt}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('rel-kpis').style.display = 'grid';
+  document.getElementById('rel-table-wrap').style.display = 'block';
+  document.getElementById('rel-empty-state').style.display = 'none';
+  window._relEventos = evs;
+  window._relPeriodo = { ini: iniStr, fim: fimStr };
+};
+
+window.exportarRelatorio = function() {
+  const evs = window._relEventos;
+  if (!evs || !evs.length) { toast('Gere o relatório primeiro', 'warn'); return; }
+  const { ini, fim } = window._relPeriodo || {};
+  const fmtData = s => s ? s.slice(0,10).split('-').reverse().join('/') : '—';
+
+  const entregues  = evs.filter(e => e.tipo === 'entregue');
+  const tentativas = evs.filter(e => e.tipo === 'tentativa');
+  const deletadas  = evs.filter(e => e.tipo === 'deletada');
+  const valorTotal = entregues.reduce((s,e) => s + (parseFloat(e.valor)||0), 0);
+
+  const situacaoTxt = { entregue: 'Entregue', tentativa: 'Devolução', deletada: 'Excluída' };
+
+  const rows = evs.map(e => `
+    <tr>
+      <td><strong>${e.numero_nf}</strong></td>
+      <td>${e.cliente||'—'}</td>
+      <td>${parseFloat(e.valor||0) ? 'R$ '+parseFloat(e.valor).toLocaleString('pt-BR',{minimumFractionDigits:2}) : '—'}</td>
+      <td>${e.data_emissao||'—'}</td>
+      <td>${situacaoTxt[e.tipo]||e.tipo}${e.tentativas_entrega>1?' ('+e.tentativas_entrega+'ª)':''}</td>
+      <td>${e.data_evento||'—'}</td>
+      <td style="max-width:200px;font-size:11px">${e.observacao||'—'}</td>
+    </tr>`).join('');
+
+  const printHTML = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+<title>Relatório de Entregas</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Arial,sans-serif;padding:24px;color:#111;font-size:12px}
+  header{margin-bottom:20px;border-bottom:3px solid #1d4ed8;padding-bottom:14px;display:flex;justify-content:space-between;align-items:flex-end}
+  h1{font-size:20px;font-weight:700;color:#1d4ed8;margin-bottom:4px}
+  .sub{font-size:11px;color:#6b7280}
+  .kpis{display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+  .kpi{border:1px solid #e5e7eb;border-radius:8px;padding:10px 16px;flex:1;min-width:100px;border-top:3px solid}
+  .kpi.green{border-top-color:#059669}.kpi.amber{border-top-color:#d97706}.kpi.red{border-top-color:#dc2626}.kpi.blue{border-top-color:#2563eb}
+  .kpi-label{font-size:9px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+  .kpi-value{font-size:20px;font-weight:700;color:#111}
+  table{width:100%;border-collapse:collapse}
+  thead tr{background:#1d4ed8;color:#fff}
+  th{padding:8px 10px;text-align:left;font-size:9px;letter-spacing:.05em;font-weight:700;text-transform:uppercase}
+  td{padding:7px 10px;border-bottom:1px solid #e5e7eb;vertical-align:top}
+  tr:nth-child(even) td{background:#f9fafb}
+  footer{margin-top:16px;font-size:10px;color:#9ca3af;text-align:center}
+  @media print{@page{margin:1cm;size:A4 landscape}}
+</style></head><body>
+<header>
+  <div>
+    <h1>📊 Relatório de Entregas</h1>
+    <div class="sub">Período: ${fmtData(ini)} até ${fmtData(fim)} · Gerado em ${new Date().toLocaleString('pt-BR')}</div>
+  </div>
+</header>
+<div class="kpis">
+  <div class="kpi green"><div class="kpi-label">Entregues</div><div class="kpi-value">${entregues.length}</div></div>
+  <div class="kpi amber"><div class="kpi-label">Devoluções</div><div class="kpi-value">${tentativas.length}</div></div>
+  <div class="kpi red"><div class="kpi-label">Excluídas</div><div class="kpi-value">${deletadas.length}</div></div>
+  <div class="kpi blue"><div class="kpi-label">Valor Transportado</div><div class="kpi-value" style="font-size:14px">R$ ${valorTotal.toLocaleString('pt-BR',{minimumFractionDigits:2})}</div></div>
+</div>
+<table>
+  <thead><tr><th>NF</th><th>Cliente</th><th>Valor</th><th>Emissão</th><th>Situação</th><th>Data Evento</th><th>Observações</th></tr></thead>
+  <tbody>${rows}</tbody>
+</table>
+<footer>Sistema de Expedição — Notas Fiscais | Criado por: Leandro NP</footer>
+<script>window.onload=()=>{setTimeout(()=>window.print(),300)}<\/script>
+</body></html>`;
+
+  const w = window.open('', '_blank');
+  if (!w) { toast('Permita pop-ups para gerar o PDF', 'warn'); return; }
+  w.document.write(printHTML);
+  w.document.close();
+};
+
 /* ── RENDER ── */
 const STATUS_ORDER = ['lancada','aguardando','solicitada','retirada'];
 const ACCENT = {
@@ -909,7 +1373,6 @@ const ACCENT = {
 
 const renderAll = window.renderAll = function() {
   const q = document.getElementById('search-input').value.toLowerCase().trim();
-  // arquivadas ficam ocultas no board
   let notas = window._state.notas.filter(n => !n.arquivada);
   if (q) notas = notas.filter(n =>
     (n.numero_nf||'').toLowerCase().includes(q) ||
@@ -956,46 +1419,78 @@ function buildCard(nota) {
   card.className = 'card' + (isEntregue ? ' card-entregue' : '') + (hasObs ? ' card-has-obs' : '');
   card.dataset.id = nota.id;
   card.style.setProperty('--accent', ACCENT[nota.status] || ACCENT.lancada);
-  card.draggable = !isEntregue;
+  // Carta entregue em coluna não-retirada ainda pode ser arrastada após devolução
+  // Apenas cartas entregue=true E status=retirada ficam imóveis
+  const locked = isEntregue && nota.status === 'retirada';
+  card.draggable = !locked;
   card.innerHTML = cardHTML(nota);
-  if (!isEntregue) {
+  if (!locked) {
     card.addEventListener('dragstart', e => onDragStart(e, nota.id, nota.numero_nf, nota.cliente, nota.status));
     card.addEventListener('dragend',   e => onDragEnd(e));
   }
   return card;
 }
 
+function updateCardInPlace(card, nota) {
+  const isEntregue = !!nota.entregue;
+  const hasObs = !!(nota.observacao && nota.observacao.trim());
+  const locked = isEntregue && nota.status === 'retirada';
+  card.className = 'card' + (isEntregue ? ' card-entregue' : '') + (hasObs ? ' card-has-obs' : '');
+  card.draggable = !locked;
+  card.style.setProperty('--accent', ACCENT[nota.status] || ACCENT.lancada);
+  card.innerHTML = cardHTML(nota);
+  if (!locked) {
+    card.addEventListener('dragstart', e => onDragStart(e, nota.id, nota.numero_nf, nota.cliente, nota.status));
+    card.addEventListener('dragend',   e => onDragEnd(e));
+  }
+}
+
 function cardHTML(nota) {
-  const { id, numero_nf, cliente, valor, data_emissao, status, observacao, entregue, data_entrega } = nota;
+  const { id, numero_nf, cliente, valor, data_emissao, status, observacao, entregue, data_entrega, tentativas_entrega } = nota;
   const hasObs = !!(observacao && observacao.trim());
   const cli = (cliente||'').length>32 ? (cliente||'').slice(0,32)+'…' : (cliente||'');
   const obsJSON = JSON.stringify(observacao||'');
+  const tentativas = tentativas_entrega || 0;
 
   const stamp = entregue
     ? `<div class="card-stamp">ENTREGUE</div>` : '';
 
-  // Botão "Entregue" — só na coluna Retiradas e se ainda não entregue
-  const entregarBtn = (status==='retirada' && !entregue)
+  // Badge tentativa anterior (resumido)
+  const tentativaBadge = (tentativas > 0 && !entregue)
+    ? `<span class="card-tentativa-badge">↩ ${tentativas}ª tentativa</span>` : '';
+
+  // Botão "Entregue" — apenas coluna Retiradas E se ainda não entregue
+  const entregarBtn = (status === 'retirada' && !entregue)
     ? `<button class="btn-action entregue" onclick="markEntregue('${id}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         Entregue
        </button>` : '';
 
-  // Botão "Remover" — só quando entregue (usuário decide)
-  const removerBtn = (status==='retirada' && entregue)
+  // Botão "Devolução" — apenas coluna Retiradas (entregue ou não)
+  const devolverBtn = (status === 'retirada')
+    ? `<button class="btn-action devolver" onclick="openDevolverModal('${id}','${numero_nf}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+        Devolução
+       </button>` : '';
+
+  // Botão "Remover" — só quando entregue em Retiradas
+  const removerBtn = (status === 'retirada' && entregue)
     ? `<button class="btn-action remover" onclick="archiveNota('${id}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
         Remover
        </button>` : '';
 
-  // Botão excluir — só se não estiver entregue
-  const deleteBtn = !entregue
-    ? `<button class="btn-action del" onclick="openDelModal('${id}','${numero_nf}')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-       </button>` : '';
+  // Botão excluir — sempre disponível (inclusive para notas presas)
+  const deleteBtn = `<button class="btn-action del" onclick="openDelModal('${id}','${numero_nf}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+     </button>`;
 
   const entreguneDateBadge = (entregue && data_entrega)
     ? `<span class="card-date entregue-date">🕐 ${data_entrega}</span>` : '';
+
+  // Badge Obs clicável para visualizar
+  const obsBadge = hasObs
+    ? `<span class="card-obs-badge" onclick="openObsModal('${id}','${numero_nf}',${obsJSON})" title="Ver observação">✏ Obs</span>` : '';
 
   return `
     ${stamp}
@@ -1007,29 +1502,17 @@ function cardHTML(nota) {
     <div class="card-meta">
       ${data_emissao ? `<span class="card-date">${data_emissao}</span>` : ''}
       ${entreguneDateBadge}
-      ${hasObs ? `<span class="card-obs-badge">✏ Obs</span>` : ''}
+      ${obsBadge}
+      ${tentativaBadge}
     </div>
     <div class="card-actions">
-      ${entregarBtn}${removerBtn}
+      ${entregarBtn}${devolverBtn}${removerBtn}
       <button class="btn-action obs" onclick="openObsModal('${id}','${numero_nf}',${obsJSON})">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         Obs
       </button>
       ${deleteBtn}
     </div>`;
-}
-
-function updateCardInPlace(card, nota) {
-  const isEntregue = !!nota.entregue;
-  const hasObs = !!(nota.observacao && nota.observacao.trim());
-  card.className = 'card' + (isEntregue ? ' card-entregue' : '') + (hasObs ? ' card-has-obs' : '');
-  card.draggable = !isEntregue;
-  card.style.setProperty('--accent', ACCENT[nota.status] || ACCENT.lancada);
-  card.innerHTML = cardHTML(nota);
-  if (!isEntregue) {
-    card.addEventListener('dragstart', e => onDragStart(e, nota.id, nota.numero_nf, nota.cliente, nota.status));
-    card.addEventListener('dragend',   e => onDragEnd(e));
-  }
 }
 
 /* ── DRAG & DROP ── */
