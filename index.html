@@ -70,7 +70,7 @@ a { color: inherit; text-decoration: none; }
 ═══════════════════════════════════════════ */
 #login-screen {
   position: fixed; inset: 0;
-  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%);
+  background: linear-gradient(135deg, #2d3748 0%, #4a5568 50%, #606876 100%);
   display: flex; align-items: center; justify-content: center;
   z-index: 9999; transition: opacity .35s, visibility .35s;
 }
@@ -179,7 +179,11 @@ a { color: inherit; text-decoration: none; }
 .card-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .card-date { font-size: 11px; color: var(--txt3); font-family: var(--mono); }
 .card-date.entregue-date { color: var(--green); font-weight: 600; font-family: var(--font); }
-.card-obs-badge { font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 99px; background: var(--amber-lt); color: var(--amber-dk); display: flex; align-items: center; gap: 3px; }
+.card-obs-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--amber); color: #fff; display: flex; align-items: center; gap: 3px; box-shadow: 0 1px 4px rgba(217,119,6,.35); }
+
+/* Card com observação — destaque visual */
+.card.card-has-obs { border-left-width: 4px; background: #fffdf5; }
+.card.card-has-obs .card-nf::after { content: ' 📝'; font-size: 11px; opacity: .8; }
 
 .card-actions { display: flex; align-items: center; gap: 4px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); flex-wrap: wrap; }
 .btn-action { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 6px; transition: var(--transition); color: var(--txt2); background: var(--surface2); border: 1px solid var(--border); }
@@ -211,8 +215,8 @@ a { color: inherit; text-decoration: none; }
 .modal-backdrop.open .modal { transform: scale(1) translateY(0); }
 .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
 .modal-sub   { font-size: 13px; color: var(--txt2); margin-bottom: 18px; }
-.modal-obs textarea { width: 100%; height: 120px; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--txt); background: var(--surface2); resize: vertical; outline: none; transition: var(--transition); line-height: 1.6; }
-.modal-obs textarea:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+.modal-obs-body textarea { width: 100%; height: 120px; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--txt); background: var(--surface); resize: vertical; outline: none; transition: var(--transition); line-height: 1.6; cursor: text; pointer-events: all; display: block; }
+.modal-obs-body textarea:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
 .modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
 .btn-modal { padding: 8px 18px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; transition: var(--transition); }
 .btn-modal.cancel { background: var(--surface2); color: var(--txt2); border: 1px solid var(--border); }
@@ -386,10 +390,12 @@ a { color: inherit; text-decoration: none; }
 
 <!-- MODAL: OBS -->
 <div class="modal-backdrop" id="modal-obs">
-  <div class="modal modal-obs">
+  <div class="modal">
     <div class="modal-title">📝 Observação</div>
     <div class="modal-sub" id="obs-subtitle">NF —</div>
-    <textarea id="obs-text" placeholder="Digite sua observação…"></textarea>
+    <div class="modal-obs-body">
+      <textarea id="obs-text" placeholder="Digite sua observação…"></textarea>
+    </div>
     <div class="modal-footer">
       <button class="btn-modal cancel" onclick="closeModal('modal-obs')">Cancelar</button>
       <button class="btn-modal cancel" onclick="clearObs()">Limpar</button>
@@ -946,7 +952,8 @@ function fmtVal(v) {
 function buildCard(nota) {
   const card = document.createElement('div');
   const isEntregue = !!nota.entregue;
-  card.className = 'card' + (isEntregue ? ' card-entregue' : '');
+  const hasObs = !!(nota.observacao && nota.observacao.trim());
+  card.className = 'card' + (isEntregue ? ' card-entregue' : '') + (hasObs ? ' card-has-obs' : '');
   card.dataset.id = nota.id;
   card.style.setProperty('--accent', ACCENT[nota.status] || ACCENT.lancada);
   card.draggable = !isEntregue;
@@ -1000,7 +1007,7 @@ function cardHTML(nota) {
     <div class="card-meta">
       ${data_emissao ? `<span class="card-date">${data_emissao}</span>` : ''}
       ${entreguneDateBadge}
-      ${hasObs ? `<span class="card-obs-badge">● Obs</span>` : ''}
+      ${hasObs ? `<span class="card-obs-badge">✏ Obs</span>` : ''}
     </div>
     <div class="card-actions">
       ${entregarBtn}${removerBtn}
@@ -1014,7 +1021,8 @@ function cardHTML(nota) {
 
 function updateCardInPlace(card, nota) {
   const isEntregue = !!nota.entregue;
-  card.className = 'card' + (isEntregue ? ' card-entregue' : '');
+  const hasObs = !!(nota.observacao && nota.observacao.trim());
+  card.className = 'card' + (isEntregue ? ' card-entregue' : '') + (hasObs ? ' card-has-obs' : '');
   card.draggable = !isEntregue;
   card.style.setProperty('--accent', ACCENT[nota.status] || ACCENT.lancada);
   card.innerHTML = cardHTML(nota);
