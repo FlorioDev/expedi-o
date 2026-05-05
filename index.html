@@ -389,6 +389,23 @@ a { color: inherit; text-decoration: none; }
 .btn-action.remover:hover { background: var(--red-lt); color: var(--red); border-color: #FECACA; }
 
 /* ═══════════════════════════════════════════
+   CARD — BARRA DE ARQUIVOS (PDF / XML)
+═══════════════════════════════════════════ */
+.card-files-bar { display: flex; align-items: center; gap: 4px; margin-top: 7px; padding-top: 7px; border-top: 1px dashed var(--border); flex-wrap: wrap; }
+.btn-dl { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 5px; transition: var(--transition); text-decoration: none; border: 1.5px solid; white-space: nowrap; cursor: pointer; line-height: 1.4; }
+.btn-dl.pdf         { color: #b91c1c; background: #fef2f2; border-color: #fca5a5; }
+.btn-dl.pdf:hover   { background: #fee2e2; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(185,28,28,.18); }
+.btn-dl.xml         { color: #047857; background: #ecfdf5; border-color: #6ee7b7; }
+.btn-dl.xml:hover   { background: #d1fae5; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(4,120,87,.18); }
+.btn-dl.dim         { opacity: .3; cursor: default; pointer-events: none; filter: grayscale(1); }
+.btn-dl svg, .btn-dl-upload svg { width: 10px; height: 10px; flex-shrink: 0; }
+.btn-dl-upload { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 5px; color: var(--txt3); background: var(--surface2); border: 1.5px dashed var(--border2); transition: var(--transition); cursor: pointer; white-space: nowrap; margin-left: auto; }
+.btn-dl-upload:hover { background: var(--blue-lt); color: var(--blue); border-color: var(--blue); }
+.btn-dl-upload input[type="file"] { display: none; }
+.card-upload-progress { font-size: 10px; color: var(--blue); font-weight: 600; display: none; margin-left: 4px; }
+.card-upload-progress.active { display: inline; animation: pulse .7s ease-in-out infinite alternate; }
+
+/* ═══════════════════════════════════════════
    DRAG GHOST
 ═══════════════════════════════════════════ */
 #drag-ghost { position: fixed; pointer-events: none; z-index: 9999; background: var(--surface); border-radius: var(--radius-sm); padding: 8px 14px; box-shadow: var(--shadow-drag); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; opacity: 0; transform: rotate(2deg) scale(1.04); transition: opacity .12s; min-width: 120px; border-left: 3px solid var(--ghost-color, #888); }
@@ -568,7 +585,7 @@ a { color: inherit; text-decoration: none; }
       <!-- Dados do criador -->
       <div class="topbar-creator">
         <span class="topbar-creator-name">Criado por: Leandro NP</span>
-        <span class="topbar-creator-version">Versão 1.1</span>
+        <span class="topbar-creator-version">Versão 1.2</span>
       </div>
 
       <button class="btn-logout" onclick="doLogout()" title="Sair">
@@ -741,10 +758,10 @@ a { color: inherit; text-decoration: none; }
 <div class="modal-backdrop" id="modal-import">
   <div class="modal" style="width:500px">
     <div class="modal-title">📂 Importar Nota Fiscal</div>
-    <div class="modal-sub">Selecione um arquivo XML ou preencha os dados manualmente.</div>
+    <div class="modal-sub">Selecione arquivos XML (notas) e/ou PDF (DANFE) — ou preencha manualmente.</div>
 
     <div class="import-tabs">
-      <button class="import-tab active" id="tab-xml" onclick="switchImportTab('xml')">📄 Importar XML</button>
+      <button class="import-tab active" id="tab-xml" onclick="switchImportTab('xml')">📄 Importar XML / PDF</button>
       <button class="import-tab" id="tab-manual" onclick="switchImportTab('manual')">✏️ Entrada Manual</button>
     </div>
 
@@ -753,10 +770,10 @@ a { color: inherit; text-decoration: none; }
       <div class="upload-area" id="upload-area"
            onclick="document.getElementById('file-input').click()"
            ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
-        <input type="file" id="file-input" multiple accept=".xml" onchange="onFileSelect(event)">
+        <input type="file" id="file-input" multiple accept=".xml,.pdf" onchange="onFileSelect(event)">
         <div style="font-size:24px;margin-bottom:6px">📄</div>
-        <div style="font-weight:600;color:var(--txt2);margin-bottom:2px">Clique ou arraste arquivos XML aqui</div>
-        <div style="font-size:11px;color:var(--txt3)">Aceita .xml · múltiplos arquivos</div>
+        <div style="font-weight:600;color:var(--txt2);margin-bottom:2px">Clique ou arraste arquivos XML e PDF aqui</div>
+        <div style="font-size:11px;color:var(--txt3)">Aceita .xml · .pdf (DANFE) · múltiplos arquivos</div>
       </div>
       <div class="upload-files-list" id="upload-files-list"></div>
       <div id="import-progress" style="display:none">
@@ -900,14 +917,14 @@ async function addNota(nota) {
   nota.historico       = [];
 
   if (nota.chave && nota.chave.length > 10) {
-    if (window._state.notas.find(n => n.chave === nota.chave)) return 'dup';
+    if (window._state.notas.find(n => n.chave === nota.chave)) return { result: 'dup', id: null };
   }
-  if (window._state.notas.find(n => n.numero_nf === nota.numero_nf && !n.arquivada)) return 'dup';
+  if (window._state.notas.find(n => n.numero_nf === nota.numero_nf && !n.arquivada)) return { result: 'dup', id: null };
 
   try {
-    await addDoc(collection(window._state.db, 'notas'), nota);
-    return 'ok';
-  } catch(e) { toast('Erro ao salvar: ' + e.message, 'error'); return 'err'; }
+    const docRef = await addDoc(collection(window._state.db, 'notas'), nota);
+    return { result: 'ok', id: docRef.id };
+  } catch(e) { toast('Erro ao salvar: ' + e.message, 'error'); return { result: 'err', id: null }; }
 }
 
 window._updateStatus = async function(id, status) {
@@ -947,6 +964,11 @@ window._deleteNota = async function(id) {
       ts: Date.now()
     };
     _registrarEventoHistorico(ev);
+    // Remove referências de arquivos (PDF/XML) do Firestore junto com a nota
+    // Nota: os arquivos no Cloudinary permanecem mas ficam sem referência no sistema
+    if (nota.files && nota.files.length) {
+      try { await updateDoc(doc(window._state.db, 'notas', id), { files: [] }); } catch(_) {}
+    }
   }
   try {
     await deleteDoc(doc(window._state.db, 'notas', id));
@@ -1159,7 +1181,98 @@ function parseXML(text) {
 }
 
 /* ── IMPORT MODAL ── */
+
+
+/* ── CLOUDINARY UPLOAD ── */
+const CLOUDINARY_CLOUD = 'drq9dfckg';
+const CLOUDINARY_PRESET = 'nf_uploads';
+
+async function uploadToCloudinary(file) {
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', CLOUDINARY_PRESET);
+
+  // PDFs e imagens usam SEMPRE "image" no Cloudinary.
+  // "raw" requer preset configurado para isso e frequentemente gera 404
+  // com uploads não assinados. O Cloudinary suporta PDFs nativamente como image.
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
+    method: 'POST', body: fd
+  });
+  if (!res.ok) throw new Error('Cloudinary HTTP ' + res.status);
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.secure_url;
+}
+
+/* Constrói URL de download confiável para qualquer arquivo Cloudinary.
+   - Normaliza URLs antigas salvas como /raw/upload/ para /image/upload/
+   - Insere fl_attachment → força Content-Disposition: attachment (download)
+     funciona cross-origin, ao contrário do atributo HTML "download"         */
+function getCloudinaryDownloadUrl(url) {
+  if (!url) return '#';
+  // Normaliza raw → image (corrige URLs salvas com endpoint errado)
+  let fixed = url.replace('/raw/upload/', '/image/upload/');
+  // Insere fl_attachment após "/image/upload/" para forçar download
+  fixed = fixed.replace('/image/upload/', '/image/upload/fl_attachment/');
+  return fixed;
+}
+
+/* Extrai número da NF a partir do nome do arquivo PDF (chave NFe no filename)
+   Estrutura: {44-dígitos}-danfe.pdf  → nNF está nas posições 25-33 da chave */
+function extractNFfromPDFFilename(filename) {
+  const match = filename.match(/^(\d{44})-/);
+  if (!match) return null;
+  const key = match[1];
+  const nNF = key.substring(25, 34); // 9 dígitos do nNF
+  return parseInt(nNF, 10).toString(); // remove zeros à esquerda
+}
+
+/* Salva arquivo nos dados da nota no Firestore */
+async function saveFileToNota(notaId, fileEntry) {
+  const nota = window._state.notas.find(n => n.id === notaId);
+  const existing = (nota && nota.files) ? nota.files : [];
+  // Não duplica por tipo: substitui se já existe PDF ou XML
+  const filtered = existing.filter(f => f.type !== fileEntry.type);
+  const newFiles = [...filtered, fileEntry];
+  await updateDoc(doc(window._state.db, 'notas', notaId), { files: newFiles });
+}
+
+/* Upload de arquivo direto pelo botão do card */
+window.handleCardFileUpload = async function(event, nfId) {
+  const file = event.target.files[0];
+  if (!file) return;
+  event.target.value = '';
+
+  const nota = window._state.notas.find(n => n.id === nfId);
+  if (!nota) { toast('Nota não encontrada', 'error'); return; }
+
+  // Feedback visual
+  const progressEl = document.getElementById('upload-prog-' + nfId);
+  if (progressEl) { progressEl.style.display = 'inline'; progressEl.classList.add('active'); }
+  toast('Enviando arquivo…', '');
+
+  try {
+    const url = await uploadToCloudinary(file);
+    const ext = file.name.split('.').pop().toLowerCase();
+    const type = ext === 'pdf' ? 'pdf' : 'img';
+    const fileEntry = {
+      url,
+      name: file.name,
+      type,
+      createdAt: new Date().toLocaleString('pt-BR')
+    };
+    await saveFileToNota(nfId, fileEntry);
+    toast(`Arquivo anexado à NF ${nota.numero_nf} ✅`, 'success');
+  } catch(e) {
+    toast('Erro no upload: ' + e.message, 'error');
+  } finally {
+    if (progressEl) { progressEl.style.display = 'none'; progressEl.classList.remove('active'); }
+  }
+};
+
+/* ── IMPORT FILES (XML + PDF) ── */
 let _importFiles = [];
+let _importPdfs  = []; // { file, nf, status }
 
 window.openImport = () => { clearImport(); openModal('modal-import'); };
 
@@ -1177,8 +1290,13 @@ window.onFileSelect = e => { handleFiles([...e.target.files]); e.target.value=''
 
 function handleFiles(files) {
   files.forEach(f => {
-    if (f.name.split('.').pop().toLowerCase() !== 'xml') return;
-    _importFiles.push({ file: f, parsed: null, status: 'pending' });
+    const ext = f.name.split('.').pop().toLowerCase();
+    if (ext === 'xml') {
+      _importFiles.push({ file: f, parsed: null, status: 'pending', kind: 'xml' });
+    } else if (ext === 'pdf') {
+      const nf = extractNFfromPDFFilename(f.name);
+      _importPdfs.push({ file: f, nf, status: nf ? 'ready' : 'error', kind: 'pdf' });
+    }
   });
   const promises = _importFiles.filter(i=>!i.parsed&&i.status==='pending').map(item =>
     item.file.text().then(text => {
@@ -1192,21 +1310,33 @@ function handleFiles(files) {
 
 function renderImportList() {
   const list = document.getElementById('upload-files-list');
-  if (!_importFiles.length) { list.innerHTML=''; return; }
-  list.innerHTML = _importFiles.map(item => {
-    let statusTxt='', statusClass='';
-    if (item.status==='ready')    { statusTxt='✓ Válido';    statusClass='ok'; }
-    if (item.status==='error')    { statusTxt='✗ Inválido';  statusClass='err'; }
-    if (item.status==='dup')      { statusTxt='Duplicado';   statusClass='dup'; }
-    if (item.status==='pending')  { statusTxt='Lendo…'; }
-    if (item.status==='imported') { statusTxt='✓ Importado'; statusClass='ok'; }
+  const allItems = [..._importFiles, ..._importPdfs];
+  if (!allItems.length) { list.innerHTML=''; return; }
+  list.innerHTML = allItems.map(item => {
+    let statusTxt='', statusClass='', icon='📄';
+    if (item.kind === 'pdf') {
+      icon = '🟥';
+      if (item.status === 'ready')    { statusTxt = `✓ NF ${item.nf}`; statusClass = 'ok'; }
+      if (item.status === 'error')    { statusTxt = '✗ NF não identificada'; statusClass = 'err'; }
+      if (item.status === 'uploaded') { statusTxt = '✓ Enviado';  statusClass = 'ok'; }
+      if (item.status === 'notfound') { statusTxt = '⚠ NF não no sistema'; statusClass = 'err'; }
+    } else {
+      if (item.status==='ready')    { statusTxt='✓ Válido';    statusClass='ok'; }
+      if (item.status==='error')    { statusTxt='✗ Inválido';  statusClass='err'; }
+      if (item.status==='dup')      { statusTxt='Duplicado';   statusClass='dup'; }
+      if (item.status==='pending')  { statusTxt='Lendo…'; }
+      if (item.status==='imported') { statusTxt='✓ Importado'; statusClass='ok'; }
+    }
     return `<div class="upload-file-item">
-      <span class="upload-file-icon">📄</span>
+      <span class="upload-file-icon">${icon}</span>
       <span class="upload-file-name">${item.file.name}</span>
       <span class="upload-file-status ${statusClass}">${statusTxt}</span>
     </div>`;
   }).join('');
-  const hasReady = _importFiles.some(i=>i.status==='ready');
+
+  const hasReadyXml = _importFiles.some(i=>i.status==='ready');
+  const hasReadyPdf = _importPdfs.some(i=>i.status==='ready');
+  const hasReady = hasReadyXml || hasReadyPdf;
   const btn = document.getElementById('btn-do-import');
   btn.disabled = !hasReady;
   btn.style.opacity = hasReady ? '1' : '.5';
@@ -1214,6 +1344,7 @@ function renderImportList() {
 
 function clearImport() {
   _importFiles = [];
+  _importPdfs  = [];
   renderImportList();
   document.getElementById('import-progress').style.display='none';
   document.getElementById('import-progress-fill').style.width='0%';
@@ -1221,31 +1352,85 @@ function clearImport() {
 
 window.doImport = async function() {
   const xmlItems = _importFiles.filter(i=>i.status==='ready');
-  if (!xmlItems.length) return;
+  const pdfItems = _importPdfs.filter(i=>i.status==='ready');
+  if (!xmlItems.length && !pdfItems.length) return;
 
+  const total = xmlItems.length + pdfItems.length;
   document.getElementById('import-progress').style.display='block';
   const progFill = document.getElementById('import-progress-fill');
   const progText = document.getElementById('import-progress-text');
   document.getElementById('btn-do-import').disabled = true;
 
-  let ok=0, dup=0, err=0;
+  let ok=0, dup=0, err=0, pdfOk=0, pdfErr=0;
+  // Mapeia nNF → docId criado nesta sessão
+  const nfToId = {};
+
+  // ── 1) Importar XMLs ──
   for (let idx=0; idx<xmlItems.length; idx++) {
     const item = xmlItems[idx];
-    progText.textContent = `Importando ${idx+1}/${xmlItems.length}…`;
-    progFill.style.width = ((idx+1)/xmlItems.length*100)+'%';
+    progText.textContent = `Importando XML ${idx+1}/${xmlItems.length}…`;
+    progFill.style.width = ((idx+1)/total*100)+'%';
     const result = await addNota({ ...item.parsed });
-    if (result==='ok')  { ok++;  item.status='imported'; }
-    if (result==='dup') { dup++; item.status='dup'; }
-    if (result==='err') { err++; item.status='error'; }
+    if (result.result==='ok')  {
+      ok++;
+      item.status='imported';
+      nfToId[item.parsed.numero_nf] = result.id;
+    }
+    if (result.result==='dup') { dup++; item.status='dup'; }
+    if (result.result==='err') { err++; item.status='error'; }
     renderImportList();
   }
 
-  progText.textContent='Concluído!';
+  // ── 2) Aguarda onSnapshot propagar novos docs (max 3s) ──
+  if (pdfItems.length) {
+    await new Promise(r => setTimeout(r, 1200));
+  }
+
+  // ── 3) Upload e vinculação de PDFs ──
+  for (let idx=0; idx<pdfItems.length; idx++) {
+    const item = pdfItems[idx];
+    progText.textContent = `Enviando PDF ${idx+1}/${pdfItems.length}: NF ${item.nf}…`;
+    progFill.style.width = ((xmlItems.length + idx+1)/total*100)+'%';
+
+    // Localiza a nota no Firebase (recém-criada ou já existente)
+    let nota = window._state.notas.find(n => n.numero_nf === item.nf && !n.arquivada);
+    // Tenta também pelo ID recém-criado
+    if (!nota && nfToId[item.nf]) {
+      nota = { id: nfToId[item.nf], numero_nf: item.nf, files: [] };
+    }
+
+    if (!nota) {
+      item.status = 'notfound';
+      pdfErr++;
+      renderImportList();
+      continue;
+    }
+
+    try {
+      const url = await uploadToCloudinary(item.file);
+      await saveFileToNota(nota.id, {
+        url,
+        name: item.file.name,
+        type: 'pdf',
+        createdAt: new Date().toLocaleString('pt-BR')
+      });
+      item.status = 'uploaded';
+      pdfOk++;
+    } catch(e) {
+      item.status = 'error';
+      pdfErr++;
+    }
+    renderImportList();
+  }
+
+  progText.textContent = 'Concluído!';
   const parts=[];
-  if (ok)  parts.push(`✅ ${ok} importada(s)`);
-  if (dup) parts.push(`⚠️ ${dup} duplicada(s)`);
-  if (err) parts.push(`❌ ${err} erro(s)`);
-  toast(parts.join(' · '), ok ? 'success' : 'warn');
+  if (ok)     parts.push(`✅ ${ok} XML importado(s)`);
+  if (dup)    parts.push(`⚠️ ${dup} duplicado(s)`);
+  if (err)    parts.push(`❌ ${err} erro(s)`);
+  if (pdfOk)  parts.push(`📎 ${pdfOk} PDF(s) vinculado(s)`);
+  if (pdfErr) parts.push(`⚠️ ${pdfErr} PDF(s) sem NF`);
+  toast(parts.join(' · '), ok||pdfOk ? 'success' : 'warn');
   setStatus(parts.join(' | ') + ' — ' + new Date().toLocaleTimeString('pt-BR'));
   document.getElementById('btn-do-import').disabled = false;
 };
@@ -1272,12 +1457,12 @@ window.doManualImport = async function() {
     chave: chave || ('manual-' + nf),
   });
 
-  if (result === 'ok') {
+  if (result.result === 'ok') {
     toast(`NF ${nf} adicionada com sucesso ✅`, 'success');
     ['manual-nf','manual-cliente','manual-valor','manual-data','manual-chave']
       .forEach(id => { document.getElementById(id).value = ''; });
     closeModal('modal-import');
-  } else if (result === 'dup') {
+  } else if (result.result === 'dup') {
     toast(`NF ${nf} já existe no sistema`, 'warn');
   } else {
     toast('Erro ao salvar a nota', 'error');
@@ -1722,6 +1907,36 @@ function cardHTML(nota) {
   const entreguneDateBadge = (entregue && data_entrega)
     ? `<span class="card-date entregue-date">🕐 ${data_entrega}</span>` : '';
 
+  // ── BARRA DE ARQUIVOS (PDF + XML) ──
+  const files = nota.files || [];
+  const pdfFile = files.find(f => f.type === 'pdf');
+  const xmlFile = files.find(f => f.type === 'xml');
+
+  const svgDown = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+  const svgUp   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`;
+
+  const btnPdf = pdfFile
+    ? `<a href="${getCloudinaryDownloadUrl(pdfFile.url)}" target="_blank" class="btn-dl pdf" title="Baixar DANFE (PDF) — ${pdfFile.name}">${svgDown} PDF</a>`
+    : `<button class="btn-dl pdf dim" disabled title="Nenhum PDF anexado">${svgDown} PDF</button>`;
+
+  const btnXml = xmlFile
+    ? `<a href="${xmlFile.url}" target="_blank" class="btn-dl xml" title="Baixar XML — ${xmlFile.name}">${svgDown} XML</a>`
+    : `<button class="btn-dl xml dim" disabled title="Nenhum XML anexado">${svgDown} XML</button>`;
+
+  const uploadTrigger = `
+    <label class="btn-dl-upload" title="Anexar PDF ou imagem" onclick="event.stopPropagation()">
+      <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="handleCardFileUpload(event,'${id}')">
+      ${svgUp} Anexar
+    </label>
+    <span class="card-upload-progress" id="upload-prog-${id}">⏳ Enviando…</span>`;
+
+  const filesBar = `
+    <div class="card-files-bar">
+      ${btnPdf}
+      ${btnXml}
+      ${uploadTrigger}
+    </div>`;
+
   // Seção de obs inline
   const obsSection = `
     <div class="card-obs-section">
@@ -1751,6 +1966,7 @@ function cardHTML(nota) {
       ${tentativaBadge}
       ${foraEstadoBadge}
     </div>
+    ${filesBar}
     ${obsSection}
     <div class="card-actions">
       ${entregarBtn}${devolverBtn}${removerBtn}
