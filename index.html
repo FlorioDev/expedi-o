@@ -37,6 +37,10 @@
   --red:        #DC2626;
   --red-lt:     #FEF2F2;
 
+  --pink:       #ec4848;
+  --pink-lt:    #FDF2F8;
+  --pink-dk:    #db2727;
+
   --txt:        #111827;
   --txt2:       #4B5563;
   --txt3:       #9CA3AF;
@@ -144,7 +148,7 @@ a { color: inherit; text-decoration: none; }
 .btn-backup:hover { background: #eff4ff; color: var(--blue); border-color: var(--blue); transform: translateY(-1px); }
 
 .btn-logout { display: flex; align-items: center; gap: 6px; background: var(--surface2); color: var(--txt2); font-size: 12px; font-weight: 600; padding: 7px 13px; border-radius: var(--radius-sm); border: 1px solid var(--border); transition: var(--transition); white-space: nowrap; }
-.btn-logout:hover { background: var(--red-lt); color: var(--red); border-color: #FECACA; }
+.btn-logout:hover { background: var(--red-lt); color: var(--red); border-color: #ffb342; }
 
 .fb-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; box-shadow: 0 0 0 2px var(--green-lt); }
 .fb-dot.offline { background: var(--red); box-shadow: 0 0 0 2px var(--red-lt); }
@@ -183,6 +187,64 @@ a { color: inherit; text-decoration: none; }
 /* Estado ENTREGUE */
 .card.card-entregue { background: #f0fdf4; border-color: #bbf7d0; border-left-color: var(--green) !important; cursor: default; }
 .card.card-entregue:hover { transform: none; border-color: #bbf7d0; border-left-color: var(--green) !important; box-shadow: none; }
+
+/* ANIMAÇÃO DE ATENÇÃO - PISCA SUAVEMENTE */
+.card.card-atencao {
+  animation: atencaoPulse 1.2s ease-in-out infinite;
+  position: relative;
+  z-index: 10;
+}
+@keyframes atencaoPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(236, 72, 153, 0);
+    border-left-color: var(--accent);
+  }
+  25% {
+    box-shadow: 0 0 0 6px rgba(236, 72, 153, 0.3);
+    border-left-color: var(--pink);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(236, 72, 153, 0.15);
+    border-left-color: var(--pink);
+    transform: scale(1.01);
+  }
+  75% {
+    box-shadow: 0 0 0 6px rgba(236, 72, 153, 0.3);
+    border-left-color: var(--pink);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(236, 72, 153, 0);
+    border-left-color: var(--accent);
+  }
+}
+
+/* Botão de atenção */
+.btn-action.atencao {
+  color: var(--pink);
+  background: var(--pink-lt);
+  border-color: #ff823a;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+.btn-action.atencao:hover {
+  background: #fce7f3;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
+}
+.btn-action.atencao-active {
+  color: #fff !important;
+  background: linear-gradient(135deg, var(--pink) 0%, var(--pink-dk) 100%) !important;
+  border-color: var(--pink-dk) !important;
+  animation: atencaoBtnPulse 1s ease-in-out infinite;
+}
+@keyframes atencaoBtnPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.3);
+  }
+}
 
 .card-stamp { position: absolute; top: 8px; right: 10px; background: var(--green); color: #fff; font-size: 9px; font-weight: 800; letter-spacing: .12em; padding: 2px 7px; border-radius: 4px; transform: rotate(2deg); border: 1.5px solid var(--green-dk); text-transform: uppercase; box-shadow: 0 2px 6px rgba(5,150,105,.3); }
 
@@ -586,7 +648,7 @@ a { color: inherit; text-decoration: none; }
 
       <div class="topbar-creator">
         <span class="topbar-creator-name">Criado por: Leandro NP</span>
-        <span class="topbar-creator-version">Versão 1.3</span>
+        <span class="topbar-creator-version">Versão 1.4</span>
       </div>
 
       <button class="btn-logout" onclick="doLogout()" title="Sair">
@@ -1083,6 +1145,7 @@ async function addNota(nota) {
   nota.data_entrega    = '';
   nota.tentativas_entrega = 0;
   nota.historico       = [];
+  nota.atencao         = false; // Estado de atenção
 
   if (nota.chave && nota.chave.length > 10) {
     if (window._state.notas.find(n => n.chave === nota.chave)) return { result: 'dup', id: null };
@@ -1113,6 +1176,18 @@ window._toggleForaEstado = async function(id) {
   try {
     await updateDoc(doc(window._state.db, 'notas', id), { fora_estado: novo });
     toast(novo ? '🗺️ Nota marcada como Transportadora' : 'Nota desmarcada como Transportadora', novo ? 'warn' : '');
+  } catch(e) { toast('Erro: ' + e.message, 'error'); }
+};
+
+// Função para alternar o estado de atenção do card
+window._toggleAtencao = async function(id) {
+  const nota = window._state.notas.find(n => n.id === id);
+  if (!nota) return;
+  const novoEstado = !nota.atencao;
+  try {
+    await updateDoc(doc(window._state.db, 'notas', id), { atencao: novoEstado });
+    toast(novoEstado ? '🔔 Atenção ativada para esta nota!' : '🔕 Atenção desativada', novoEstado ? 'warn' : '');
+    // O card será atualizado automaticamente pelo listener do Firebase
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
@@ -2102,7 +2177,7 @@ window.exportarEntregues = function() {
   </div>
   <div class="badge">${notas.length} nota(s)</div>
 </header>
-<table>
+<tr>
   <thead><tr><th>NF</th><th>Cliente</th><th>Valor</th><th>Emissão</th><th>Data Entrega</th><th>Tentativas</th><th>Transportadora</th><th>Observações</th></tr></thead>
   <tbody>${rows}
     <tr class="total-row">
@@ -2517,10 +2592,14 @@ function buildCard(nota) {
   const isEntregue = !!nota.entregue;
   const hasObs = !!(nota.observacao && nota.observacao.trim());
   const foraEstado = !!nota.fora_estado;
+  const emAtencao = !!nota.atencao;
+  
   card.className = 'card'
     + (isEntregue ? ' card-entregue' : '')
     + (hasObs ? ' card-has-obs' : '')
-    + (foraEstado ? ' card-fora-estado' : '');
+    + (foraEstado ? ' card-fora-estado' : '')
+    + (emAtencao ? ' card-atencao' : '');
+    
   card.dataset.id = nota.id;
   card.style.setProperty('--accent', foraEstado ? '#db2777' : (ACCENT[nota.status] || ACCENT.lancada));
   const locked = isEntregue && nota.status === 'retirada';
@@ -2541,6 +2620,7 @@ function updateCardInPlace(card, nota) {
   const hasObs = !!(nota.observacao && nota.observacao.trim());
   const locked = isEntregue && nota.status === 'retirada';
   const foraEstado = !!nota.fora_estado;
+  const emAtencao = !!nota.atencao;
 
   const editorOpen = card.querySelector('.card-obs-editor.open');
   const wasOpen = !!editorOpen;
@@ -2549,7 +2629,9 @@ function updateCardInPlace(card, nota) {
   card.className = 'card'
     + (isEntregue ? ' card-entregue' : '')
     + (hasObs ? ' card-has-obs' : '')
-    + (foraEstado ? ' card-fora-estado' : '');
+    + (foraEstado ? ' card-fora-estado' : '')
+    + (emAtencao ? ' card-atencao' : '');
+    
   card.draggable = !locked;
   card.style.setProperty('--accent', foraEstado ? '#db2777' : (ACCENT[nota.status] || ACCENT.lancada));
   card.innerHTML = cardHTML(nota);
@@ -2584,9 +2666,10 @@ function updateCardInPlace(card, nota) {
 }
 
 function cardHTML(nota) {
-  const { id, numero_nf, cliente, valor, data_emissao, status, observacao, entregue, data_entrega, tentativas_entrega, fora_estado } = nota;
+  const { id, numero_nf, cliente, valor, data_emissao, status, observacao, entregue, data_entrega, tentativas_entrega, fora_estado, atencao } = nota;
   const hasObs = !!(observacao && observacao.trim());
   const foraEstado = !!fora_estado;
+  const emAtencao = !!atencao;
   const cli = (cliente||'').length>32 ? (cliente||'').slice(0,32)+'…' : (cliente||'');
   const tentativas = tentativas_entrega || 0;
   const obsEscaped = (observacao||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -2624,6 +2707,15 @@ function cardHTML(nota) {
        </button>`
     : `<button class="btn-action fora-estado-off" onclick="event.stopPropagation();_toggleForaEstado('${id}')">
         🗺️ Transportadora?
+       </button>`;
+
+  // Botão de atenção - alterna o estado
+  const atencaoBtn = emAtencao
+    ? `<button class="btn-action atencao atencao-active" onclick="event.stopPropagation();_toggleAtencao('${id}')" title="Desativar atenção">
+        🔔 Atenção
+       </button>`
+    : `<button class="btn-action atencao" onclick="event.stopPropagation();_toggleAtencao('${id}')" title="Chamar atenção para este card">
+        🔕 Chamar Atenção
        </button>`;
 
   const deleteBtn = `<button class="btn-action del" onclick="openDelModal('${id}','${numero_nf}')">
@@ -2696,6 +2788,7 @@ function cardHTML(nota) {
     <div class="card-actions">
       ${entregarBtn}${devolverBtn}${removerBtn}
       ${foraEstadoBtn}
+      ${atencaoBtn}
       ${deleteBtn}
     </div>`;
 }
