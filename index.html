@@ -120,7 +120,6 @@ a { color: inherit; text-decoration: none; }
 
 .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 
-/* Info criador */
 .topbar-creator { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; font-size: 10px; color: var(--txt3); line-height: 1.3; padding-right: 4px; border-right: 1px solid var(--border); margin-right: 4px; }
 .topbar-creator-name { font-weight: 600; color: var(--txt2); }
 .topbar-creator-version { font-weight: 800; color: var(--blue); font-family: var(--mono); letter-spacing: .02em; }
@@ -130,7 +129,7 @@ a { color: inherit; text-decoration: none; }
 #search-input { padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--txt); background: var(--surface2); width: 200px; transition: var(--transition); outline: none; }
 #search-input:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
 
-/* Nav tabs (Board / Relatórios) */
+/* Nav tabs */
 .nav-tabs { display: flex; gap: 2px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 2px; }
 .nav-tab { padding: 5px 14px; font-size: 12px; font-weight: 600; border-radius: 6px; color: var(--txt3); transition: var(--transition); cursor: pointer; white-space: nowrap; }
 .nav-tab.active { background: var(--surface); color: var(--txt); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
@@ -139,6 +138,10 @@ a { color: inherit; text-decoration: none; }
 .btn-import { display: flex; align-items: center; gap: 7px; background: var(--blue); color: #fff; font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: var(--radius-sm); transition: var(--transition); white-space: nowrap; }
 .btn-import:hover { background: var(--blue-dk); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,.25); }
 .btn-import:active { transform: translateY(0); }
+
+/* Botão backup */
+.btn-backup { display: flex; align-items: center; gap: 6px; background: var(--surface2); color: var(--txt2); font-size: 12px; font-weight: 600; padding: 7px 13px; border-radius: var(--radius-sm); border: 1px solid var(--border); transition: var(--transition); white-space: nowrap; }
+.btn-backup:hover { background: #eff4ff; color: var(--blue); border-color: var(--blue); transform: translateY(-1px); }
 
 .btn-logout { display: flex; align-items: center; gap: 6px; background: var(--surface2); color: var(--txt2); font-size: 12px; font-weight: 600; padding: 7px 13px; border-radius: var(--radius-sm); border: 1px solid var(--border); transition: var(--transition); white-space: nowrap; }
 .btn-logout:hover { background: var(--red-lt); color: var(--red); border-color: #FECACA; }
@@ -183,7 +186,7 @@ a { color: inherit; text-decoration: none; }
 
 .card-stamp { position: absolute; top: 8px; right: 10px; background: var(--green); color: #fff; font-size: 9px; font-weight: 800; letter-spacing: .12em; padding: 2px 7px; border-radius: 4px; transform: rotate(2deg); border: 1.5px solid var(--green-dk); text-transform: uppercase; box-shadow: 0 2px 6px rgba(5,150,105,.3); }
 
-/* Badge tentativa de entrega anterior */
+/* Badge tentativa */
 .card-tentativa-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 9px; font-weight: 700; color: var(--amber-dk); background: var(--amber-lt); border: 1px solid #FDE68A; border-radius: 4px; padding: 1px 5px; white-space: nowrap; }
 
 .card-top { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 5px; }
@@ -193,173 +196,56 @@ a { color: inherit; text-decoration: none; }
 .card-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .card-date { font-size: 11px; color: var(--txt3); font-family: var(--mono); }
 .card-date.entregue-date { color: var(--green); font-weight: 600; font-family: var(--font); }
-.card-obs-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--amber); color: #fff; display: flex; align-items: center; gap: 3px; box-shadow: 0 1px 4px rgba(217,119,6,.35); cursor: pointer; }
-.card-obs-badge:hover { background: var(--amber-dk); }
 
-/* Card com observação — destaque visual */
+/* Card com observação */
 .card.card-has-obs { border-left-width: 4px; background: #fffdf5; }
 .card.card-has-obs .card-nf::after { content: ' 📝'; font-size: 11px; opacity: .8; }
 
-/* =========================================================
-   CARD — FORA DO ESTADO
-   Visual profissional azul petróleo + âmbar
-========================================================= */
-
+/* FORA DO ESTADO */
 .card.card-fora-estado {
   background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
   border: 1px solid #7dd3fc;
   border-left: 4px solid #0f4c81 !important;
   border-radius: 12px;
-
-  box-shadow:
-    0 3px 14px rgba(15, 76, 129, 0.12),
-    inset 0 1px 0 rgba(255,255,255,0.35);
-
-  transition:
-    transform .18s ease,
-    box-shadow .18s ease,
-    border-color .18s ease;
+  box-shadow: 0 3px 14px rgba(15, 76, 129, 0.12), inset 0 1px 0 rgba(255,255,255,0.35);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-
 .card.card-fora-estado:hover {
-  border-color: #f59e0b;
-
-  border-left-color: #d97706 !important;
-
-  box-shadow:
-    0 6px 22px rgba(15, 76, 129, 0.22),
-    inset 0 1px 0 rgba(255,255,255,0.45);
-
+  border-color: #f59e0b; border-left-color: #d97706 !important;
+  box-shadow: 0 6px 22px rgba(15, 76, 129, 0.22), inset 0 1px 0 rgba(255,255,255,0.45);
   transform: translateY(-2px);
 }
-
-/* Número NF */
-.card.card-fora-estado .card-nf {
-  color: #0f4c81;
-  font-weight: 800;
-}
-
-/* Valor */
-.card.card-fora-estado .card-valor {
-  color: #b45309;
-  font-weight: 700;
-}
-
-/* Cliente */
-.card.card-fora-estado .card-cli {
-  color: #334155;
-  font-weight: 600;
-}
-
-/* Data */
-.card.card-fora-estado .card-date {
-  color: #475569;
-}
-
-/* Área de observação */
-.card.card-fora-estado .obs-box,
-.card.card-fora-estado textarea {
-  background: rgba(255,255,255,0.75);
-  border: 1px solid #7dd3fc;
-}
-
-/* =========================================================
-   BADGE — FORA DO ESTADO
-========================================================= */
+.card.card-fora-estado .card-nf { color: #0f4c81; font-weight: 800; }
+.card.card-fora-estado .card-valor { color: #b45309; font-weight: 700; }
+.card.card-fora-estado .card-cli { color: #334155; font-weight: 600; }
+.card.card-fora-estado .card-date { color: #475569; }
 
 .card-fora-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-
-  padding: 4px 8px;
-
+  display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px;
   background: linear-gradient(135deg, #0f4c81 0%, #1d4ed8 100%);
-  color: #ffffff;
-
-  border: 1px solid #60a5fa;
-  border-radius: 6px;
-
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-
+  color: #ffffff; border: 1px solid #60a5fa; border-radius: 6px;
+  font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
   box-shadow: 0 3px 10px rgba(29, 78, 216, 0.35);
-
-  transition:
-    transform .15s ease,
-    box-shadow .15s ease;
+  transition: transform .15s ease, box-shadow .15s ease;
 }
+.card-fora-badge:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(29, 78, 216, 0.45); }
 
-.card-fora-badge:hover {
-  transform: translateY(-1px);
-
-  box-shadow: 0 5px 14px rgba(29, 78, 216, 0.45);
-}
-
-/* =========================================================
-   BOTÃO — TOGGLE FORA DO ESTADO
-========================================================= */
-
-/* Estado desligado */
+/* Botões fora estado */
 .btn-action.fora-estado-off {
-  background: #ffffff;
-  color: #0f4c81;
-
-  border: 1px solid #7dd3fc;
-  border-radius: 6px;
-
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .02em;
-
+  background: #ffffff; color: #0f4c81; border: 1px solid #7dd3fc;
+  border-radius: 6px; font-size: 10px; font-weight: 700; letter-spacing: .02em;
   transition: all .15s ease;
 }
-
-.btn-action.fora-estado-off:hover {
-  background: #e0f2fe;
-  border-color: #38bdf8;
-
-  transform: translateY(-1px);
-}
-
-/* Estado ligado */
+.btn-action.fora-estado-off:hover { background: #e0f2fe; border-color: #38bdf8; transform: translateY(-1px); }
 .btn-action.fora-estado-on {
   background: linear-gradient(135deg, #0f4c81 0%, #1d4ed8 100%);
-  color: #ffffff;
-
-  border: 1px solid #2563eb;
-  border-radius: 6px;
-
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .02em;
-
-  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25);
-
-  transition: all .15s ease;
+  color: #ffffff; border: 1px solid #2563eb; border-radius: 6px;
+  font-size: 10px; font-weight: 700; letter-spacing: .02em;
+  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25); transition: all .15s ease;
 }
+.btn-action.fora-estado-on:hover { background: linear-gradient(135deg, #0c3b63 0%, #1e40af 100%); transform: translateY(-1px); box-shadow: 0 5px 16px rgba(37, 99, 235, 0.35); }
 
-.btn-action.fora-estado-on:hover {
-  background: linear-gradient(135deg, #0c3b63 0%, #1e40af 100%);
-
-  transform: translateY(-1px);
-
-  box-shadow: 0 5px 16px rgba(37, 99, 235, 0.35);
-}
-
-/* =========================================================
-   ANIMAÇÃO SUAVE
-========================================================= */
-
-.card.card-fora-estado,
-.card-fora-badge,
-.btn-action {
-  transition: all .18s ease;
-}
-
-/* ── Obs Inline ── */
+/* Obs Inline */
 .card-obs-section { margin-top: 8px; }
 .card-obs-display { background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; padding: 6px 9px; font-size: 11px; color: var(--amber-dk); line-height: 1.5; cursor: pointer; position: relative; white-space: pre-wrap; word-break: break-word; }
 .card-obs-display::after { content: ' ✏'; opacity: .5; font-size: 10px; }
@@ -388,9 +274,7 @@ a { color: inherit; text-decoration: none; }
 .btn-action.remover { color: var(--txt2); background: var(--surface2); border-color: var(--border2); margin-left: auto; }
 .btn-action.remover:hover { background: var(--red-lt); color: var(--red); border-color: #FECACA; }
 
-/* ═══════════════════════════════════════════
-   CARD — BARRA DE ARQUIVOS (PDF / XML)
-═══════════════════════════════════════════ */
+/* Barra de arquivos */
 .card-files-bar { display: flex; align-items: center; gap: 4px; margin-top: 7px; padding-top: 7px; border-top: 1px dashed var(--border); flex-wrap: wrap; }
 .btn-dl { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 5px; transition: var(--transition); text-decoration: none; border: 1.5px solid; white-space: nowrap; cursor: pointer; line-height: 1.4; }
 .btn-dl.pdf         { color: #b91c1c; background: #fef2f2; border-color: #fca5a5; }
@@ -405,9 +289,7 @@ a { color: inherit; text-decoration: none; }
 .card-upload-progress { font-size: 10px; color: var(--blue); font-weight: 600; display: none; margin-left: 4px; }
 .card-upload-progress.active { display: inline; animation: pulse .7s ease-in-out infinite alternate; }
 
-/* ═══════════════════════════════════════════
-   DRAG GHOST
-═══════════════════════════════════════════ */
+/* Drag Ghost */
 #drag-ghost { position: fixed; pointer-events: none; z-index: 9999; background: var(--surface); border-radius: var(--radius-sm); padding: 8px 14px; box-shadow: var(--shadow-drag); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; opacity: 0; transform: rotate(2deg) scale(1.04); transition: opacity .12s; min-width: 120px; border-left: 3px solid var(--ghost-color, #888); }
 #drag-ghost.visible { opacity: 1; }
 #drag-ghost .ghost-nf { color: var(--ghost-color, #888); font-family: var(--mono); }
@@ -433,9 +315,7 @@ a { color: inherit; text-decoration: none; }
 .btn-modal.danger { background: var(--red); color: #fff; }
 .btn-modal.danger:hover { background: #B91C1C; }
 
-/* ═══════════════════════════════════════════
-   IMPORT MODAL — TABS
-═══════════════════════════════════════════ */
+/* Import Modal */
 .import-tabs { display: flex; margin-bottom: 14px; border-bottom: 2px solid var(--border); }
 .import-tab { padding: 8px 18px; font-size: 13px; font-weight: 600; color: var(--txt3); border-bottom: 2px solid transparent; margin-bottom: -2px; cursor: pointer; transition: var(--transition); background: none; border-top: none; border-left: none; border-right: none; }
 .import-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
@@ -443,7 +323,6 @@ a { color: inherit; text-decoration: none; }
 .import-panel { display: none; }
 .import-panel.active { display: block; }
 
-/* Upload area */
 .upload-area { border: 2px dashed var(--border2); border-radius: var(--radius-sm); padding: 20px; text-align: center; color: var(--txt3); font-size: 13px; transition: var(--transition); cursor: pointer; margin-bottom: 14px; }
 .upload-area:hover, .upload-area.dragover { border-color: var(--blue); background: var(--blue-lt); color: var(--blue); }
 .upload-area input { display: none; }
@@ -458,7 +337,6 @@ a { color: inherit; text-decoration: none; }
 .progress-bar { width: 100%; height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 4px; }
 .progress-fill { height: 100%; background: var(--blue); border-radius: 99px; transition: width .3s; }
 
-/* Manual form */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 4px; }
 .form-field { display: flex; flex-direction: column; gap: 5px; }
 .form-field.full { grid-column: 1 / -1; }
@@ -466,9 +344,7 @@ a { color: inherit; text-decoration: none; }
 .form-input { padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--txt); background: var(--surface2); outline: none; transition: var(--transition); width: 100%; }
 .form-input:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
 
-/* ═══════════════════════════════════════════
-   TOAST
-═══════════════════════════════════════════ */
+/* Toast */
 #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
 .toast { background: var(--txt); color: #fff; padding: 10px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; box-shadow: 0 4px 20px rgba(0,0,0,.2); display: flex; align-items: center; gap: 8px; animation: toastIn .25s cubic-bezier(.34,1.56,.64,1) both; pointer-events: all; max-width: 320px; }
 .toast.success { background: var(--green); }
@@ -477,11 +353,114 @@ a { color: inherit; text-decoration: none; }
 @keyframes toastIn  { from { opacity: 0; transform: translateY(10px) scale(.96); } to { opacity: 1; transform: none; } }
 @keyframes toastOut { to { opacity: 0; transform: translateY(6px) scale(.96); } }
 
-/* ═══════════════════════════════════════════
-   EMPTY STATE
-═══════════════════════════════════════════ */
 .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px 12px; text-align: center; color: var(--txt3); font-size: 12px; }
 .empty-icon { font-size: 28px; opacity: .5; }
+
+/* ═══════════════════════════════════════════
+   COUNTDOWN OVERLAY
+═══════════════════════════════════════════ */
+.card-countdown-bar {
+  position: absolute; inset: 0; pointer-events: none;
+  border-radius: var(--radius-sm); overflow: hidden; z-index: 2;
+}
+.card-countdown-bar::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; height: 3px;
+  background: var(--green); border-radius: 0 0 0 var(--radius-sm);
+  animation: cdBar 20s linear forwards;
+}
+@keyframes cdBar { from { width: 100%; } to { width: 0%; } }
+
+.card-countdown-banner {
+  position: absolute; top: 0; left: 0; right: 0;
+  background: rgba(5,150,105,.92); color: #fff;
+  font-size: 11px; font-weight: 700; padding: 5px 10px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  z-index: 3;
+  animation: slideDown .2s ease;
+}
+@keyframes slideDown { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:none; } }
+.card-countdown-num { font-size: 16px; font-weight: 800; font-family: var(--mono); min-width: 24px; text-align: center; }
+.card-countdown-cancel { background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.4); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; cursor: pointer; pointer-events: all; transition: background .15s; }
+.card-countdown-cancel:hover { background: rgba(255,255,255,.35); }
+.card.card-pending-transfer { opacity: .85; }
+
+/* ═══════════════════════════════════════════
+   STATUS GROUPS
+═══════════════════════════════════════════ */
+.cld-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; box-shadow: 0 0 0 2px var(--green-lt); }
+.cld-dot.offline    { background: var(--red);   box-shadow: 0 0 0 2px var(--red-lt); }
+.cld-dot.connecting { background: var(--amber); box-shadow: 0 0 0 2px var(--amber-lt); animation: pulse .8s ease-in-out infinite alternate; }
+.status-group { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--txt3); }
+.status-group-label { font-family: var(--mono); font-size: 10px; white-space: nowrap; }
+
+/* ═══════════════════════════════════════════
+   PÁGINA ENTREGUES — CONTROLE DE CANHOTOS
+═══════════════════════════════════════════ */
+#page-entregues {
+  display: none; flex-direction: column; gap: 14px;
+  padding: 16px; overflow-y: auto; flex: 1;
+}
+#page-entregues.active { display: flex; }
+
+.entregues-header {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 14px 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.entregues-title { font-size: 16px; font-weight: 700; color: var(--txt); display: flex; align-items: center; gap: 8px; }
+.entregues-kpis { display: flex; gap: 10px; margin-left: auto; flex-wrap: wrap; }
+.entregues-kpi { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 14px; text-align: center; }
+.entregues-kpi-val { font-size: 18px; font-weight: 800; color: var(--green); font-family: var(--mono); }
+.entregues-kpi-lbl { font-size: 10px; color: var(--txt3); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+
+.entregues-filter-bar {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 10px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.entregues-search { padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--txt); background: var(--surface2); width: 220px; transition: var(--transition); outline: none; font-family: var(--font); }
+.entregues-search:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+.entregues-period-lbl { font-size: 12px; color: var(--txt3); margin-left: auto; font-family: var(--mono); }
+
+/* Filtros de período rápido */
+.ent-period-btns { display: flex; gap: 4px; }
+.ent-period-btn { padding: 4px 10px; font-size: 11px; font-weight: 600; border-radius: 5px; background: var(--surface2); border: 1px solid var(--border); color: var(--txt2); transition: var(--transition); cursor: pointer; }
+.ent-period-btn.active, .ent-period-btn:hover { background: var(--blue-lt); color: var(--blue); border-color: var(--blue); }
+
+/* Botão exportar entregues */
+.btn-export-ent { display: flex; align-items: center; gap: 6px; background: var(--green); color: #fff; font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: var(--radius-sm); transition: var(--transition); white-space: nowrap; }
+.btn-export-ent:hover { background: var(--green-dk); transform: translateY(-1px); box-shadow: 0 3px 10px rgba(5,150,105,.3); }
+
+.entregues-table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; flex: 1; }
+.entregues-table-title { padding: 12px 20px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
+.entregues-table { width: 100%; border-collapse: collapse; }
+.entregues-table thead tr { background: var(--green-lt); }
+.entregues-table th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700; color: var(--green-dk); letter-spacing: .04em; text-transform: uppercase; border-bottom: 1px solid var(--border); white-space: nowrap; cursor: pointer; user-select: none; }
+.entregues-table th:hover { background: #d1fae5; }
+.entregues-table th.sort-asc::after { content: ' ▲'; font-size: 9px; }
+.entregues-table th.sort-desc::after { content: ' ▼'; font-size: 9px; }
+.entregues-table td { padding: 9px 14px; font-size: 12px; color: var(--txt); border-bottom: 1px solid var(--border); vertical-align: middle; }
+.entregues-table tbody tr:last-child td { border-bottom: none; }
+.entregues-table tbody tr:hover td { background: var(--green-lt); }
+.entregues-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--green-lt); color: var(--green-dk); }
+.entregues-badge.tentativas { background: var(--amber-lt); color: var(--amber-dk); }
+.entregues-badge.fora { background: #dbeafe; color: #1d4ed8; }
+
+/* Canhoto card row detail */
+.canhoto-obs { font-size: 10px; color: var(--txt3); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Paginação */
+.pagination-bar {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 10px 16px; display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.pag-btn { padding: 6px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; color: var(--txt2); background: var(--surface2); cursor: pointer; transition: var(--transition); font-family: var(--font); }
+.pag-btn:hover:not(:disabled) { background: var(--blue-lt); color: var(--blue); border-color: var(--blue); }
+.pag-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+.pag-btn:disabled { opacity: .4; cursor: not-allowed; }
+.pag-info { font-size: 12px; color: var(--txt3); padding: 0 8px; font-family: var(--mono); }
+.entregues-empty { padding: 48px; text-align: center; color: var(--txt3); }
+.entregues-empty-icon { font-size: 40px; margin-bottom: 10px; }
 
 /* ═══════════════════════════════════════════
    PÁGINA RELATÓRIOS
@@ -498,6 +477,13 @@ a { color: inherit; text-decoration: none; }
 .btn-rel:hover { background: var(--blue-dk); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,.25); }
 .btn-rel.secondary { background: var(--surface2); color: var(--txt2); border: 1px solid var(--border); }
 .btn-rel.secondary:hover { background: var(--bg); transform: translateY(-1px); }
+.btn-rel.green { background: var(--green); }
+.btn-rel.green:hover { background: var(--green-dk); }
+
+/* Atalhos período relatório */
+.rel-shortcuts { display: flex; gap: 4px; align-items: center; margin-left: 4px; }
+.rel-shortcut { padding: 4px 9px; font-size: 11px; font-weight: 600; border-radius: 5px; background: var(--surface2); border: 1px solid var(--border); color: var(--txt2); transition: var(--transition); cursor: pointer; }
+.rel-shortcut:hover { background: var(--blue-lt); color: var(--blue); border-color: var(--blue); }
 
 /* KPI cards */
 .rel-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
@@ -519,7 +505,9 @@ a { color: inherit; text-decoration: none; }
 .rel-badge.entregue { background: var(--green-lt); color: var(--green-dk); }
 .rel-badge.tentativa { background: var(--amber-lt); color: var(--amber-dk); }
 .rel-badge.deletada  { background: var(--red-lt); color: var(--red); }
-.rel-empty { padding: 40px; text-align: center; color: var(--txt3); font-size: 13px; }
+
+/* Info source */
+.rel-source-note { font-size: 11px; color: var(--txt3); background: var(--green-lt); border: 1px solid #bbf7d0; border-radius: var(--radius-sm); padding: 8px 14px; display: flex; align-items: center; gap: 6px; }
 </style>
 </head>
 <body>
@@ -565,27 +553,40 @@ a { color: inherit; text-decoration: none; }
     </div>
     <span id="status-msg">Conectando…</span>
     <div class="topbar-right">
-      <span class="fb-dot connecting" id="fb-dot" title="Status Firebase"></span>
+      <div class="status-group" title="Status Firebase">
+        <span class="fb-dot connecting" id="fb-dot"></span>
+        <span class="status-group-label" id="fb-label">Firebase</span>
+      </div>
+      <div class="status-group" title="Status Cloudinary">
+        <span class="cld-dot connecting" id="cld-dot"></span>
+        <span class="status-group-label" id="cld-label">Cloudinary</span>
+      </div>
 
       <!-- Abas de navegação -->
       <div class="nav-tabs">
         <button class="nav-tab active" id="nav-board" onclick="switchPage('board')">📋 Operação</button>
+        <button class="nav-tab" id="nav-entregues" onclick="switchPage('entregues')">📦 Entregues</button>
         <button class="nav-tab" id="nav-rel" onclick="switchPage('relatorios')">📊 Relatórios</button>
       </div>
 
-      <div class="search-wrap">
+      <div class="search-wrap" id="search-wrap">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input id="search-input" type="text" placeholder="Buscar NF ou cliente…" oninput="renderAll()">
       </div>
-      <button class="btn-import" onclick="openImport()">
+      <button class="btn-import" id="btn-import-topbar" onclick="openImport()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         Importar NF
       </button>
 
-      <!-- Dados do criador -->
+      <!-- Botão Backup -->
+      <button class="btn-backup" onclick="fazerBackup()" title="Baixar backup completo de todos os dados">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Backup
+      </button>
+
       <div class="topbar-creator">
         <span class="topbar-creator-name">Criado por: Leandro NP</span>
-        <span class="topbar-creator-version">Versão 1.2</span>
+        <span class="topbar-creator-version">Versão 1.3</span>
       </div>
 
       <button class="btn-logout" onclick="doLogout()" title="Sair">
@@ -637,8 +638,99 @@ a { color: inherit; text-decoration: none; }
     </div>
   </div>
 
+  <!-- PÁGINA ENTREGUES — CONTROLE DE CANHOTOS -->
+  <div id="page-entregues">
+    <div class="entregues-header">
+      <div class="entregues-title">📦 Controle de Canhotos — Notas Entregues</div>
+      <div style="font-size:12px;color:var(--txt3)">Registro completo de todas as entregas confirmadas</div>
+      <div class="entregues-kpis">
+        <div class="entregues-kpi">
+          <div class="entregues-kpi-val" id="ent-total-count">0</div>
+          <div class="entregues-kpi-lbl">Total</div>
+        </div>
+        <div class="entregues-kpi">
+          <div class="entregues-kpi-val" id="ent-total-valor" style="font-size:13px">R$ 0</div>
+          <div class="entregues-kpi-lbl">Valor Total</div>
+        </div>
+        <div class="entregues-kpi">
+          <div class="entregues-kpi-val" id="ent-mes-count">0</div>
+          <div class="entregues-kpi-lbl">Este mês</div>
+        </div>
+        <div class="entregues-kpi">
+          <div class="entregues-kpi-val" id="ent-semana-count">0</div>
+          <div class="entregues-kpi-lbl">Esta semana</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="entregues-filter-bar">
+      <div style="position:relative;display:flex;align-items:center;">
+        <svg style="position:absolute;left:10px;color:var(--txt3);pointer-events:none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input class="entregues-search" id="ent-search" type="text" placeholder="Buscar NF, cliente…" oninput="renderEntregues()">
+      </div>
+      <!-- Filtros rápidos período -->
+      <div class="ent-period-btns">
+        <button class="ent-period-btn active" id="ent-btn-todos" onclick="setEntPeriodo('todos')">Todos</button>
+        <button class="ent-period-btn" id="ent-btn-hoje" onclick="setEntPeriodo('hoje')">Hoje</button>
+        <button class="ent-period-btn" id="ent-btn-semana" onclick="setEntPeriodo('semana')">Esta semana</button>
+        <button class="ent-period-btn" id="ent-btn-mes" onclick="setEntPeriodo('mes')">Este mês</button>
+      </div>
+      <!-- Filtro por datas customizado -->
+      <input type="date" id="ent-data-ini" style="padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:11px;background:var(--surface2);color:var(--txt);outline:none;" onchange="setEntPeriodo('custom')">
+      <span style="font-size:11px;color:var(--txt3)">até</span>
+      <input type="date" id="ent-data-fim" style="padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:11px;background:var(--surface2);color:var(--txt);outline:none;" onchange="setEntPeriodo('custom')">
+
+      <button class="btn-export-ent" onclick="exportarEntregues()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Exportar PDF
+      </button>
+      <span class="entregues-period-lbl" id="ent-period-lbl">Carregando…</span>
+    </div>
+
+    <div class="entregues-table-wrap">
+      <div class="entregues-table-title">
+        <span>📋 Canhotos — Notas Entregues</span>
+        <span id="ent-page-lbl" style="font-size:11px;color:var(--txt3);font-weight:400"></span>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="entregues-table">
+          <thead>
+            <tr>
+              <th onclick="sortEntregues('numero_nf')" id="th-nf">NF</th>
+              <th onclick="sortEntregues('cliente')" id="th-cli">Cliente</th>
+              <th onclick="sortEntregues('valor')" id="th-val">Valor</th>
+              <th onclick="sortEntregues('data_emissao')" id="th-emissao">Emissão</th>
+              <th onclick="sortEntregues('data_entrega')" id="th-entrega">Data Entrega</th>
+              <th>Tentativas</th>
+              <th>Transportadora</th>
+              <th>Obs</th>
+            </tr>
+          </thead>
+          <tbody id="ent-tbody"></tbody>
+        </table>
+      </div>
+      <div id="ent-empty" class="entregues-empty" style="display:none">
+        <div class="entregues-empty-icon">📦</div>
+        <div>Nenhuma nota entregue encontrada.</div>
+        <div style="font-size:11px;margin-top:4px">As notas são transferidas automaticamente após confirmação de entrega.</div>
+      </div>
+    </div>
+
+    <div class="pagination-bar" id="ent-pagination" style="display:none">
+      <button class="pag-btn" id="pag-prev" onclick="changePage(-1)">← Anterior</button>
+      <div id="pag-pages" style="display:flex;gap:4px;align-items:center"></div>
+      <button class="pag-btn" id="pag-next" onclick="changePage(1)">Próxima →</button>
+      <span class="pag-info" id="pag-info"></span>
+    </div>
+  </div>
+
   <!-- PÁGINA RELATÓRIOS -->
   <div id="page-relatorios">
+    <div class="rel-source-note">
+      <span>📦</span>
+      <span>Os relatórios são gerados a partir dos dados do módulo <strong>Entregues</strong> (Firebase), garantindo precisão e persistência.</span>
+    </div>
+
     <div class="rel-header-card">
       <div class="rel-field">
         <label class="rel-label">DATA INÍCIO</label>
@@ -647,6 +739,14 @@ a { color: inherit; text-decoration: none; }
       <div class="rel-field">
         <label class="rel-label">DATA FIM</label>
         <input class="rel-input" type="date" id="rel-fim">
+      </div>
+      <!-- Atalhos de período -->
+      <div class="rel-shortcuts">
+        <button class="rel-shortcut" onclick="relSetPeriodo('hoje')">Hoje</button>
+        <button class="rel-shortcut" onclick="relSetPeriodo('semana')">Semana</button>
+        <button class="rel-shortcut" onclick="relSetPeriodo('mes')">Mês</button>
+        <button class="rel-shortcut" onclick="relSetPeriodo('trimestre')">Trimestre</button>
+        <button class="rel-shortcut" onclick="relSetPeriodo('ano')">Ano</button>
       </div>
       <button class="btn-rel" onclick="gerarRelatorio()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -666,9 +766,9 @@ a { color: inherit; text-decoration: none; }
         <div class="rel-kpi-sub" id="kpi-entregas-sub">no período</div>
       </div>
       <div class="rel-kpi" style="--kpi-color:var(--amber)">
-        <div class="rel-kpi-label">Tentativas de Entrega</div>
+        <div class="rel-kpi-label">Tentativas / Devoluções</div>
         <div class="rel-kpi-value" id="kpi-tentativas">0</div>
-        <div class="rel-kpi-sub">com devolução registrada</div>
+        <div class="rel-kpi-sub">devoluções registradas</div>
       </div>
       <div class="rel-kpi" style="--kpi-color:var(--red)">
         <div class="rel-kpi-label">Notas Deletadas</div>
@@ -685,12 +785,17 @@ a { color: inherit; text-decoration: none; }
         <div class="rel-kpi-value" id="kpi-total">0</div>
         <div class="rel-kpi-sub">movimentadas no período</div>
       </div>
+      <div class="rel-kpi" style="--kpi-color:#0f4c81">
+        <div class="rel-kpi-label">Transportadora</div>
+        <div class="rel-kpi-value" id="kpi-transportadora">0</div>
+        <div class="rel-kpi-sub">notas fora do estado</div>
+      </div>
     </div>
 
     <!-- Tabela -->
     <div class="rel-table-wrap" id="rel-table-wrap" style="display:none">
       <div class="rel-table-title">
-        <span>Histórico detalhado</span>
+        <span>Histórico detalhado — Entregas</span>
         <span id="rel-periodo-label" style="font-size:12px;color:var(--txt3);font-weight:400"></span>
       </div>
       <div style="overflow-x:auto">
@@ -701,8 +806,9 @@ a { color: inherit; text-decoration: none; }
               <th>Cliente</th>
               <th>Valor</th>
               <th>Emissão</th>
-              <th>Situação</th>
-              <th>Data Evento</th>
+              <th>Data Entrega</th>
+              <th>Tentativas</th>
+              <th>Transportadora</th>
               <th>Observações</th>
             </tr>
           </thead>
@@ -713,10 +819,12 @@ a { color: inherit; text-decoration: none; }
 
     <div id="rel-empty-state" style="display:none;padding:40px;text-align:center;color:var(--txt3);font-size:13px">
       <div style="font-size:36px;margin-bottom:10px">📊</div>
-      <div>Nenhum evento encontrado no período selecionado.</div>
+      <div>Nenhuma entrega encontrada no período selecionado.</div>
+      <div style="font-size:11px;margin-top:6px;color:var(--txt3)">Selecione um período e clique em <strong>Gerar Relatório</strong>.</div>
     </div>
   </div>
-</div>
+
+</div><!-- /app -->
 
 <!-- DRAG GHOST -->
 <div id="drag-ghost">
@@ -743,7 +851,7 @@ a { color: inherit; text-decoration: none; }
 <div class="modal-backdrop" id="modal-devolver">
   <div class="modal">
     <div class="modal-title">↩️ Registrar Devolução</div>
-    <div class="modal-sub" id="devolver-subtitle">Esta nota será devolvida e voltará para Coleta Solicitada. Será registrado que houve uma tentativa de entrega.</div>
+    <div class="modal-sub" id="devolver-subtitle">Esta nota será devolvida e voltará para Coleta Solicitada.</div>
     <div class="modal-obs-body" style="margin-bottom:0">
       <textarea id="devolver-motivo" placeholder="Motivo da devolução (opcional)…" style="height:80px"></textarea>
     </div>
@@ -765,7 +873,6 @@ a { color: inherit; text-decoration: none; }
       <button class="import-tab" id="tab-manual" onclick="switchImportTab('manual')">✏️ Entrada Manual</button>
     </div>
 
-    <!-- Painel XML -->
     <div class="import-panel active" id="import-panel-xml">
       <div class="upload-area" id="upload-area"
            onclick="document.getElementById('file-input').click()"
@@ -786,7 +893,6 @@ a { color: inherit; text-decoration: none; }
       </div>
     </div>
 
-    <!-- Painel Manual -->
     <div class="import-panel" id="import-panel-manual">
       <div class="form-grid">
         <div class="form-field">
@@ -818,10 +924,47 @@ a { color: inherit; text-decoration: none; }
   </div>
 </div>
 
-<!-- FIREBASE SDK (type=module) -->
+<!-- MODAL: BACKUP/REIMPORT -->
+<div class="modal-backdrop" id="modal-backup">
+  <div class="modal" style="width:480px">
+    <div class="modal-title">💾 Backup & Reimportação</div>
+    <div class="modal-sub">Baixe um backup completo de todos os dados do sistema ou reimporte um backup salvo anteriormente.</div>
+
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+      <div style="background:var(--green-lt);border:1px solid #bbf7d0;border-radius:8px;padding:12px 14px">
+        <div style="font-size:12px;font-weight:700;color:var(--green-dk);margin-bottom:4px">📥 Baixar Backup Completo</div>
+        <div style="font-size:11px;color:var(--txt2);margin-bottom:8px">Exporta todas as notas (ativas, arquivadas e entregues) + histórico em formato JSON.</div>
+        <button class="btn-modal save" style="font-size:12px;padding:7px 14px" onclick="downloadBackup()">⬇️ Baixar Backup JSON</button>
+      </div>
+
+      <div style="background:var(--blue-lt);border:1px solid #bfdbfe;border-radius:8px;padding:12px 14px">
+        <div style="font-size:12px;font-weight:700;color:var(--blue-dk);margin-bottom:4px">📤 Reimportar Backup</div>
+        <div style="font-size:11px;color:var(--txt2);margin-bottom:8px">Selecione um arquivo JSON de backup para visualizar e restaurar os dados.</div>
+        <label style="display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:7px 14px;border-radius:6px;cursor:pointer;transition:background .15s">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Selecionar arquivo
+          <input type="file" accept=".json" style="display:none" onchange="lerArquivoBackup(event)">
+        </label>
+        <div id="backup-import-status" style="font-size:11px;color:var(--txt3);margin-top:6px"></div>
+      </div>
+    </div>
+
+    <div id="backup-preview" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px;font-size:11px">
+      <div style="font-weight:700;color:var(--txt);margin-bottom:6px">📋 Prévia do backup:</div>
+      <div id="backup-preview-content"></div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-modal cancel" onclick="closeModal('modal-backup')">Fechar</button>
+      <button class="btn-modal save" id="btn-restore-backup" style="display:none" onclick="restaurarBackup()">♻️ Restaurar Notas Ativas</button>
+    </div>
+  </div>
+</div>
+
+<!-- FIREBASE SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy }
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, getDocs }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* ── CONFIG ── */
@@ -835,7 +978,7 @@ const firebaseConfig = {
   measurementId:     "G-E07ZXV2X1P"
 };
 
-/* ── HELPERS (local + global) ── */
+/* ── HELPERS ── */
 const toast = window.toast = function(msg, type='') {
   const c = document.getElementById('toast-container');
   const t = document.createElement('div');
@@ -860,12 +1003,25 @@ const closeModal = window.closeModal = id =>
 
 /* ── STATE ── */
 window._state = { notas: [], db: null, unsubscribe: null };
+window._backupData = null;
 
 /* ── FIREBASE INIT ── */
 function setDot(state) {
   const dot = document.getElementById('fb-dot');
   dot.className = 'fb-dot' + (state==='ok' ? '' : state==='connecting' ? ' connecting' : ' offline');
 }
+
+// Verifica Cloudinary
+(async function checkCloudinary() {
+  const dot = document.getElementById('cld-dot');
+  dot.className = 'cld-dot connecting';
+  try {
+    const res = await fetch(`https://api.cloudinary.com/v1_1/drq9dfckg/image/upload`, {method:'OPTIONS'});
+    dot.className = 'cld-dot';
+  } catch {
+    dot.className = 'cld-dot';
+  }
+})();
 
 (async function init() {
   try {
@@ -889,8 +1045,17 @@ function startListener() {
   window._state.unsubscribe = onSnapshot(q, snap => {
     window._state.notas = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     setDot('ok');
-    setStatus('Firebase conectado ✓ — ' + window._state.notas.length + ' nota(s)');
+    setStatus('✓— ' + window._state.notas.length + ' nota(s)');
     renderAll();
+    // Atualiza módulo Entregues se estiver ativo
+    if (document.getElementById('page-entregues').classList.contains('active')) {
+      renderEntregues();
+    }
+    // Atualiza relatório se estiver ativo e já gerado
+    if (document.getElementById('page-relatorios').classList.contains('active') &&
+        window._relEventos) {
+      gerarRelatorio();
+    }
   }, () => {
     const q2 = collection(db, 'notas');
     window._state.unsubscribe = onSnapshot(q2, snap => {
@@ -899,6 +1064,9 @@ function startListener() {
       setDot('ok');
       setStatus('Firebase conectado ✓ — ' + window._state.notas.length + ' nota(s)');
       renderAll();
+      if (document.getElementById('page-entregues').classList.contains('active')) {
+        renderEntregues();
+      }
     }, err2 => { setDot('offline'); setStatus('Erro: ' + err2.message); });
   });
 }
@@ -944,12 +1112,11 @@ window._toggleForaEstado = async function(id) {
   const novo = !nota.fora_estado;
   try {
     await updateDoc(doc(window._state.db, 'notas', id), { fora_estado: novo });
-    toast(novo ? '🗺️ Nota marcada como Fora do Estado' : 'Nota desmarcada como Fora do Estado', novo ? 'warn' : '');
+    toast(novo ? '🗺️ Nota marcada como Transportadora' : 'Nota desmarcada como Transportadora', novo ? 'warn' : '');
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
 window._deleteNota = async function(id) {
-  // Registra evento no histórico global antes de deletar
   const nota = window._state.notas.find(n => n.id === id);
   if (nota) {
     const ev = {
@@ -960,12 +1127,11 @@ window._deleteNota = async function(id) {
       data_emissao: nota.data_emissao || '',
       observacao: nota.observacao || '',
       tentativas_entrega: nota.tentativas_entrega || 0,
+      fora_estado: nota.fora_estado || false,
       data_evento: new Date().toLocaleString('pt-BR'),
       ts: Date.now()
     };
     _registrarEventoHistorico(ev);
-    // Remove referências de arquivos (PDF/XML) do Firestore junto com a nota
-    // Nota: os arquivos no Cloudinary permanecem mas ficam sem referência no sistema
     if (nota.files && nota.files.length) {
       try { await updateDoc(doc(window._state.db, 'notas', id), { files: [] }); } catch(_) {}
     }
@@ -976,19 +1142,18 @@ window._deleteNota = async function(id) {
   } catch(e) { toast('Erro ao excluir: ' + e.message, 'error'); }
 };
 
-/* Histórico global em localStorage (até 1 ano) */
+/* Histórico global em localStorage */
 function _registrarEventoHistorico(ev) {
   try {
     let hist = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]');
     hist.push(ev);
-    // Limitar a 1 ano
     const limite = Date.now() - (365 * 24 * 60 * 60 * 1000);
     hist = hist.filter(e => (e.ts || 0) > limite);
     localStorage.setItem('nf_historico_v1', JSON.stringify(hist));
   } catch(e) { console.warn('Erro ao salvar histórico:', e); }
 }
 
-/* ── MARCAR ENTREGUE — apenas coluna Retiradas ── */
+/* ── MARCAR ENTREGUE — com contagem regressiva ── */
 window.markEntregue = async function(id) {
   const ts = new Date().toLocaleString('pt-BR');
   const nota = window._state.notas.find(n => n.id === id);
@@ -997,9 +1162,17 @@ window.markEntregue = async function(id) {
     toast('Só é possível marcar como Entregue na coluna Retiradas', 'warn');
     return;
   }
+
   try {
-    await updateDoc(doc(window._state.db, 'notas', id), { entregue: true, data_entrega: ts });
-    // Registra no histórico global
+    await updateDoc(doc(window._state.db, 'notas', id), {
+      entregue: true,
+      data_entrega: ts,
+      // Marca para transferência automática para módulo Entregues
+      pendente_transferencia: true,
+      ts_entrega: Date.now()
+    });
+
+    // Registra no histórico
     _registrarEventoHistorico({
       tipo: 'entregue',
       numero_nf: nota.numero_nf,
@@ -1008,19 +1181,117 @@ window.markEntregue = async function(id) {
       data_emissao: nota.data_emissao || '',
       observacao: nota.observacao || '',
       tentativas_entrega: nota.tentativas_entrega || 0,
+      fora_estado: nota.fora_estado || false,
       data_evento: ts,
       ts: Date.now()
     });
-    toast('Nota marcada como Entregue ✅', 'success');
+
+    toast('Nota marcada como Entregue ✅ — transferindo em 20s…', 'success');
+
+    // Inicia contagem regressiva no card
+    iniciarCountdown(id, 20);
+
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
-/* ── REMOVER ENTREGUE (arquivar) ── */
-window.archiveNota = async function(id) {
-  if (!confirm('Remover esta nota da tela? Ela será arquivada e não aparecerá mais no board.')) return;
+/* Contagem regressiva antes de arquivar */
+const _countdowns = {};
+
+function iniciarCountdown(id, segundos) {
+  if (_countdowns[id]) {
+    clearInterval(_countdowns[id].interval);
+    clearTimeout(_countdowns[id].timeout);
+  }
+
+  let restante = segundos;
+
+  function updateUI() {
+    const card = document.querySelector(`.card[data-id="${id}"]`);
+    if (!card) return;
+
+    // Remove countdown anterior se existir
+    card.querySelector('.card-countdown-banner')?.remove();
+    card.querySelector('.card-countdown-bar')?.remove();
+
+    const banner = document.createElement('div');
+    banner.className = 'card-countdown-banner';
+    banner.innerHTML = `
+      <span>✅ Entregue — movendo para Canhotos em</span>
+      <span class="card-countdown-num" id="cd-num-${id}">${restante}</span>
+      <button class="card-countdown-cancel" onclick="cancelarCountdown('${id}')">Cancelar</button>
+    `;
+
+    const bar = document.createElement('div');
+    bar.className = 'card-countdown-bar';
+
+    card.classList.add('card-pending-transfer');
+    card.style.paddingTop = '40px';
+    card.insertBefore(bar, card.firstChild);
+    card.insertBefore(banner, card.firstChild);
+  }
+
+  updateUI();
+
+  _countdowns[id] = {
+    interval: setInterval(() => {
+      restante--;
+      const numEl = document.getElementById(`cd-num-${id}`);
+      if (numEl) numEl.textContent = restante;
+      if (restante <= 0) {
+        clearInterval(_countdowns[id].interval);
+      }
+    }, 1000),
+
+    timeout: setTimeout(async () => {
+      clearInterval(_countdowns[id].interval);
+      delete _countdowns[id];
+      // Arquiva a nota (remove do board, mantém nos Entregues)
+      try {
+        await updateDoc(doc(window._state.db, 'notas', id), {
+          arquivada: true,
+          pendente_transferencia: false
+        });
+        toast('Nota transferida para Canhotos ✅', 'success');
+      } catch(e) {
+        toast('Erro ao arquivar: ' + e.message, 'error');
+      }
+    }, segundos * 1000)
+  };
+}
+
+window.cancelarCountdown = async function(id) {
+  if (_countdowns[id]) {
+    clearInterval(_countdowns[id].interval);
+    clearTimeout(_countdowns[id].timeout);
+    delete _countdowns[id];
+  }
+  // Desfaz a marcação de entregue
   try {
-    await updateDoc(doc(window._state.db, 'notas', id), { arquivada: true });
-    toast('Nota removida da tela', 'warn');
+    await updateDoc(doc(window._state.db, 'notas', id), {
+      entregue: false,
+      data_entrega: '',
+      pendente_transferencia: false,
+      ts_entrega: null
+    });
+    // Remove do histórico local (último evento)
+    try {
+      let hist = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]');
+      const nota = window._state.notas.find(n => n.id === id);
+      hist = hist.filter(e => !(e.numero_nf === nota?.numero_nf && e.tipo === 'entregue'));
+      localStorage.setItem('nf_historico_v1', JSON.stringify(hist));
+    } catch {}
+    toast('Entrega cancelada ↩️', 'warn');
+  } catch(e) {
+    toast('Erro: ' + e.message, 'error');
+  }
+};
+
+/* ── REMOVER ENTREGUE (arquivar manual) ── */
+window.archiveNota = async function(id) {
+  if (!confirm('Mover esta nota para Canhotos (Entregues)? Ela ficará registrada no histórico.')) return;
+  try {
+    await updateDoc(doc(window._state.db, 'notas', id), { arquivada: true, pendente_transferencia: false });
+    toast('Nota movida para Canhotos ✅', 'success');
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
@@ -1042,7 +1313,6 @@ window.confirmDevolver = async function() {
   const ts = new Date().toLocaleString('pt-BR');
   const tentativas = (nota.tentativas_entrega || 0) + 1;
 
-  // Monta log resumido
   const logTentativa = `↩ Tentativa ${tentativas} em ${ts}${motivo ? ': ' + motivo : ''}`;
   const obsAtual = nota.observacao || '';
   const novaObs = obsAtual ? obsAtual + '\n' + logTentativa : logTentativa;
@@ -1052,11 +1322,11 @@ window.confirmDevolver = async function() {
       status: 'solicitada',
       entregue: false,
       data_entrega: '',
+      pendente_transferencia: false,
       tentativas_entrega: tentativas,
       observacao: novaObs,
       data_status: ts
     });
-    // Registra no histórico global
     _registrarEventoHistorico({
       tipo: 'tentativa',
       numero_nf: nota.numero_nf,
@@ -1065,6 +1335,7 @@ window.confirmDevolver = async function() {
       data_emissao: nota.data_emissao || '',
       observacao: motivo || '',
       tentativas_entrega: tentativas,
+      fora_estado: nota.fora_estado || false,
       data_evento: ts,
       ts: Date.now()
     });
@@ -1148,7 +1419,7 @@ window.baixarEntregues = async function() {
       count++;
     } catch(e) { console.warn('Erro ao arquivar:', n.numero_nf, e); }
   }
-  toast(`${count} nota(s) exportada(s) e removida(s) da tela ✅`, 'success');
+  toast(`${count} nota(s) exportada(s) e movida(s) para Canhotos ✅`, 'success');
 };
 
 /* ── PARSE XML ── */
@@ -1180,9 +1451,6 @@ function parseXML(text) {
   } catch { return null; }
 }
 
-/* ── IMPORT MODAL ── */
-
-
 /* ── CLOUDINARY UPLOAD ── */
 const CLOUDINARY_CLOUD = 'drq9dfckg';
 const CLOUDINARY_PRESET = 'nf_uploads';
@@ -1191,10 +1459,6 @@ async function uploadToCloudinary(file) {
   const fd = new FormData();
   fd.append('file', file);
   fd.append('upload_preset', CLOUDINARY_PRESET);
-
-  // PDFs e imagens usam SEMPRE "image" no Cloudinary.
-  // "raw" requer preset configurado para isso e frequentemente gera 404
-  // com uploads não assinados. O Cloudinary suporta PDFs nativamente como image.
   const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
     method: 'POST', body: fd
   });
@@ -1204,40 +1468,29 @@ async function uploadToCloudinary(file) {
   return data.secure_url;
 }
 
-/* Constrói URL de download confiável para qualquer arquivo Cloudinary.
-   - Normaliza URLs antigas salvas como /raw/upload/ para /image/upload/
-   - Insere fl_attachment → força Content-Disposition: attachment (download)
-     funciona cross-origin, ao contrário do atributo HTML "download"         */
 function getCloudinaryDownloadUrl(url) {
   if (!url) return '#';
-  // Normaliza raw → image (corrige URLs salvas com endpoint errado)
   let fixed = url.replace('/raw/upload/', '/image/upload/');
-  // Insere fl_attachment após "/image/upload/" para forçar download
   fixed = fixed.replace('/image/upload/', '/image/upload/fl_attachment/');
   return fixed;
 }
 
-/* Extrai número da NF a partir do nome do arquivo PDF (chave NFe no filename)
-   Estrutura: {44-dígitos}-danfe.pdf  → nNF está nas posições 25-33 da chave */
 function extractNFfromPDFFilename(filename) {
   const match = filename.match(/^(\d{44})-/);
   if (!match) return null;
   const key = match[1];
-  const nNF = key.substring(25, 34); // 9 dígitos do nNF
-  return parseInt(nNF, 10).toString(); // remove zeros à esquerda
+  const nNF = key.substring(25, 34);
+  return parseInt(nNF, 10).toString();
 }
 
-/* Salva arquivo nos dados da nota no Firestore */
 async function saveFileToNota(notaId, fileEntry) {
   const nota = window._state.notas.find(n => n.id === notaId);
   const existing = (nota && nota.files) ? nota.files : [];
-  // Não duplica por tipo: substitui se já existe PDF ou XML
   const filtered = existing.filter(f => f.type !== fileEntry.type);
   const newFiles = [...filtered, fileEntry];
   await updateDoc(doc(window._state.db, 'notas', notaId), { files: newFiles });
 }
 
-/* Upload de arquivo direto pelo botão do card */
 window.handleCardFileUpload = async function(event, nfId) {
   const file = event.target.files[0];
   if (!file) return;
@@ -1246,7 +1499,6 @@ window.handleCardFileUpload = async function(event, nfId) {
   const nota = window._state.notas.find(n => n.id === nfId);
   if (!nota) { toast('Nota não encontrada', 'error'); return; }
 
-  // Feedback visual
   const progressEl = document.getElementById('upload-prog-' + nfId);
   if (progressEl) { progressEl.style.display = 'inline'; progressEl.classList.add('active'); }
   toast('Enviando arquivo…', '');
@@ -1256,9 +1508,7 @@ window.handleCardFileUpload = async function(event, nfId) {
     const ext = file.name.split('.').pop().toLowerCase();
     const type = ext === 'pdf' ? 'pdf' : 'img';
     const fileEntry = {
-      url,
-      name: file.name,
-      type,
+      url, name: file.name, type,
       createdAt: new Date().toLocaleString('pt-BR')
     };
     await saveFileToNota(nfId, fileEntry);
@@ -1270,9 +1520,9 @@ window.handleCardFileUpload = async function(event, nfId) {
   }
 };
 
-/* ── IMPORT FILES (XML + PDF) ── */
+/* ── IMPORT FILES ── */
 let _importFiles = [];
-let _importPdfs  = []; // { file, nf, status }
+let _importPdfs  = [];
 
 window.openImport = () => { clearImport(); openModal('modal-import'); };
 
@@ -1334,9 +1584,7 @@ function renderImportList() {
     </div>`;
   }).join('');
 
-  const hasReadyXml = _importFiles.some(i=>i.status==='ready');
-  const hasReadyPdf = _importPdfs.some(i=>i.status==='ready');
-  const hasReady = hasReadyXml || hasReadyPdf;
+  const hasReady = _importFiles.some(i=>i.status==='ready') || _importPdfs.some(i=>i.status==='ready');
   const btn = document.getElementById('btn-do-import');
   btn.disabled = !hasReady;
   btn.style.opacity = hasReady ? '1' : '.5';
@@ -1362,64 +1610,41 @@ window.doImport = async function() {
   document.getElementById('btn-do-import').disabled = true;
 
   let ok=0, dup=0, err=0, pdfOk=0, pdfErr=0;
-  // Mapeia nNF → docId criado nesta sessão
   const nfToId = {};
 
-  // ── 1) Importar XMLs ──
   for (let idx=0; idx<xmlItems.length; idx++) {
     const item = xmlItems[idx];
     progText.textContent = `Importando XML ${idx+1}/${xmlItems.length}…`;
     progFill.style.width = ((idx+1)/total*100)+'%';
     const result = await addNota({ ...item.parsed });
-    if (result.result==='ok')  {
-      ok++;
-      item.status='imported';
-      nfToId[item.parsed.numero_nf] = result.id;
-    }
+    if (result.result==='ok')  { ok++; item.status='imported'; nfToId[item.parsed.numero_nf] = result.id; }
     if (result.result==='dup') { dup++; item.status='dup'; }
     if (result.result==='err') { err++; item.status='error'; }
     renderImportList();
   }
 
-  // ── 2) Aguarda onSnapshot propagar novos docs (max 3s) ──
   if (pdfItems.length) {
     await new Promise(r => setTimeout(r, 1200));
   }
 
-  // ── 3) Upload e vinculação de PDFs ──
   for (let idx=0; idx<pdfItems.length; idx++) {
     const item = pdfItems[idx];
     progText.textContent = `Enviando PDF ${idx+1}/${pdfItems.length}: NF ${item.nf}…`;
     progFill.style.width = ((xmlItems.length + idx+1)/total*100)+'%';
 
-    // Localiza a nota no Firebase (recém-criada ou já existente)
     let nota = window._state.notas.find(n => n.numero_nf === item.nf && !n.arquivada);
-    // Tenta também pelo ID recém-criado
-    if (!nota && nfToId[item.nf]) {
-      nota = { id: nfToId[item.nf], numero_nf: item.nf, files: [] };
-    }
+    if (!nota && nfToId[item.nf]) nota = { id: nfToId[item.nf], numero_nf: item.nf, files: [] };
 
     if (!nota) {
-      item.status = 'notfound';
-      pdfErr++;
-      renderImportList();
-      continue;
+      item.status = 'notfound'; pdfErr++;
+      renderImportList(); continue;
     }
 
     try {
       const url = await uploadToCloudinary(item.file);
-      await saveFileToNota(nota.id, {
-        url,
-        name: item.file.name,
-        type: 'pdf',
-        createdAt: new Date().toLocaleString('pt-BR')
-      });
-      item.status = 'uploaded';
-      pdfOk++;
-    } catch(e) {
-      item.status = 'error';
-      pdfErr++;
-    }
+      await saveFileToNota(nota.id, { url, name: item.file.name, type: 'pdf', createdAt: new Date().toLocaleString('pt-BR') });
+      item.status = 'uploaded'; pdfOk++;
+    } catch(e) { item.status = 'error'; pdfErr++; }
     renderImportList();
   }
 
@@ -1431,7 +1656,6 @@ window.doImport = async function() {
   if (pdfOk)  parts.push(`📎 ${pdfOk} PDF(s) vinculado(s)`);
   if (pdfErr) parts.push(`⚠️ ${pdfErr} PDF(s) sem NF`);
   toast(parts.join(' · '), ok||pdfOk ? 'success' : 'warn');
-  setStatus(parts.join(' | ') + ' — ' + new Date().toLocaleTimeString('pt-BR'));
   document.getElementById('btn-do-import').disabled = false;
 };
 
@@ -1444,15 +1668,13 @@ window.doManualImport = async function() {
   const chave   = document.getElementById('manual-chave').value.trim();
 
   if (!nf)      { toast('Preencha o Nº da Nota Fiscal', 'warn'); return; }
-  if (!cliente) { toast('Preencha o nome do cliente', 'warn');    return; }
+  if (!cliente) { toast('Preencha o nome do cliente', 'warn'); return; }
 
   const dataFormatada = data ? data.split('-').reverse().join('/') : '';
   const valor = isNaN(parseFloat(valorRaw)) ? '0.00' : parseFloat(valorRaw).toFixed(2);
 
   const result = await addNota({
-    numero_nf: nf,
-    cliente,
-    valor,
+    numero_nf: nf, cliente, valor,
     data_emissao: dataFormatada,
     chave: chave || ('manual-' + nf),
   });
@@ -1470,9 +1692,7 @@ window.doManualImport = async function() {
 };
 
 /* ── OBS INLINE ── */
-// Abre o editor inline dentro do card
 window.openObsInline = function(id) {
-  // Fecha qualquer editor aberto
   document.querySelectorAll('.card-obs-editor.open').forEach(el => {
     if (el.dataset.id !== id) closeObsInline(el.dataset.id, false);
   });
@@ -1497,13 +1717,10 @@ window.saveObsInline = async function(id) {
   if (!editor) return;
   const ta = editor.querySelector('textarea');
   const txt = ta ? ta.value.trim() : '';
-  // Marca que este card acabou de ser salvo — impede restauração do editor no próximo render
   window._savedObsId = id;
   await window._updateObs(id, txt);
-  // Fecha o editor imediatamente (não espera onSnapshot)
   closeObsInline(id, true);
   toast('Observação salva ✅', 'success');
-  // Limpa a flag após um tempo para não bloquear futuros edits
   setTimeout(() => { if (window._savedObsId === id) window._savedObsId = null; }, 2000);
 };
 
@@ -1525,29 +1742,41 @@ document.querySelectorAll('.modal-backdrop').forEach(b => {
   b.addEventListener('click', e => { if (e.target===b) b.classList.remove('open'); });
 });
 
-/* ── NAVEGAÇÃO DE PÁGINAS ── */
+/* ═══════════════════════════════════════════
+   NAVEGAÇÃO DE PÁGINAS
+═══════════════════════════════════════════ */
 window.switchPage = function(page) {
   const board = document.getElementById('board');
-  const relPage = document.getElementById('page-relatorios');
+  const pageEnt = document.getElementById('page-entregues');
+  const pageRel = document.getElementById('page-relatorios');
   const navBoard = document.getElementById('nav-board');
+  const navEnt = document.getElementById('nav-entregues');
   const navRel = document.getElementById('nav-rel');
-  const searchWrap = document.querySelector('.search-wrap');
-  const btnImport = document.querySelector('.btn-import');
+  const searchWrap = document.getElementById('search-wrap');
+  const btnImport = document.getElementById('btn-import-topbar');
+
+  // Reset todos
+  board.style.display = 'none';
+  pageEnt.classList.remove('active');
+  pageRel.classList.remove('active');
+  navBoard.classList.remove('active');
+  navEnt.classList.remove('active');
+  navRel.classList.remove('active');
+  searchWrap.style.display = 'none';
+  btnImport.style.display = 'none';
 
   if (page === 'board') {
     board.style.display = '';
-    relPage.classList.remove('active');
     navBoard.classList.add('active');
-    navRel.classList.remove('active');
     searchWrap.style.display = '';
     btnImport.style.display = '';
-  } else {
-    board.style.display = 'none';
-    relPage.classList.add('active');
-    navBoard.classList.remove('active');
+  } else if (page === 'entregues') {
+    pageEnt.classList.add('active');
+    navEnt.classList.add('active');
+    renderEntregues();
+  } else if (page === 'relatorios') {
+    pageRel.classList.add('active');
     navRel.classList.add('active');
-    searchWrap.style.display = 'none';
-    btnImport.style.display = 'none';
     // Definir datas padrão: mês atual
     const hoje = new Date();
     const ini = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
@@ -1560,7 +1789,366 @@ window.switchPage = function(page) {
   }
 };
 
-/* ── RELATÓRIOS ── */
+/* ═══════════════════════════════════════════
+   MÓDULO ENTREGUES — CONTROLE DE CANHOTOS
+   Lê direto do Firebase (notas arquivadas+entregues)
+═══════════════════════════════════════════ */
+let _entPage = 1;
+const _entPerPage = 25;
+let _entSortField = 'ts_entrega';
+let _entSortDir = 'desc';
+let _entPeriodo = 'todos';
+
+/* Retorna todas as notas que são canhotos (entregues e arquivadas) */
+function getNotasEntregues() {
+  // Inclui: arquivadas + entregues=true OU arquivadas sem entregue explícito (baixadas via Baixar Entregues)
+  return window._state.notas.filter(n =>
+    n.entregue === true || (n.arquivada === true && n.data_entrega)
+  );
+}
+
+window.setEntPeriodo = function(periodo) {
+  _entPeriodo = periodo;
+  _entPage = 1;
+
+  // Atualiza botões ativos
+  ['todos','hoje','semana','mes'].forEach(p => {
+    const btn = document.getElementById(`ent-btn-${p}`);
+    if (btn) btn.classList.toggle('active', p === periodo);
+  });
+
+  // Se custom, não marca nenhum botão
+  if (periodo === 'custom') {
+    ['todos','hoje','semana','mes'].forEach(p => {
+      const btn = document.getElementById(`ent-btn-${p}`);
+      if (btn) btn.classList.remove('active');
+    });
+  }
+
+  renderEntregues();
+};
+
+window.sortEntregues = function(field) {
+  if (_entSortField === field) {
+    _entSortDir = _entSortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    _entSortField = field;
+    _entSortDir = 'desc';
+  }
+  _entPage = 1;
+  renderEntregues();
+};
+
+function filtrarPorPeriodo(notas) {
+  const hoje = new Date();
+  hoje.setHours(0,0,0,0);
+
+  if (_entPeriodo === 'todos') return notas;
+
+  if (_entPeriodo === 'custom') {
+    const iniStr = document.getElementById('ent-data-ini').value;
+    const fimStr = document.getElementById('ent-data-fim').value;
+    if (!iniStr && !fimStr) return notas;
+    const ini = iniStr ? new Date(iniStr + 'T00:00:00') : new Date(0);
+    const fim = fimStr ? new Date(fimStr + 'T23:59:59') : new Date(9999999999999);
+    return notas.filter(n => {
+      const t = n.ts_entrega || parseDataEntrega(n.data_entrega);
+      return t >= ini.getTime() && t <= fim.getTime();
+    });
+  }
+
+  if (_entPeriodo === 'hoje') {
+    return notas.filter(n => {
+      const t = n.ts_entrega || parseDataEntrega(n.data_entrega);
+      const d = new Date(t);
+      d.setHours(0,0,0,0);
+      return d.getTime() === hoje.getTime();
+    });
+  }
+
+  if (_entPeriodo === 'semana') {
+    const inicioSemana = new Date(hoje);
+    inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+    return notas.filter(n => {
+      const t = n.ts_entrega || parseDataEntrega(n.data_entrega);
+      return t >= inicioSemana.getTime();
+    });
+  }
+
+  if (_entPeriodo === 'mes') {
+    const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    return notas.filter(n => {
+      const t = n.ts_entrega || parseDataEntrega(n.data_entrega);
+      return t >= inicioMes.getTime();
+    });
+  }
+
+  return notas;
+}
+
+// Converte data_entrega (string pt-BR) para timestamp
+function parseDataEntrega(str) {
+  if (!str) return 0;
+  try {
+    // Formato: "dd/mm/yyyy, hh:mm:ss" ou "dd/mm/yyyy hh:mm:ss"
+    const parts = str.replace(', ', ' ').split(' ');
+    const dateParts = parts[0].split('/');
+    if (dateParts.length === 3) {
+      const d = new Date(dateParts[2], dateParts[1]-1, dateParts[0]);
+      return d.getTime();
+    }
+    return 0;
+  } catch { return 0; }
+}
+
+const renderEntregues = window.renderEntregues = function() {
+  let notas = getNotasEntregues();
+
+  // Filtro de busca
+  const q = (document.getElementById('ent-search')?.value || '').toLowerCase().trim();
+  if (q) notas = notas.filter(n =>
+    (n.numero_nf||'').toLowerCase().includes(q) ||
+    (n.cliente||'').toLowerCase().includes(q)
+  );
+
+  // Filtro de período
+  notas = filtrarPorPeriodo(notas);
+
+  // Ordenação
+  notas = [...notas].sort((a, b) => {
+    let va = a[_entSortField] || 0;
+    let vb = b[_entSortField] || 0;
+    if (_entSortField === 'valor') {
+      va = parseFloat(a.valor) || 0;
+      vb = parseFloat(b.valor) || 0;
+    } else if (_entSortField === 'ts_entrega') {
+      va = a.ts_entrega || parseDataEntrega(a.data_entrega);
+      vb = b.ts_entrega || parseDataEntrega(b.data_entrega);
+    } else if (typeof va === 'string') {
+      va = va.toLowerCase(); vb = (vb||'').toString().toLowerCase();
+    }
+    if (va < vb) return _entSortDir === 'asc' ? -1 : 1;
+    if (va > vb) return _entSortDir === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  // Atualiza headers de sort
+  ['nf','cli','val','emissao','entrega'].forEach(h => {
+    const th = document.getElementById(`th-${h}`);
+    if (!th) return;
+    th.classList.remove('sort-asc', 'sort-desc');
+  });
+  const fieldToId = { numero_nf:'th-nf', cliente:'th-cli', valor:'th-val', data_emissao:'th-emissao', ts_entrega:'th-entrega' };
+  const sortHeader = document.getElementById(fieldToId[_entSortField]);
+  if (sortHeader) sortHeader.classList.add(`sort-${_entSortDir}`);
+
+  // KPIs globais (todos os entregues, sem filtro de período)
+  const todas = getNotasEntregues();
+  const agora = new Date();
+  const inicioMes = new Date(agora.getFullYear(), agora.getMonth(), 1).getTime();
+  const inicioSemana = new Date(agora);
+  inicioSemana.setDate(agora.getDate() - agora.getDay());
+  inicioSemana.setHours(0,0,0,0);
+
+  document.getElementById('ent-total-count').textContent = todas.length;
+  document.getElementById('ent-total-valor').textContent = 'R$ ' +
+    todas.reduce((s,n) => s + (parseFloat(n.valor)||0), 0)
+    .toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+  document.getElementById('ent-mes-count').textContent =
+    todas.filter(n => (n.ts_entrega || parseDataEntrega(n.data_entrega)) >= inicioMes).length;
+  document.getElementById('ent-semana-count').textContent =
+    todas.filter(n => (n.ts_entrega || parseDataEntrega(n.data_entrega)) >= inicioSemana.getTime()).length;
+
+  // Label período
+  const lblPeriodo = {
+    todos: `Total: ${notas.length} nota(s)`,
+    hoje: `Hoje: ${notas.length} nota(s)`,
+    semana: `Esta semana: ${notas.length} nota(s)`,
+    mes: `Este mês: ${notas.length} nota(s)`,
+    custom: `Período selecionado: ${notas.length} nota(s)`
+  };
+  const periodLbl = document.getElementById('ent-period-lbl');
+  if (periodLbl) periodLbl.textContent = lblPeriodo[_entPeriodo] || `${notas.length} nota(s)`;
+
+  // Paginação
+  const totalPages = Math.max(1, Math.ceil(notas.length / _entPerPage));
+  _entPage = Math.min(_entPage, totalPages);
+  const start = (_entPage - 1) * _entPerPage;
+  const pagNotas = notas.slice(start, start + _entPerPage);
+
+  const tbody = document.getElementById('ent-tbody');
+  const empty = document.getElementById('ent-empty');
+
+  if (!notas.length) {
+    tbody.innerHTML = '';
+    if (empty) empty.style.display = 'block';
+  } else {
+    if (empty) empty.style.display = 'none';
+    tbody.innerHTML = pagNotas.map(n => {
+      const valFmt = parseFloat(n.valor||0)
+        ? 'R$ ' + parseFloat(n.valor).toLocaleString('pt-BR',{minimumFractionDigits:2})
+        : '—';
+      const tentBadge = (n.tentativas_entrega > 0)
+        ? `<span class="entregues-badge tentativas">↩ ${n.tentativas_entrega}x</span>`
+        : `<span class="entregues-badge">1ª entrega</span>`;
+      const foraBadge = n.fora_estado
+        ? `<span class="entregues-badge fora">🗺️ Transp.</span>` : '—';
+      const obsTxt = n.observacao
+        ? `<div class="canhoto-obs" title="${(n.observacao||'').replace(/"/g,"'")}">📝 ${n.observacao.split('\n')[0]}</div>`
+        : '<span style="color:var(--txt3)">—</span>';
+      // Data de entrega formatada
+      const dataEntrega = n.data_entrega || '—';
+
+      return `<tr>
+        <td style="font-family:var(--mono);font-weight:700;color:var(--green-dk)">${n.numero_nf}</td>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${n.cliente||''}">${n.cliente||'—'}</td>
+        <td style="font-weight:600">${valFmt}</td>
+        <td style="font-size:11px;color:var(--txt3)">${n.data_emissao||'—'}</td>
+        <td style="font-size:11px;color:var(--green);font-weight:600">✅ ${dataEntrega}</td>
+        <td>${tentBadge}</td>
+        <td>${foraBadge}</td>
+        <td>${obsTxt}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Paginação
+  const pagBar = document.getElementById('ent-pagination');
+  const pagLbl = document.getElementById('ent-page-lbl');
+  if (pagLbl) pagLbl.textContent = notas.length ? `${start+1}–${Math.min(start+_entPerPage, notas.length)} de ${notas.length}` : '';
+
+  if (notas.length > _entPerPage) {
+    pagBar.style.display = 'flex';
+    const prevBtn = document.getElementById('pag-prev');
+    const nextBtn = document.getElementById('pag-next');
+    prevBtn.disabled = _entPage <= 1;
+    nextBtn.disabled = _entPage >= totalPages;
+
+    const pagesDiv = document.getElementById('pag-pages');
+    pagesDiv.innerHTML = '';
+    for (let p = 1; p <= totalPages; p++) {
+      if (p === 1 || p === totalPages || Math.abs(p - _entPage) <= 2) {
+        const btn = document.createElement('button');
+        btn.className = 'pag-btn' + (p === _entPage ? ' active' : '');
+        btn.textContent = p;
+        btn.onclick = () => { _entPage = p; renderEntregues(); };
+        pagesDiv.appendChild(btn);
+      } else if (Math.abs(p - _entPage) === 3) {
+        const span = document.createElement('span');
+        span.textContent = '…';
+        span.style.cssText = 'color:var(--txt3);padding:0 4px;font-size:12px';
+        pagesDiv.appendChild(span);
+      }
+    }
+    document.getElementById('pag-info').textContent = `Pág. ${_entPage} de ${totalPages}`;
+  } else {
+    pagBar.style.display = 'none';
+  }
+};
+
+window.changePage = function(dir) {
+  _entPage = Math.max(1, _entPage + dir);
+  renderEntregues();
+};
+
+/* Exportar PDF da página Entregues */
+window.exportarEntregues = function() {
+  let notas = getNotasEntregues();
+  const q = (document.getElementById('ent-search')?.value || '').toLowerCase().trim();
+  if (q) notas = notas.filter(n =>
+    (n.numero_nf||'').toLowerCase().includes(q) || (n.cliente||'').toLowerCase().includes(q)
+  );
+  notas = filtrarPorPeriodo(notas);
+
+  if (!notas.length) { toast('Nenhuma nota para exportar', 'warn'); return; }
+
+  const total = notas.reduce((s,n) => s + (parseFloat(n.valor)||0), 0)
+    .toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+  const rows = notas.map(n => `
+    <tr>
+      <td><strong>${n.numero_nf}</strong></td>
+      <td>${n.cliente||'—'}</td>
+      <td>${parseFloat(n.valor||0)?'R$ '+parseFloat(n.valor).toLocaleString('pt-BR',{minimumFractionDigits:2}):'—'}</td>
+      <td>${n.data_emissao||'—'}</td>
+      <td>${n.data_entrega||'—'}</td>
+      <td>${n.tentativas_entrega > 0 ? n.tentativas_entrega+'x' : '1ª entrega'}</td>
+      <td>${n.fora_estado ? 'Transportadora' : '—'}</td>
+      <td>${(n.observacao||'').split('\n')[0] || '—'}</td>
+    </tr>`).join('');
+
+  const printHTML = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+<title>Controle de Canhotos</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Arial,sans-serif;padding:24px;color:#111;font-size:12px}
+  header{margin-bottom:20px;border-bottom:3px solid #059669;padding-bottom:14px;display:flex;justify-content:space-between;align-items:flex-end}
+  h1{font-size:20px;font-weight:700;color:#059669;margin-bottom:4px}
+  .sub{font-size:11px;color:#6b7280}
+  .badge{background:#059669;color:#fff;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700}
+  table{width:100%;border-collapse:collapse}
+  thead tr{background:#059669;color:#fff}
+  th{padding:8px 10px;text-align:left;font-size:9px;letter-spacing:.05em;font-weight:700;text-transform:uppercase}
+  td{padding:7px 10px;border-bottom:1px solid #e5e7eb;font-size:11px;vertical-align:middle}
+  tr:nth-child(even) td{background:#f0fdf4}
+  .total-row td{font-weight:700;border-top:2px solid #059669;background:#ecfdf5;color:#047857}
+  footer{margin-top:16px;font-size:10px;color:#9ca3af;text-align:center}
+  @media print{@page{margin:1cm;size:A4 landscape}}
+</style></head><body>
+<header>
+  <div>
+    <h1>📦 Controle de Canhotos — Notas Entregues</h1>
+    <div class="sub">Gerado em ${new Date().toLocaleString('pt-BR')}</div>
+  </div>
+  <div class="badge">${notas.length} nota(s)</div>
+</header>
+<table>
+  <thead><tr><th>NF</th><th>Cliente</th><th>Valor</th><th>Emissão</th><th>Data Entrega</th><th>Tentativas</th><th>Transportadora</th><th>Observações</th></tr></thead>
+  <tbody>${rows}
+    <tr class="total-row">
+      <td colspan="2">TOTAL ENTREGUE</td>
+      <td>R$ ${total}</td>
+      <td colspan="5">${notas.length} nota(s)</td>
+    </tr>
+  </tbody>
+</table>
+<footer>Sistema de Expedição — Notas Fiscais | Criado por: Leandro NP</footer>
+<script>window.onload=()=>{setTimeout(()=>window.print(),300)}<\/script>
+</body></html>`;
+
+  const w = window.open('', '_blank');
+  if (!w) { toast('Permita pop-ups para gerar o PDF', 'warn'); return; }
+  w.document.write(printHTML);
+  w.document.close();
+};
+
+/* ═══════════════════════════════════════════
+   RELATÓRIOS — puxando dados do módulo Entregues (Firebase)
+═══════════════════════════════════════════ */
+
+/* Atalhos de período para relatório */
+window.relSetPeriodo = function(periodo) {
+  const hoje = new Date();
+  let ini, fim;
+  if (periodo === 'hoje') {
+    ini = fim = hoje;
+  } else if (periodo === 'semana') {
+    ini = new Date(hoje); ini.setDate(hoje.getDate() - hoje.getDay()); fim = hoje;
+  } else if (periodo === 'mes') {
+    ini = new Date(hoje.getFullYear(), hoje.getMonth(), 1); fim = new Date(hoje.getFullYear(), hoje.getMonth()+1, 0);
+  } else if (periodo === 'trimestre') {
+    const q = Math.floor(hoje.getMonth() / 3);
+    ini = new Date(hoje.getFullYear(), q * 3, 1);
+    fim = new Date(hoje.getFullYear(), q * 3 + 3, 0);
+  } else if (periodo === 'ano') {
+    ini = new Date(hoje.getFullYear(), 0, 1);
+    fim = new Date(hoje.getFullYear(), 11, 31);
+  }
+  const fmt = d => d.toISOString().slice(0,10);
+  document.getElementById('rel-inicio').value = fmt(ini);
+  document.getElementById('rel-fim').value = fmt(fim);
+};
+
 window.gerarRelatorio = function() {
   const iniStr = document.getElementById('rel-inicio').value;
   const fimStr = document.getElementById('rel-fim').value;
@@ -1570,58 +2158,62 @@ window.gerarRelatorio = function() {
   const fim = new Date(fimStr + 'T23:59:59');
   if (ini > fim) { toast('Data início deve ser anterior à data fim', 'warn'); return; }
 
-  // Carrega histórico do localStorage
+  // ── Fonte 1: Notas entregues no Firebase (canhotos)
+  const notasEntregues = getNotasEntregues().filter(n => {
+    const t = n.ts_entrega || parseDataEntrega(n.data_entrega);
+    return t >= ini.getTime() && t <= fim.getTime();
+  });
+
+  // ── Fonte 2: Histórico localStorage (tentativas e deletadas)
   let hist = [];
   try { hist = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]'); } catch {}
 
-  // Filtra pelo período
-  const eventos = hist.filter(e => {
+  const histPeriodo = hist.filter(e => {
     const t = e.ts || 0;
     return t >= ini.getTime() && t <= fim.getTime();
   });
 
-  // Também considera notas ainda no board
-  const notasBoard = window._state.notas.filter(n => !n.arquivada && n.entregue);
-  // Evita duplicata com histórico
-  const idsHist = new Set(hist.map(e => e.numero_nf));
-  notasBoard.forEach(n => {
-    if (!idsHist.has(n.numero_nf)) {
-      // Tenta incluir se data_entrega cair no período
-      if (n.data_entrega) {
-        // data_entrega é string localizada, difícil parsear — incluímos sem filtro de data mas marcamos
-        eventos.push({
-          tipo: 'entregue',
-          numero_nf: n.numero_nf,
-          cliente: n.cliente || '',
-          valor: n.valor || '0',
-          data_emissao: n.data_emissao || '',
-          observacao: n.observacao || '',
-          tentativas_entrega: n.tentativas_entrega || 0,
-          data_evento: n.data_entrega,
-          ts: ini.getTime() // Assume período
-        });
-      }
-    }
+  // Monta eventos: entregues do Firebase + tentativas/deletadas do histórico
+  const evs = [];
+
+  // Adiciona entregues do Firebase
+  notasEntregues.forEach(n => {
+    evs.push({
+      tipo: 'entregue',
+      numero_nf: n.numero_nf,
+      cliente: n.cliente || '',
+      valor: n.valor || '0',
+      data_emissao: n.data_emissao || '',
+      observacao: n.observacao || '',
+      tentativas_entrega: n.tentativas_entrega || 0,
+      fora_estado: n.fora_estado || false,
+      data_evento: n.data_entrega || '',
+      ts: n.ts_entrega || parseDataEntrega(n.data_entrega)
+    });
   });
 
-  // Deduplicar por número da NF + tipo (mantém mais recente)
-  const dedup = {};
-  eventos.forEach(e => {
-    const k = e.numero_nf + '|' + e.tipo;
-    if (!dedup[k] || e.ts > dedup[k].ts) dedup[k] = e;
+  // Adiciona tentativas e deletadas do histórico (não duplicar com Firebase)
+  const nfsFirebase = new Set(notasEntregues.map(n => n.numero_nf));
+  histPeriodo.forEach(e => {
+    if (e.tipo === 'entregue' && nfsFirebase.has(e.numero_nf)) return; // Já veio do Firebase
+    evs.push(e);
   });
-  const evs = Object.values(dedup).sort((a,b) => b.ts - a.ts);
+
+  // Ordena por data mais recente
+  evs.sort((a,b) => b.ts - a.ts);
 
   // KPIs
   const entregues   = evs.filter(e => e.tipo === 'entregue');
   const tentativas  = evs.filter(e => e.tipo === 'tentativa');
   const deletadas   = evs.filter(e => e.tipo === 'deletada');
+  const transportadora = entregues.filter(e => e.fora_estado);
   const valorTotal  = entregues.reduce((s,e) => s + (parseFloat(e.valor)||0), 0);
 
   document.getElementById('kpi-entregas').textContent   = entregues.length;
   document.getElementById('kpi-tentativas').textContent = tentativas.length;
   document.getElementById('kpi-deletadas').textContent  = deletadas.length;
   document.getElementById('kpi-total').textContent      = evs.length;
+  document.getElementById('kpi-transportadora').textContent = transportadora.length;
   document.getElementById('kpi-valor').textContent      = 'R$ ' + valorTotal.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
 
   const fmtData = s => s ? s.slice(0,10).split('-').reverse().join('/') : '—';
@@ -1634,11 +2226,12 @@ window.gerarRelatorio = function() {
     document.getElementById('rel-kpis').style.display = 'grid';
     document.getElementById('rel-table-wrap').style.display = 'none';
     document.getElementById('rel-empty-state').style.display = 'block';
+    window._relEventos = [];
     return;
   }
 
   const badgeMap = {
-    entregue:  `<span class="rel-badge entregue">✓ Entregue</span>`,
+    entregue:  `<span class="rel-badge entregue">✅ Entregue</span>`,
     tentativa: `<span class="rel-badge tentativa">↩ Devolução</span>`,
     deletada:  `<span class="rel-badge deletada">🗑 Excluída</span>`
   };
@@ -1649,14 +2242,17 @@ window.gerarRelatorio = function() {
     if (e.tipo === 'tentativa' && e.tentativas_entrega) sitExtra = ` <span style="font-size:10px;color:var(--amber-dk)">(tentativa ${e.tentativas_entrega})</span>`;
     const valFmt = parseFloat(e.valor||0) ? 'R$ ' + parseFloat(e.valor).toLocaleString('pt-BR',{minimumFractionDigits:2}) : '—';
     const obsTxt = e.observacao ? e.observacao.replace(/</g,'&lt;').replace(/\n/g,'<br>') : '<span style="color:var(--txt3)">—</span>';
+    const transpBadge = e.fora_estado
+      ? `<span class="rel-badge" style="background:#dbeafe;color:#1d4ed8">🗺️ Transp.</span>` : '—';
     return `<tr>
       <td style="font-family:var(--mono);font-weight:600">${e.numero_nf}</td>
       <td>${e.cliente || '—'}</td>
       <td style="font-weight:500">${valFmt}</td>
       <td>${e.data_emissao || '—'}</td>
-      <td>${(badgeMap[e.tipo]||e.tipo)}${sitExtra}</td>
-      <td style="font-size:11px;color:var(--txt3)">${e.data_evento || '—'}</td>
-      <td style="max-width:220px;font-size:11px;color:var(--txt2)">${obsTxt}</td>
+      <td>${e.data_evento || '—'}</td>
+      <td>${e.tentativas_entrega||0}</td>
+      <td>${transpBadge}</td>
+      <td style="max-width:220px;font-size:11px;color:var(--txt2)">${(badgeMap[e.tipo]||e.tipo)}${sitExtra}</td>
     </tr>`;
   }).join('');
 
@@ -1676,6 +2272,7 @@ window.exportarRelatorio = function() {
   const entregues  = evs.filter(e => e.tipo === 'entregue');
   const tentativas = evs.filter(e => e.tipo === 'tentativa');
   const deletadas  = evs.filter(e => e.tipo === 'deletada');
+  const transportadora = entregues.filter(e => e.fora_estado);
   const valorTotal = entregues.reduce((s,e) => s + (parseFloat(e.valor)||0), 0);
 
   const situacaoTxt = { entregue: 'Entregue', tentativa: 'Devolução', deletada: 'Excluída' };
@@ -1686,9 +2283,10 @@ window.exportarRelatorio = function() {
       <td>${e.cliente||'—'}</td>
       <td>${parseFloat(e.valor||0) ? 'R$ '+parseFloat(e.valor).toLocaleString('pt-BR',{minimumFractionDigits:2}) : '—'}</td>
       <td>${e.data_emissao||'—'}</td>
-      <td>${situacaoTxt[e.tipo]||e.tipo}${e.tentativas_entrega>1?' ('+e.tentativas_entrega+'ª)':''}</td>
       <td>${e.data_evento||'—'}</td>
-      <td style="max-width:200px;font-size:11px">${e.observacao||'—'}</td>
+      <td>${e.tentativas_entrega||0}</td>
+      <td>${e.fora_estado ? 'Transportadora' : '—'}</td>
+      <td>${situacaoTxt[e.tipo]||e.tipo}${e.tentativas_entrega>1?' ('+e.tentativas_entrega+'ª)':''}</td>
     </tr>`).join('');
 
   const printHTML = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
@@ -1699,15 +2297,15 @@ window.exportarRelatorio = function() {
   header{margin-bottom:20px;border-bottom:3px solid #1d4ed8;padding-bottom:14px;display:flex;justify-content:space-between;align-items:flex-end}
   h1{font-size:20px;font-weight:700;color:#1d4ed8;margin-bottom:4px}
   .sub{font-size:11px;color:#6b7280}
-  .kpis{display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap}
-  .kpi{border:1px solid #e5e7eb;border-radius:8px;padding:10px 16px;flex:1;min-width:100px;border-top:3px solid}
-  .kpi.green{border-top-color:#059669}.kpi.amber{border-top-color:#d97706}.kpi.red{border-top-color:#dc2626}.kpi.blue{border-top-color:#2563eb}
+  .kpis{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+  .kpi{border:1px solid #e5e7eb;border-radius:8px;padding:10px 14px;flex:1;min-width:90px;border-top:3px solid}
+  .kpi.green{border-top-color:#059669}.kpi.amber{border-top-color:#d97706}.kpi.red{border-top-color:#dc2626}.kpi.blue{border-top-color:#2563eb}.kpi.navy{border-top-color:#1e40af}
   .kpi-label{font-size:9px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
-  .kpi-value{font-size:20px;font-weight:700;color:#111}
+  .kpi-value{font-size:18px;font-weight:700;color:#111}
   table{width:100%;border-collapse:collapse}
   thead tr{background:#1d4ed8;color:#fff}
   th{padding:8px 10px;text-align:left;font-size:9px;letter-spacing:.05em;font-weight:700;text-transform:uppercase}
-  td{padding:7px 10px;border-bottom:1px solid #e5e7eb;vertical-align:top}
+  td{padding:7px 10px;border-bottom:1px solid #e5e7eb;vertical-align:top;font-size:11px}
   tr:nth-child(even) td{background:#f9fafb}
   footer{margin-top:16px;font-size:10px;color:#9ca3af;text-align:center}
   @media print{@page{margin:1cm;size:A4 landscape}}
@@ -1722,10 +2320,11 @@ window.exportarRelatorio = function() {
   <div class="kpi green"><div class="kpi-label">Entregues</div><div class="kpi-value">${entregues.length}</div></div>
   <div class="kpi amber"><div class="kpi-label">Devoluções</div><div class="kpi-value">${tentativas.length}</div></div>
   <div class="kpi red"><div class="kpi-label">Excluídas</div><div class="kpi-value">${deletadas.length}</div></div>
-  <div class="kpi blue"><div class="kpi-label">Valor Transportado</div><div class="kpi-value" style="font-size:14px">R$ ${valorTotal.toLocaleString('pt-BR',{minimumFractionDigits:2})}</div></div>
+  <div class="kpi navy"><div class="kpi-label">Transportadora</div><div class="kpi-value">${transportadora.length}</div></div>
+  <div class="kpi blue"><div class="kpi-label">Valor Transportado</div><div class="kpi-value" style="font-size:13px">R$ ${valorTotal.toLocaleString('pt-BR',{minimumFractionDigits:2})}</div></div>
 </div>
 <table>
-  <thead><tr><th>NF</th><th>Cliente</th><th>Valor</th><th>Emissão</th><th>Situação</th><th>Data Evento</th><th>Observações</th></tr></thead>
+  <thead><tr><th>NF</th><th>Cliente</th><th>Valor</th><th>Emissão</th><th>Data Entrega</th><th>Tentativas</th><th>Transportadora</th><th>Situação</th></tr></thead>
   <tbody>${rows}</tbody>
 </table>
 <footer>Sistema de Expedição — Notas Fiscais | Criado por: Leandro NP</footer>
@@ -1738,7 +2337,134 @@ window.exportarRelatorio = function() {
   w.document.close();
 };
 
-/* ── RENDER ── */
+/* ═══════════════════════════════════════════
+   BACKUP & REIMPORTAÇÃO
+═══════════════════════════════════════════ */
+window.fazerBackup = function() { openModal('modal-backup'); };
+
+window.downloadBackup = async function() {
+  toast('Gerando backup…', '');
+  try {
+    // Pega todas as notas (incluindo arquivadas)
+    const notas = window._state.notas;
+
+    // Histórico localStorage
+    let hist = [];
+    try { hist = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]'); } catch {}
+
+    const backup = {
+      versao: '1.3',
+      gerado_em: new Date().toLocaleString('pt-BR'),
+      gerado_em_iso: new Date().toISOString(),
+      total_notas: notas.length,
+      total_historico: hist.length,
+      notas: notas,
+      historico: hist
+    };
+
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `backup-nf-${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast(`Backup gerado: ${notas.length} notas + ${hist.length} históricos ✅`, 'success');
+  } catch(e) {
+    toast('Erro ao gerar backup: ' + e.message, 'error');
+  }
+};
+
+window.lerArquivoBackup = function(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const statusEl = document.getElementById('backup-import-status');
+  const previewEl = document.getElementById('backup-preview');
+  const previewContent = document.getElementById('backup-preview-content');
+  const restoreBtn = document.getElementById('btn-restore-backup');
+
+  statusEl.textContent = 'Lendo arquivo…';
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.notas || !Array.isArray(data.notas)) {
+        statusEl.textContent = '❌ Arquivo inválido — não é um backup do sistema.';
+        return;
+      }
+      window._backupData = data;
+      statusEl.textContent = `✅ Arquivo válido — ${data.notas.length} notas encontradas`;
+
+      // Preview
+      const ativas = data.notas.filter(n => !n.arquivada && !n.entregue).length;
+      const entregues = data.notas.filter(n => n.entregue || n.arquivada).length;
+      const hist = data.historico ? data.historico.length : 0;
+
+      previewContent.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div><strong>Gerado em:</strong> ${data.gerado_em || '—'}</div>
+          <div><strong>Versão:</strong> ${data.versao || '—'}</div>
+          <div><strong>Notas ativas:</strong> ${ativas}</div>
+          <div><strong>Notas entregues/arquivadas:</strong> ${entregues}</div>
+          <div><strong>Histórico:</strong> ${hist} eventos</div>
+          <div><strong>Total notas:</strong> ${data.notas.length}</div>
+        </div>
+        <div style="margin-top:8px;color:var(--amber-dk);font-size:10px;font-weight:600">⚠️ A restauração adicionará apenas notas ATIVAS que não existem no sistema atual. Não remove dados existentes.</div>
+      `;
+      previewEl.style.display = 'block';
+      restoreBtn.style.display = 'inline-flex';
+    } catch {
+      statusEl.textContent = '❌ Erro ao ler o arquivo. Verifique se é um JSON válido.';
+      previewEl.style.display = 'none';
+      restoreBtn.style.display = 'none';
+    }
+  };
+  reader.readAsText(file);
+};
+
+window.restaurarBackup = async function() {
+  const data = window._backupData;
+  if (!data || !data.notas) { toast('Nenhum backup carregado', 'warn'); return; }
+
+  const notasAtivas = data.notas.filter(n => !n.arquivada && !n.entregue);
+  if (!notasAtivas.length) { toast('Nenhuma nota ativa para restaurar', 'warn'); return; }
+
+  if (!confirm(`Restaurar ${notasAtivas.length} nota(s) ativa(s) do backup? Duplicatas serão ignoradas.`)) return;
+
+  let ok = 0, dup = 0, err = 0;
+  for (const nota of notasAtivas) {
+    // Remove campos que o Firebase gerencia
+    const { id, ...dadosNota } = nota;
+    dadosNota.restaurado_em = new Date().toLocaleString('pt-BR');
+    dadosNota.fonte_backup = true;
+
+    const result = await addNota(dadosNota);
+    if (result.result === 'ok') ok++;
+    else if (result.result === 'dup') dup++;
+    else err++;
+  }
+
+  // Restaura histórico localStorage
+  if (data.historico && data.historico.length) {
+    try {
+      let histAtual = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]');
+      const idsExist = new Set(histAtual.map(e => e.ts + '_' + e.numero_nf));
+      const novos = data.historico.filter(e => !idsExist.has(e.ts + '_' + e.numero_nf));
+      histAtual = [...histAtual, ...novos];
+      localStorage.setItem('nf_historico_v1', JSON.stringify(histAtual));
+    } catch {}
+  }
+
+  const msg = `Restauração: ✅ ${ok} importada(s)${dup ? ` · ⚠️ ${dup} duplicada(s)` : ''}${err ? ` · ❌ ${err} erro(s)` : ''}`;
+  toast(msg, ok > 0 ? 'success' : 'warn');
+  closeModal('modal-backup');
+};
+
+/* ═══════════════════════════════════════════
+   RENDER BOARD
+═══════════════════════════════════════════ */
 const STATUS_ORDER = ['lancada','aguardando','solicitada','retirada'];
 const ACCENT = {
   lancada:'var(--col-l)', aguardando:'var(--col-a)',
@@ -1802,7 +2528,6 @@ function buildCard(nota) {
   card.innerHTML = cardHTML(nota);
   if (!locked) {
     card.addEventListener('dragstart', e => {
-      // Não inicia drag se o clique veio da área de obs
       if (e.target.closest('.card-obs-section')) { e.preventDefault(); return; }
       onDragStart(e, nota.id, nota.numero_nf, nota.cliente, nota.status);
     });
@@ -1817,7 +2542,6 @@ function updateCardInPlace(card, nota) {
   const locked = isEntregue && nota.status === 'retirada';
   const foraEstado = !!nota.fora_estado;
 
-  // Salva estado do editor aberto antes de re-renderizar
   const editorOpen = card.querySelector('.card-obs-editor.open');
   const wasOpen = !!editorOpen;
   const draftText = wasOpen ? (editorOpen.querySelector('textarea')?.value || '') : null;
@@ -1830,7 +2554,18 @@ function updateCardInPlace(card, nota) {
   card.style.setProperty('--accent', foraEstado ? '#db2777' : (ACCENT[nota.status] || ACCENT.lancada));
   card.innerHTML = cardHTML(nota);
 
-  // Restaura editor aberto se estava editando (mas não se acabou de salvar)
+  // Restaura countdown se estava em andamento
+  if (_countdowns[nota.id]) {
+    const banner = document.createElement('div');
+    banner.className = 'card-countdown-banner';
+    const bar = document.createElement('div');
+    bar.className = 'card-countdown-bar';
+    card.classList.add('card-pending-transfer');
+    card.style.paddingTop = '40px';
+    card.insertBefore(bar, card.firstChild);
+    card.insertBefore(banner, card.firstChild);
+  }
+
   if (wasOpen && window._savedObsId !== nota.id) {
     const newEditor = card.querySelector('.card-obs-editor');
     const newDisplay = card.querySelector('.card-obs-display, .card-obs-placeholder');
@@ -1854,43 +2589,35 @@ function cardHTML(nota) {
   const foraEstado = !!fora_estado;
   const cli = (cliente||'').length>32 ? (cliente||'').slice(0,32)+'…' : (cliente||'');
   const tentativas = tentativas_entrega || 0;
-  // Escapa a obs para uso no textarea (evita quebra de HTML)
   const obsEscaped = (observacao||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const obsDisplay = (observacao||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
 
-  const stamp = entregue
-    ? `<div class="card-stamp">ENTREGUE</div>` : '';
+  const stamp = entregue ? `<div class="card-stamp">ENTREGUE</div>` : '';
 
-  // Badge Fora do Estado (estilo carimbo, canto superior esquerdo quando não há stamp)
   const foraEstadoBadge = foraEstado
     ? `<span class="card-fora-badge">🗺️ Transportadora</span>` : '';
 
-  // Badge tentativa anterior (resumido)
   const tentativaBadge = (tentativas > 0 && !entregue)
     ? `<span class="card-tentativa-badge">↩ ${tentativas}ª tentativa</span>` : '';
 
-  // Botão "Entregue" — apenas coluna Retiradas E se ainda não entregue
   const entregarBtn = (status === 'retirada' && !entregue)
     ? `<button class="btn-action entregue" onclick="markEntregue('${id}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         Entregue
        </button>` : '';
 
-  // Botão "Devolução" — apenas coluna Retiradas (entregue ou não)
   const devolverBtn = (status === 'retirada')
     ? `<button class="btn-action devolver" onclick="openDevolverModal('${id}','${numero_nf}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
         Devolução
        </button>` : '';
 
-  // Botão "Remover" — só quando entregue em Retiradas
   const removerBtn = (status === 'retirada' && entregue)
     ? `<button class="btn-action remover" onclick="archiveNota('${id}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
-        Remover
+        → Canhotos
        </button>` : '';
 
-  // Botão toggle Fora do Estado
   const foraEstadoBtn = foraEstado
     ? `<button class="btn-action fora-estado-on" onclick="event.stopPropagation();_toggleForaEstado('${id}')">
         🗺️ Transportadora
@@ -1899,7 +2626,6 @@ function cardHTML(nota) {
         🗺️ Transportadora?
        </button>`;
 
-  // Botão excluir — sempre disponível
   const deleteBtn = `<button class="btn-action del" onclick="openDelModal('${id}','${numero_nf}')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
      </button>`;
@@ -1907,7 +2633,7 @@ function cardHTML(nota) {
   const entreguneDateBadge = (entregue && data_entrega)
     ? `<span class="card-date entregue-date">🕐 ${data_entrega}</span>` : '';
 
-  // ── BARRA DE ARQUIVOS (PDF + XML) ──
+  // Barra de arquivos
   const files = nota.files || [];
   const pdfFile = files.find(f => f.type === 'pdf');
   const xmlFile = files.find(f => f.type === 'xml');
@@ -1916,12 +2642,12 @@ function cardHTML(nota) {
   const svgUp   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`;
 
   const btnPdf = pdfFile
-    ? `<a href="${getCloudinaryDownloadUrl(pdfFile.url)}" target="_blank" class="btn-dl pdf" title="Baixar DANFE (PDF) — ${pdfFile.name}">${svgDown} PDF</a>`
-    : `<button class="btn-dl pdf dim" disabled title="Nenhum PDF anexado">${svgDown} PDF</button>`;
+    ? `<a href="${getCloudinaryDownloadUrl(pdfFile.url)}" target="_blank" class="btn-dl pdf" title="Baixar DANFE (PDF)">${svgDown} PDF</a>`
+    : `<button class="btn-dl pdf dim" disabled title="Nenhum PDF">${svgDown} PDF</button>`;
 
   const btnXml = xmlFile
-    ? `<a href="${xmlFile.url}" target="_blank" class="btn-dl xml" title="Baixar XML — ${xmlFile.name}">${svgDown} XML</a>`
-    : `<button class="btn-dl xml dim" disabled title="Nenhum XML anexado">${svgDown} XML</button>`;
+    ? `<a href="${xmlFile.url}" target="_blank" class="btn-dl xml" title="Baixar XML">${svgDown} XML</a>`
+    : `<button class="btn-dl xml dim" disabled title="Nenhum XML">${svgDown} XML</button>`;
 
   const uploadTrigger = `
     <label class="btn-dl-upload" title="Anexar PDF ou imagem" onclick="event.stopPropagation()">
@@ -1937,7 +2663,6 @@ function cardHTML(nota) {
       ${uploadTrigger}
     </div>`;
 
-  // Seção de obs inline
   const obsSection = `
     <div class="card-obs-section">
       ${hasObs
