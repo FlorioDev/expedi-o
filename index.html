@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Controle de Notas Fiscais</title>
+<title>Expedição — Controle de Notas Fiscais</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
 /* ═══════════════════════════════════════════
@@ -41,6 +41,10 @@
   --pink-lt:    #FDF2F8;
   --pink-dk:    #db2727;
 
+  --teal:       #0d9488;
+  --teal-lt:    #F0FDFA;
+  --teal-dk:    #0f766e;
+
   --txt:        #111827;
   --txt2:       #4B5563;
   --txt3:       #9CA3AF;
@@ -54,20 +58,21 @@
   --radius-sm:  8px;
   --shadow:     0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.05);
   --shadow-drag:0 12px 40px rgba(0,0,0,.18);
-  --font:       'ARIAL', sans-serif;
-  --mono:       'Segoe UI', monospace;
+  --font:       'DM Sans', 'Segoe UI', Arial, sans-serif;
+  --mono:       'DM Mono', 'Segoe UI', monospace;
   --transition: 180ms cubic-bezier(.4,0,.2,1);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; font-family: var(--font); background: var(--bg); color: var(--txt); font-size: 14px; -webkit-font-smoothing: antialiased; }
 button { font-family: var(--font); cursor: pointer; border: none; background: none; }
-input, textarea { font-family: var(--font); }
+input, textarea, select { font-family: var(--font); }
 a { color: inherit; text-decoration: none; }
 
-::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--txt3); }
 
 /* ═══════════════════════════════════════════
    LOGIN SCREEN
@@ -110,52 +115,30 @@ a { color: inherit; text-decoration: none; }
 .btn-login:active { transform: none; }
 .btn-login:disabled { opacity: .6; pointer-events: none; }
 
-/* Botão Central Programas (laranja) */
 .btn-central {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 12px 18px;
-  border-radius: var(--radius-sm);
-  transition: all 0.2s ease;
-  text-decoration: none;
+  color: #fff; font-size: 13px; font-weight: 700;
+  padding: 12px 18px; border-radius: var(--radius-sm);
+  transition: all 0.2s ease; text-decoration: none;
   box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
-  width: 100%;
-  text-align: center;
-  letter-spacing: 0.3px;
-  margin-top: 16px;
-  border: none;
-  cursor: pointer;
+  width: 100%; text-align: center; letter-spacing: 0.3px;
+  margin-top: 16px; border: none; cursor: pointer;
 }
-.btn-central:hover {
-  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(234, 88, 12, 0.4);
-}
-.btn-central:active {
-  transform: translateY(0);
-}
-.btn-central svg {
-  width: 16px;
-  height: 16px;
-  stroke-width: 2;
-}
+.btn-central:hover { background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(234, 88, 12, 0.4); }
+.btn-central:active { transform: translateY(0); }
+.btn-central svg { width: 16px; height: 16px; stroke-width: 2; }
 
 /* ═══════════════════════════════════════════
    LAYOUT
 ═══════════════════════════════════════════ */
 #app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
-#topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 20px; height: 60px; display: flex; align-items: center; gap: 16px; flex-shrink: 0; position: relative; z-index: 100; }
+#topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 20px; height: 62px; display: flex; align-items: center; gap: 14px; flex-shrink: 0; position: relative; z-index: 100; }
 
 .logo { display: flex; align-items: center; gap: 10px; }
 .logo-icon { width: 34px; height: 34px; background: var(--blue); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-.logo-text { font-size: 15px; font-weight: 600; color: var(--txt); letter-spacing: -.01em; }
+.logo-text { font-size: 15px; font-weight: 700; color: var(--txt); letter-spacing: -.01em; }
 
 #status-msg { font-size: 12px; color: var(--txt3); margin-left: 4px; font-family: var(--mono); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
@@ -170,17 +153,28 @@ a { color: inherit; text-decoration: none; }
 #search-input { padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--txt); background: var(--surface2); width: 200px; transition: var(--transition); outline: none; }
 #search-input:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
 
-/* Nav tabs */
 .nav-tabs { display: flex; gap: 2px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 2px; }
-.nav-tab { padding: 5px 14px; font-size: 12px; font-weight: 600; border-radius: 6px; color: var(--txt3); transition: var(--transition); cursor: pointer; white-space: nowrap; }
+.nav-tab { padding: 6px 14px; font-size: 12px; font-weight: 600; border-radius: 6px; color: var(--txt3); transition: var(--transition); cursor: pointer; white-space: nowrap; position: relative; display: inline-flex; align-items: center; gap: 5px; }
 .nav-tab.active { background: var(--surface); color: var(--txt); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
 .nav-tab:hover:not(.active) { color: var(--txt2); }
+.nav-tab svg { width: 13px; height: 13px; flex-shrink: 0; }
+.nav-tab .nav-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 16px; height: 16px; padding: 0 5px;
+  background: var(--pink); color: #fff;
+  font-size: 9px; font-weight: 800;
+  border-radius: 99px; margin-left: 3px;
+  animation: badgePulse 1.5s ease-in-out infinite;
+}
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(236,72,153,.5); }
+  50% { box-shadow: 0 0 0 4px rgba(236,72,153,0); }
+}
 
 .btn-import { display: flex; align-items: center; gap: 7px; background: var(--blue); color: #fff; font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: var(--radius-sm); transition: var(--transition); white-space: nowrap; }
 .btn-import:hover { background: var(--blue-dk); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,.25); }
 .btn-import:active { transform: translateY(0); }
 
-/* Botão backup */
 .btn-backup { display: flex; align-items: center; gap: 6px; background: var(--surface2); color: var(--txt2); font-size: 12px; font-weight: 600; padding: 7px 13px; border-radius: var(--radius-sm); border: 1px solid var(--border); transition: var(--transition); white-space: nowrap; }
 .btn-backup:hover { background: #eff4ff; color: var(--blue); border-color: var(--blue); transform: translateY(-1px); }
 
@@ -202,90 +196,61 @@ a { color: inherit; text-decoration: none; }
 
 .col-header { padding: 10px 12px 9px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px; flex-shrink: 0; background: var(--surface); flex-wrap: wrap; }
 .col-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
-.col-title { font-size: 13px; font-weight: 600; color: var(--txt); flex: 1; white-space: nowrap; min-width: 0; }
+.col-title { font-size: 13px; font-weight: 600; color: var(--txt); flex: 1; white-space: nowrap; min-width: 0; display: inline-flex; align-items: center; gap: 5px; }
+.col-title svg { width: 13px; height: 13px; flex-shrink: 0; color: var(--accent); }
 .col-count { font-size: 11px; font-weight: 600; color: var(--accent); background: var(--accent-lt); padding: 2px 8px; border-radius: 99px; min-width: 24px; text-align: center; flex-shrink: 0; }
-
-/* Botão Baixar Entregues */
-.btn-baixar-entregues { display: flex; align-items: center; gap: 4px; background: var(--green); color: #fff; font-size: 10px; font-weight: 700; padding: 4px 9px; border-radius: 6px; transition: var(--transition); white-space: nowrap; letter-spacing: .01em; flex-shrink: 0; }
-.btn-baixar-entregues:hover { background: var(--green-dk); transform: translateY(-1px); box-shadow: 0 3px 10px rgba(5,150,105,.3); }
-.btn-baixar-entregues:active { transform: none; }
 
 .col-body { flex: 1; overflow-y: auto; padding: 10px 8px; display: flex; flex-direction: column; gap: 7px; }
 
 /* ═══════════════════════════════════════════
    CARD
 ═══════════════════════════════════════════ */
-.card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius-sm); padding: 10px 12px 9px; cursor: grab; user-select: none; transition: box-shadow var(--transition), transform var(--transition), opacity var(--transition), background var(--transition); position: relative; animation: cardIn .25s cubic-bezier(.34,1.56,.64,1) both; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px 9px;
+  cursor: grab;
+  user-select: none;
+  transition: box-shadow var(--transition), transform var(--transition), opacity var(--transition), background var(--transition);
+  position: relative;
+  animation: cardIn .25s cubic-bezier(.34,1.56,.64,1) both;
+  will-change: transform;
+  pointer-events: auto;
+}
 @keyframes cardIn { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
 .card:hover { box-shadow: var(--shadow); border-color: var(--border2); border-left-color: var(--accent); transform: translateY(-1px); }
 .card:active { cursor: grabbing; }
 .card.dragging { opacity: .35; transform: scale(.97); box-shadow: none; }
+.card.drag-active { border-color: var(--blue); box-shadow: 0 4px 16px rgba(37,99,235,.15); }
 
-/* Estado ENTREGUE */
 .card.card-entregue { background: #f0fdf4; border-color: #bbf7d0; border-left-color: var(--green) !important; cursor: default; }
 .card.card-entregue:hover { transform: none; border-color: #bbf7d0; border-left-color: var(--green) !important; box-shadow: none; }
 
-/* ANIMAÇÃO DE ATENÇÃO - PISCA SUAVEMENTE */
 .card.card-atencao {
   animation: atencaoPulse 1.2s ease-in-out infinite;
   position: relative;
   z-index: 10;
 }
 @keyframes atencaoPulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(236, 72, 153, 0);
-    border-left-color: var(--accent);
-  }
-  25% {
-    box-shadow: 0 0 0 6px rgba(236, 72, 153, 0.3);
-    border-left-color: var(--pink);
-  }
-  50% {
-    box-shadow: 0 0 0 12px rgba(236, 72, 153, 0.15);
-    border-left-color: var(--pink);
-    transform: scale(1.01);
-  }
-  75% {
-    box-shadow: 0 0 0 6px rgba(236, 72, 153, 0.3);
-    border-left-color: var(--pink);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(236, 72, 153, 0);
-    border-left-color: var(--accent);
-  }
+  0% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0); border-left-color: var(--accent); }
+  25% { box-shadow: 0 0 0 6px rgba(236, 72, 153, 0.3); border-left-color: var(--pink); }
+  50% { box-shadow: 0 0 0 12px rgba(236, 72, 153, 0.15); border-left-color: var(--pink); transform: scale(1.01); }
+  75% { box-shadow: 0 0 0 6px rgba(236, 72, 153, 0.3); border-left-color: var(--pink); }
+  100% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0); border-left-color: var(--accent); }
 }
 
-/* Botão de atenção */
-.btn-action.atencao {
-  color: var(--pink);
-  background: var(--pink-lt);
-  border-color: #ff823a;
-  font-weight: 700;
-  transition: all 0.2s ease;
-}
-.btn-action.atencao:hover {
-  background: #fce7f3;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
-}
-.btn-action.atencao-active {
-  color: #fff !important;
-  background: linear-gradient(135deg, var(--pink) 0%, var(--pink-dk) 100%) !important;
-  border-color: var(--pink-dk) !important;
-  animation: atencaoBtnPulse 1s ease-in-out infinite;
-}
+.btn-action.atencao { color: var(--pink); background: var(--pink-lt); border-color: #ff823a; font-weight: 700; transition: all 0.2s ease; }
+.btn-action.atencao:hover { background: #fce7f3; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3); }
+.btn-action.atencao-active { color: #fff !important; background: linear-gradient(135deg, var(--pink) 0%, var(--pink-dk) 100%) !important; border-color: var(--pink-dk) !important; animation: atencaoBtnPulse 1s ease-in-out infinite; }
 @keyframes atencaoBtnPulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.3);
-  }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.5); }
+  50% { box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.3); }
 }
 
 .card-stamp { position: absolute; top: 8px; right: 10px; background: var(--green); color: #fff; font-size: 9px; font-weight: 800; letter-spacing: .12em; padding: 2px 7px; border-radius: 4px; transform: rotate(2deg); border: 1.5px solid var(--green-dk); text-transform: uppercase; box-shadow: 0 2px 6px rgba(5,150,105,.3); }
 
-/* Badge tentativa */
 .card-tentativa-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 9px; font-weight: 700; color: var(--amber-dk); background: var(--amber-lt); border: 1px solid #FDE68A; border-radius: 4px; padding: 1px 5px; white-space: nowrap; }
 
 .card-top { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 5px; }
@@ -296,7 +261,6 @@ a { color: inherit; text-decoration: none; }
 .card-date { font-size: 11px; color: var(--txt3); font-family: var(--mono); }
 .card-date.entregue-date { color: var(--green); font-weight: 600; font-family: var(--font); }
 
-/* Card com observação */
 .card.card-has-obs { border-left-width: 4px; background: #fffdf5; }
 .card.card-has-obs .card-nf::after { content: ' 📝'; font-size: 11px; opacity: .8; }
 
@@ -309,11 +273,7 @@ a { color: inherit; text-decoration: none; }
   box-shadow: 0 3px 14px rgba(15, 76, 129, 0.12), inset 0 1px 0 rgba(255,255,255,0.35);
   transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
-.card.card-fora-estado:hover {
-  border-color: #f59e0b; border-left-color: #d97706 !important;
-  box-shadow: 0 6px 22px rgba(15, 76, 129, 0.22), inset 0 1px 0 rgba(255,255,255,0.45);
-  transform: translateY(-2px);
-}
+.card.card-fora-estado:hover { border-color: #f59e0b; border-left-color: #d97706 !important; box-shadow: 0 6px 22px rgba(15, 76, 129, 0.22), inset 0 1px 0 rgba(255,255,255,0.45); transform: translateY(-2px); }
 .card.card-fora-estado .card-nf { color: #0f4c81; font-weight: 800; }
 .card.card-fora-estado .card-valor { color: #b45309; font-weight: 700; }
 .card.card-fora-estado .card-cli { color: #334155; font-weight: 600; }
@@ -325,24 +285,109 @@ a { color: inherit; text-decoration: none; }
   color: #ffffff; border: 1px solid #60a5fa; border-radius: 6px;
   font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
   box-shadow: 0 3px 10px rgba(29, 78, 216, 0.35);
-  transition: transform .15s ease, box-shadow .15s ease;
 }
-.card-fora-badge:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(29, 78, 216, 0.45); }
 
-/* Botões fora estado */
-.btn-action.fora-estado-off {
-  background: #ffffff; color: #0f4c81; border: 1px solid #7dd3fc;
-  border-radius: 6px; font-size: 10px; font-weight: 700; letter-spacing: .02em;
-  transition: all .15s ease;
-}
+.btn-action.fora-estado-off { background: #ffffff; color: #0f4c81; border: 1px solid #7dd3fc; border-radius: 6px; font-size: 10px; font-weight: 700; letter-spacing: .02em; transition: all .15s ease; }
 .btn-action.fora-estado-off:hover { background: #e0f2fe; border-color: #38bdf8; transform: translateY(-1px); }
-.btn-action.fora-estado-on {
-  background: linear-gradient(135deg, #0f4c81 0%, #1d4ed8 100%);
-  color: #ffffff; border: 1px solid #2563eb; border-radius: 6px;
-  font-size: 10px; font-weight: 700; letter-spacing: .02em;
-  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25); transition: all .15s ease;
-}
+.btn-action.fora-estado-on { background: linear-gradient(135deg, #0f4c81 0%, #1d4ed8 100%); color: #ffffff; border: 1px solid #2563eb; border-radius: 6px; font-size: 10px; font-weight: 700; letter-spacing: .02em; box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25); transition: all .15s ease; }
 .btn-action.fora-estado-on:hover { background: linear-gradient(135deg, #0c3b63 0%, #1e40af 100%); transform: translateY(-1px); box-shadow: 0 5px 16px rgba(37, 99, 235, 0.35); }
+
+/* ═══════════════════════════════════════════
+   SELETOR DE PALETES
+═══════════════════════════════════════════ */
+.paletes-section {
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  padding: 7px 10px;
+  margin-top: 8px;
+  transition: var(--transition);
+}
+.paletes-section.has-paletes {
+  border-color: var(--green);
+  box-shadow: 0 2px 8px rgba(5,150,105,0.15);
+}
+.paletes-section.is-zero {
+  background: var(--surface2);
+  border-color: var(--border);
+}
+.paletes-icon-wrap {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px;
+  flex-shrink: 0;
+  color: var(--green-dk);
+}
+.paletes-icon-wrap svg { width: 100%; height: 100%; }
+.paletes-label { font-size: 11px; font-weight: 700; color: var(--green-dk); letter-spacing: .03em; flex: 1; }
+.paletes-section.is-zero .paletes-label { color: var(--txt3); }
+.paletes-section.is-zero .paletes-icon-wrap { color: var(--txt3); }
+.paletes-value {
+  font-size: 15px; font-weight: 800; color: var(--green-dk);
+  font-family: var(--mono);
+  background: #ffffff;
+  border: 1.5px solid var(--green);
+  border-radius: 6px;
+  min-width: 38px;
+  text-align: center;
+  padding: 2px 8px;
+  box-shadow: 0 1px 3px rgba(5,150,105,.15);
+}
+.paletes-value.zero { color: var(--txt3); border-color: var(--border2); box-shadow: none; background: var(--surface); }
+
+.btn-paletes-open {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--green); color: #fff;
+  font-size: 11px; font-weight: 700;
+  padding: 5px 11px; border-radius: 6px;
+  transition: all .15s ease;
+  white-space: nowrap;
+  border: none;
+  box-shadow: 0 2px 6px rgba(5,150,105,.25);
+}
+.btn-paletes-open:hover { background: var(--green-dk); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(5,150,105,.35); }
+.btn-paletes-open:active { transform: translateY(0); }
+
+.paletes-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-top: 10px;
+}
+.paletes-opt {
+  padding: 10px 4px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: var(--mono);
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  color: var(--txt2);
+  cursor: pointer;
+  transition: all .12s ease;
+  text-align: center;
+}
+.paletes-opt:hover { background: var(--green-lt); border-color: var(--green); color: var(--green-dk); transform: translateY(-1px); }
+.paletes-opt.selected { background: var(--green); border-color: var(--green-dk); color: #fff; box-shadow: 0 3px 10px rgba(5,150,105,.35); }
+
+.paletes-zero-btn {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--red-lt);
+  border: 1.5px dashed #FECACA;
+  border-radius: 8px;
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  transition: all .15s ease;
+  cursor: pointer;
+}
+.paletes-zero-btn:hover { background: #FEE2E2; border-color: var(--red); border-style: solid; transform: translateY(-1px); box-shadow: 0 3px 10px rgba(220,38,38,.2); }
+.paletes-zero-btn:active { transform: translateY(0); }
+.paletes-zero-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 
 /* Obs Inline */
 .card-obs-section { margin-top: 8px; }
@@ -360,10 +405,23 @@ a { color: inherit; text-decoration: none; }
 .btn-obs-cancel { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 5px; background: var(--surface2); color: var(--txt2); border: 1px solid var(--border); transition: var(--transition); }
 .btn-obs-cancel:hover { background: var(--bg); }
 
-.card-actions { display: flex; align-items: center; gap: 4px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); flex-wrap: wrap; }
-.btn-action { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 6px; transition: var(--transition); color: var(--txt2); background: var(--surface2); border: 1px solid var(--border); }
+.card-actions { display: flex; align-items: center; gap: 4px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); flex-wrap: wrap; position: relative; z-index: 5; }
+.btn-action {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 600;
+  padding: 5px 9px; border-radius: 6px;
+  transition: var(--transition);
+  color: var(--txt2); background: var(--surface2);
+  border: 1px solid var(--border);
+  position: relative;
+  z-index: 6;
+  pointer-events: auto;
+  cursor: pointer;
+  user-select: none;
+}
 .btn-action:hover { background: var(--bg); border-color: var(--border2); }
-.btn-action svg { width: 11px; height: 11px; }
+.btn-action:active { transform: scale(.97); }
+.btn-action svg { width: 11px; height: 11px; pointer-events: none; }
 .btn-action.del  { color: var(--red); background: var(--red-lt); border-color: #FECACA; margin-left: auto; }
 .btn-action.del:hover  { background: #FEE2E2; }
 .btn-action.entregue { color: var(--green); background: var(--green-lt); border-color: #6ee7b7; font-weight: 700; }
@@ -375,7 +433,7 @@ a { color: inherit; text-decoration: none; }
 
 /* Barra de arquivos */
 .card-files-bar { display: flex; align-items: center; gap: 4px; margin-top: 7px; padding-top: 7px; border-top: 1px dashed var(--border); flex-wrap: wrap; }
-.btn-dl { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 5px; transition: var(--transition); text-decoration: none; border: 1.5px solid; white-space: nowrap; cursor: pointer; line-height: 1.4; }
+.btn-dl { display: inline-flex; align-items: center; gap: 3px; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 5px; transition: var(--transition); text-decoration: none; border: 1.5px solid; white-space: nowrap; cursor: pointer; line-height: 1.4; pointer-events: auto; }
 .btn-dl.pdf         { color: #b91c1c; background: #fef2f2; border-color: #fca5a5; }
 .btn-dl.pdf:hover   { background: #fee2e2; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(185,28,28,.18); }
 .btn-dl.xml         { color: #047857; background: #ecfdf5; border-color: #6ee7b7; }
@@ -413,6 +471,8 @@ a { color: inherit; text-decoration: none; }
 .btn-modal.save:hover { background: var(--blue-dk); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,.25); }
 .btn-modal.danger { background: var(--red); color: #fff; }
 .btn-modal.danger:hover { background: #B91C1C; }
+.btn-modal.green { background: var(--green); color: #fff; }
+.btn-modal.green:hover { background: var(--green-dk); }
 
 /* Import Modal */
 .import-tabs { display: flex; margin-bottom: 14px; border-bottom: 2px solid var(--border); }
@@ -455,19 +515,9 @@ a { color: inherit; text-decoration: none; }
 .empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px 12px; text-align: center; color: var(--txt3); font-size: 12px; }
 .empty-icon { font-size: 28px; opacity: .5; }
 
-/* ═══════════════════════════════════════════
-   COUNTDOWN OVERLAY
-═══════════════════════════════════════════ */
-.card-countdown-bar {
-  position: absolute; inset: 0; pointer-events: none;
-  border-radius: var(--radius-sm); overflow: hidden; z-index: 2;
-}
-.card-countdown-bar::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; height: 3px;
-  background: var(--green); border-radius: 0 0 0 var(--radius-sm);
-  animation: cdBar 20s linear forwards;
-}
+/* Countdown */
+.card-countdown-bar { position: absolute; inset: 0; pointer-events: none; border-radius: var(--radius-sm); overflow: hidden; z-index: 2; }
+.card-countdown-bar::after { content: ''; position: absolute; bottom: 0; left: 0; height: 3px; background: var(--green); border-radius: 0 0 0 var(--radius-sm); animation: cdBar 20s linear forwards; }
 @keyframes cdBar { from { width: 100%; } to { width: 0%; } }
 
 .card-countdown-banner {
@@ -485,9 +535,7 @@ a { color: inherit; text-decoration: none; }
 .card-countdown-cancel:hover { background: rgba(255,255,255,.35); }
 .card.card-pending-transfer { opacity: .85; }
 
-/* ═══════════════════════════════════════════
-   STATUS GROUPS
-═══════════════════════════════════════════ */
+/* Status groups */
 .cld-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; box-shadow: 0 0 0 2px var(--green-lt); }
 .cld-dot.offline    { background: var(--red);   box-shadow: 0 0 0 2px var(--red-lt); }
 .cld-dot.connecting { background: var(--amber); box-shadow: 0 0 0 2px var(--amber-lt); animation: pulse .8s ease-in-out infinite alternate; }
@@ -495,118 +543,141 @@ a { color: inherit; text-decoration: none; }
 .status-group-label { font-family: var(--mono); font-size: 10px; white-space: nowrap; }
 
 /* ═══════════════════════════════════════════
-   PÁGINA ENTREGUES — CONTROLE DE CANHOTOS
+   PÁGINA PALETES A RETORNAR
 ═══════════════════════════════════════════ */
-#page-entregues {
+#page-paletes {
   display: none; flex-direction: column; gap: 14px;
   padding: 16px; overflow-y: auto; flex: 1;
 }
-#page-entregues.active { display: flex; }
+#page-paletes.active { display: flex; }
 
-.entregues-header {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 14px 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+.pal-header-card {
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  display: flex; align-items: center; gap: 20px;
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(13,148,136,.25);
+  flex-wrap: wrap;
 }
-.entregues-title { font-size: 16px; font-weight: 700; color: var(--txt); display: flex; align-items: center; gap: 8px; }
-.entregues-kpis { display: flex; gap: 10px; margin-left: auto; flex-wrap: wrap; }
-.entregues-kpi { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 14px; text-align: center; }
-.entregues-kpi-val { font-size: 18px; font-weight: 800; color: var(--green); font-family: var(--mono); }
-.entregues-kpi-lbl { font-size: 10px; color: var(--txt3); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
-
-.entregues-filter-bar {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 10px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+.pal-header-icon {
+  width: 52px; height: 52px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.18);
+  border: 1.5px solid rgba(255,255,255,.28);
+  border-radius: 12px;
+  color: #fff;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.2));
 }
-.entregues-search { padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--txt); background: var(--surface2); width: 220px; transition: var(--transition); outline: none; font-family: var(--font); }
-.entregues-search:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
-.entregues-period-lbl { font-size: 12px; color: var(--txt3); margin-left: auto; font-family: var(--mono); }
-
-/* Filtros de período rápido */
-.ent-period-btns { display: flex; gap: 4px; }
-.ent-period-btn { padding: 4px 10px; font-size: 11px; font-weight: 600; border-radius: 5px; background: var(--surface2); border: 1px solid var(--border); color: var(--txt2); transition: var(--transition); cursor: pointer; }
-.ent-period-btn.active, .ent-period-btn:hover { background: var(--blue-lt); color: var(--blue); border-color: var(--blue); }
-
-/* Botão exportar entregues */
-.btn-export-ent { display: flex; align-items: center; gap: 6px; background: var(--green); color: #fff; font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: var(--radius-sm); transition: var(--transition); white-space: nowrap; }
-.btn-export-ent:hover { background: var(--green-dk); transform: translateY(-1px); box-shadow: 0 3px 10px rgba(5,150,105,.3); }
-
-.entregues-table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; flex: 1; }
-.entregues-table-title { padding: 12px 20px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
-.entregues-table { width: 100%; border-collapse: collapse; }
-.entregues-table thead tr { background: var(--green-lt); }
-.entregues-table th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700; color: var(--green-dk); letter-spacing: .04em; text-transform: uppercase; border-bottom: 1px solid var(--border); white-space: nowrap; cursor: pointer; user-select: none; }
-.entregues-table th:hover { background: #d1fae5; }
-.entregues-table th.sort-asc::after { content: ' ▲'; font-size: 9px; }
-.entregues-table th.sort-desc::after { content: ' ▼'; font-size: 9px; }
-.entregues-table td { padding: 9px 14px; font-size: 12px; color: var(--txt); border-bottom: 1px solid var(--border); vertical-align: middle; }
-.entregues-table tbody tr:last-child td { border-bottom: none; }
-.entregues-table tbody tr:hover td { background: var(--green-lt); }
-.entregues-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--green-lt); color: var(--green-dk); }
-.entregues-badge.tentativas { background: var(--amber-lt); color: var(--amber-dk); }
-.entregues-badge.fora { background: #dbeafe; color: #1d4ed8; }
-
-/* Canhoto card row detail */
-.canhoto-obs { font-size: 10px; color: var(--txt3); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-/* Paginação */
-.pagination-bar {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 10px 16px; display: flex; align-items: center; justify-content: center; gap: 6px;
+.pal-header-icon svg { width: 28px; height: 28px; }
+.pal-header-info { flex: 1; min-width: 200px; }
+.pal-header-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; letter-spacing: -.01em; }
+.pal-header-sub { font-size: 13px; opacity: .9; }
+.pal-header-stats { display: flex; gap: 16px; flex-wrap: wrap; }
+.pal-stat {
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 10px;
+  padding: 10px 18px;
+  text-align: center;
+  backdrop-filter: blur(8px);
+  min-width: 90px;
 }
-.pag-btn { padding: 6px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; color: var(--txt2); background: var(--surface2); cursor: pointer; transition: var(--transition); font-family: var(--font); }
-.pag-btn:hover:not(:disabled) { background: var(--blue-lt); color: var(--blue); border-color: var(--blue); }
-.pag-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
-.pag-btn:disabled { opacity: .4; cursor: not-allowed; }
-.pag-info { font-size: 12px; color: var(--txt3); padding: 0 8px; font-family: var(--mono); }
-.entregues-empty { padding: 48px; text-align: center; color: var(--txt3); }
-.entregues-empty-icon { font-size: 40px; margin-bottom: 10px; }
+.pal-stat-val { font-size: 26px; font-weight: 800; font-family: var(--mono); line-height: 1; }
+.pal-stat-lbl { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; opacity: .85; margin-top: 4px; }
 
-/* ═══════════════════════════════════════════
-   PÁGINA RELATÓRIOS
-═══════════════════════════════════════════ */
-#page-relatorios { flex: 1; overflow-y: auto; padding: 20px; display: none; flex-direction: column; gap: 16px; }
-#page-relatorios.active { display: flex; }
+.pal-filter-bar {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 12px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.pal-search-wrap { position: relative; display: flex; align-items: center; }
+.pal-search-wrap svg { position: absolute; left: 10px; color: var(--txt3); pointer-events: none; }
+.pal-search { padding: 7px 12px 7px 32px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--txt); background: var(--surface2); width: 220px; transition: var(--transition); outline: none; }
+.pal-search:focus { border-color: var(--teal); background: var(--surface); box-shadow: 0 0 0 3px rgba(13,148,136,.1); }
 
-.rel-header-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
-.rel-field { display: flex; flex-direction: column; gap: 5px; }
-.rel-label { font-size: 11px; font-weight: 700; color: var(--txt2); letter-spacing: .03em; }
-.rel-input { padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--txt); background: var(--surface2); outline: none; transition: var(--transition); }
-.rel-input:focus { border-color: var(--blue); background: var(--surface); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
-.btn-rel { display: flex; align-items: center; gap: 7px; background: var(--blue); color: #fff; font-size: 13px; font-weight: 600; padding: 9px 18px; border-radius: var(--radius-sm); transition: var(--transition); white-space: nowrap; }
-.btn-rel:hover { background: var(--blue-dk); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,.25); }
-.btn-rel.secondary { background: var(--surface2); color: var(--txt2); border: 1px solid var(--border); }
-.btn-rel.secondary:hover { background: var(--bg); transform: translateY(-1px); }
-.btn-rel.green { background: var(--green); }
-.btn-rel.green:hover { background: var(--green-dk); }
+.pal-view-toggle { display: flex; gap: 4px; margin-left: auto; }
+.pal-view-btn { padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 6px; background: var(--surface2); border: 1px solid var(--border); color: var(--txt2); transition: var(--transition); cursor: pointer; }
+.pal-view-btn.active { background: var(--teal); color: #fff; border-color: var(--teal-dk); }
 
-/* Atalhos período relatório */
-.rel-shortcuts { display: flex; gap: 4px; align-items: center; margin-left: 4px; }
-.rel-shortcut { padding: 4px 9px; font-size: 11px; font-weight: 600; border-radius: 5px; background: var(--surface2); border: 1px solid var(--border); color: var(--txt2); transition: var(--transition); cursor: pointer; }
-.rel-shortcut:hover { background: var(--blue-lt); color: var(--blue); border-color: var(--blue); }
+.btn-export-pal { display: flex; align-items: center; gap: 6px; background: var(--teal); color: #fff; font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: var(--radius-sm); transition: var(--transition); white-space: nowrap; }
+.btn-export-pal:hover { background: var(--teal-dk); transform: translateY(-1px); box-shadow: 0 3px 10px rgba(13,148,136,.3); }
 
-/* KPI cards */
-.rel-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
-.rel-kpi { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; border-top: 3px solid var(--kpi-color, var(--blue)); }
-.rel-kpi-label { font-size: 11px; font-weight: 700; color: var(--txt3); letter-spacing: .04em; text-transform: uppercase; margin-bottom: 8px; }
-.rel-kpi-value { font-size: 24px; font-weight: 700; color: var(--kpi-color, var(--txt)); line-height: 1; }
-.rel-kpi-sub { font-size: 11px; color: var(--txt3); margin-top: 4px; }
+.pal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+}
+.pal-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--teal);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  transition: var(--transition);
+  position: relative;
+}
+.pal-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); border-left-color: var(--teal-dk); }
+.pal-card-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+.pal-card-nf { font-size: 15px; font-weight: 800; color: var(--teal-dk); font-family: var(--mono); flex: 1; }
+.pal-card-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dk) 100%);
+  color: #fff;
+  font-size: 14px; font-weight: 800;
+  font-family: var(--mono);
+  padding: 4px 12px;
+  border-radius: 99px;
+  box-shadow: 0 3px 10px rgba(13,148,136,.35);
+}
+.pal-card-badge svg { width: 12px; height: 12px; }
+.pal-card-cli { font-size: 13px; color: var(--txt2); margin-bottom: 8px; font-weight: 500; }
+.pal-card-info { display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: var(--txt3); }
+.pal-card-info strong { color: var(--txt2); font-weight: 600; }
+.pal-card-footer { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
+.pal-card-footer .btn-action { font-size: 11px; }
 
-/* Tabela relatório */
-.rel-table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-.rel-table-title { padding: 14px 20px 12px; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
-.rel-table { width: 100%; border-collapse: collapse; }
-.rel-table thead tr { background: var(--surface2); }
-.rel-table th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700; color: var(--txt2); letter-spacing: .04em; text-transform: uppercase; border-bottom: 1px solid var(--border); white-space: nowrap; }
-.rel-table td { padding: 9px 14px; font-size: 12px; color: var(--txt); border-bottom: 1px solid var(--border); vertical-align: middle; }
-.rel-table tbody tr:last-child td { border-bottom: none; }
-.rel-table tbody tr:hover td { background: var(--surface2); }
-.rel-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
-.rel-badge.entregue { background: var(--green-lt); color: var(--green-dk); }
-.rel-badge.tentativa { background: var(--amber-lt); color: var(--amber-dk); }
-.rel-badge.deletada  { background: var(--red-lt); color: var(--red); }
+.pal-empty {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 48px 24px; text-align: center; color: var(--txt3);
+  grid-column: 1 / -1;
+}
+.pal-empty-icon {
+  width: 64px; height: 64px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--surface2);
+  border: 1.5px dashed var(--border2);
+  border-radius: 16px;
+  color: var(--txt3);
+  margin-bottom: 12px;
+}
+.pal-empty-icon svg { width: 32px; height: 32px; }
 
-/* Info source */
-.rel-source-note { font-size: 11px; color: var(--txt3); background: var(--green-lt); border: 1px solid #bbf7d0; border-radius: var(--radius-sm); padding: 8px 14px; display: flex; align-items: center; gap: 6px; }
+.pal-table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.pal-table { width: 100%; border-collapse: collapse; }
+.pal-table thead tr { background: var(--teal-lt); }
+.pal-table th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700; color: var(--teal-dk); letter-spacing: .04em; text-transform: uppercase; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.pal-table td { padding: 10px 14px; font-size: 12px; color: var(--txt); border-bottom: 1px solid var(--border); vertical-align: middle; }
+.pal-table tbody tr:last-child td { border-bottom: none; }
+.pal-table tbody tr:hover td { background: var(--teal-lt); }
+.pal-qty-cell {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 44px;
+  background: var(--green-lt);
+  border: 1.5px solid var(--green);
+  color: var(--green-dk);
+  font-weight: 800;
+  font-family: var(--mono);
+  font-size: 14px;
+  padding: 3px 10px;
+  border-radius: 6px;
+}
+
+/* Estilo inline para ícone do pallet (SVG) */
+.icon-pallet {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
 </style>
 </head>
 <body>
@@ -615,10 +686,17 @@ a { color: inherit; text-decoration: none; }
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo">
-      <div class="login-logo-icon">📋</div>
+      <div class="login-logo-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+          <path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/>
+          <path d="M9 13h6"/>
+          <path d="M9 17h6"/>
+        </svg>
+      </div>
       <div>
-        <div class="login-logo-text">Notas Fiscais</div>
-        <div class="login-logo-sub">Sistema de Expedição</div>
+        <div class="login-logo-text">Expedição</div>
+        <div class="login-logo-sub">Sistema de Notas Fiscais</div>
       </div>
     </div>
     <div class="login-title">Bem-vindo</div>
@@ -638,8 +716,6 @@ a { color: inherit; text-decoration: none; }
     </div>
     <div class="login-error" id="login-err">Senha incorreta. Tente novamente.</div>
     <button class="btn-login" id="btn-login-submit" onclick="doLogin()">Entrar →</button>
-    
-    <!-- Botão Central Programas - Laranja -->
     <a href="https://floriodev.github.io/Central/" target="_blank" rel="noopener noreferrer" class="btn-central">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -657,8 +733,15 @@ a { color: inherit; text-decoration: none; }
   <!-- TOPBAR -->
   <div id="topbar">
     <div class="logo">
-      <div class="logo-icon">📋</div>
-      <span class="logo-text">Notas Fiscais</span>
+      <div class="logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+          <path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/>
+          <path d="M9 13h6"/>
+          <path d="M9 17h6"/>
+        </svg>
+      </div>
+      <span class="logo-text">Expedição</span>
     </div>
     <span id="status-msg">Conectando…</span>
     <div class="topbar-right">
@@ -671,11 +754,25 @@ a { color: inherit; text-decoration: none; }
         <span class="status-group-label" id="cld-label">Cloudinary</span>
       </div>
 
-      <!-- Abas de navegação -->
       <div class="nav-tabs">
-        <button class="nav-tab active" id="nav-board" onclick="switchPage('board')">📋 Operação</button>
-        <button class="nav-tab" id="nav-entregues" onclick="switchPage('entregues')">📦 Entregues</button>
-        <button class="nav-tab" id="nav-rel" onclick="switchPage('relatorios')">📊 Relatórios</button>
+        <button class="nav-tab active" id="nav-board" onclick="switchPage('board')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="9" rx="1"/>
+            <rect x="14" y="3" width="7" height="5" rx="1"/>
+            <rect x="14" y="12" width="7" height="9" rx="1"/>
+            <rect x="3" y="16" width="7" height="5" rx="1"/>
+          </svg>
+          Operação
+        </button>
+        <button class="nav-tab" id="nav-paletes" onclick="switchPage('paletes')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+            <path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/>
+            <path d="M9 13h6"/>
+          </svg>
+          Paletes a Retornar
+          <span class="nav-badge" id="nav-pal-badge" style="display:none">0</span>
+        </button>
       </div>
 
       <div class="search-wrap" id="search-wrap">
@@ -687,15 +784,14 @@ a { color: inherit; text-decoration: none; }
         Importar NF
       </button>
 
-      <!-- Botão Backup -->
-      <button class="btn-backup" onclick="fazerBackup()" title="Baixar backup completo de todos os dados">
+      <button class="btn-backup" onclick="fazerBackup()" title="Baixar backup completo">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Backup
       </button>
 
       <div class="topbar-creator">
         <span class="topbar-creator-name">Criado por: Leandro NP</span>
-        <span class="topbar-creator-version">Versão 1.5</span>
+        <span class="topbar-creator-version">Versão 2.2</span>
       </div>
 
       <button class="btn-logout" onclick="doLogout()" title="Sair">
@@ -710,7 +806,10 @@ a { color: inherit; text-decoration: none; }
     <div class="column" id="col-lancada" style="--accent:var(--col-l);--accent-lt:var(--blue-lt)" data-status="lancada">
       <div class="col-header">
         <div class="col-dot"></div>
-        <span class="col-title">📥 Lançadas</span>
+        <span class="col-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Lançadas
+        </span>
         <span class="col-count" id="cnt-lancada">0</span>
       </div>
       <div class="col-body" id="body-lancada"></div>
@@ -719,7 +818,10 @@ a { color: inherit; text-decoration: none; }
     <div class="column" id="col-aguardando" style="--accent:var(--col-a);--accent-lt:var(--amber-lt)" data-status="aguardando">
       <div class="col-header">
         <div class="col-dot"></div>
-        <span class="col-title">⏳ Separado</span>
+        <span class="col-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Separado
+        </span>
         <span class="col-count" id="cnt-aguardando">0</span>
       </div>
       <div class="col-body" id="body-aguardando"></div>
@@ -728,7 +830,10 @@ a { color: inherit; text-decoration: none; }
     <div class="column" id="col-solicitada" style="--accent:var(--col-s);--accent-lt:var(--violet-lt)" data-status="solicitada">
       <div class="col-header">
         <div class="col-dot"></div>
-        <span class="col-title">🚚 Coleta Solicitada</span>
+        <span class="col-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Coleta Solicitada
+        </span>
         <span class="col-count" id="cnt-solicitada">0</span>
       </div>
       <div class="col-body" id="body-solicitada"></div>
@@ -737,199 +842,80 @@ a { color: inherit; text-decoration: none; }
     <div class="column" id="col-retirada" style="--accent:var(--col-r);--accent-lt:var(--green-lt)" data-status="retirada">
       <div class="col-header">
         <div class="col-dot"></div>
-        <span class="col-title">✅ Retiradas</span>
+        <span class="col-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Retiradas
+        </span>
         <span class="col-count" id="cnt-retirada">0</span>
-        <button class="btn-baixar-entregues" onclick="baixarEntregues()" title="Exportar entregues para PDF e remover da tela">
-          📥 Baixar Entregues
-        </button>
       </div>
       <div class="col-body" id="body-retirada"></div>
     </div>
   </div>
 
-  <!-- PÁGINA ENTREGUES — CONTROLE DE CANHOTOS -->
-  <div id="page-entregues">
-    <div class="entregues-header">
-      <div class="entregues-title">📦 Controle de Canhotos — Notas Entregues</div>
-      <div style="font-size:12px;color:var(--txt3)">Registro completo de todas as entregas confirmadas</div>
-      <div class="entregues-kpis">
-        <div class="entregues-kpi">
-          <div class="entregues-kpi-val" id="ent-total-count">0</div>
-          <div class="entregues-kpi-lbl">Total</div>
+  <!-- PÁGINA PALETES A RETORNAR -->
+  <div id="page-paletes">
+    <div class="pal-header-card">
+      <div class="pal-header-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+          <path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/>
+          <path d="M9 13h6"/>
+          <path d="M9 17h6"/>
+        </svg>
+      </div>
+      <div class="pal-header-info">
+        <div class="pal-header-title">Paletes a Retornar</div>
+        <div class="pal-header-sub">Controle de paletes pendentes de devolução — notas em Retiradas</div>
+      </div>
+      <div class="pal-header-stats">
+        <div class="pal-stat">
+          <div class="pal-stat-val" id="pal-total-notas">0</div>
+          <div class="pal-stat-lbl">Notas</div>
         </div>
-        <div class="entregues-kpi">
-          <div class="entregues-kpi-val" id="ent-total-valor" style="font-size:13px">R$ 0</div>
-          <div class="entregues-kpi-lbl">Valor Total</div>
+        <div class="pal-stat">
+          <div class="pal-stat-val" id="pal-total-qty">0</div>
+          <div class="pal-stat-lbl">Paletes</div>
         </div>
-        <div class="entregues-kpi">
-          <div class="entregues-kpi-val" id="ent-mes-count">0</div>
-          <div class="entregues-kpi-lbl">Este mês</div>
-        </div>
-        <div class="entregues-kpi">
-          <div class="entregues-kpi-val" id="ent-semana-count">0</div>
-          <div class="entregues-kpi-lbl">Esta semana</div>
+        <div class="pal-stat">
+          <div class="pal-stat-val" id="pal-total-devolvidos">0</div>
+          <div class="pal-stat-lbl">Devolvidos</div>
         </div>
       </div>
     </div>
 
-    <div class="entregues-filter-bar">
-      <div style="position:relative;display:flex;align-items:center;">
-        <svg style="position:absolute;left:10px;color:var(--txt3);pointer-events:none" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input class="entregues-search" id="ent-search" type="text" placeholder="Buscar NF, cliente…" oninput="renderEntregues()">
+    <div class="pal-filter-bar">
+      <div class="pal-search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input class="pal-search" id="pal-search" type="text" placeholder="Buscar NF ou cliente…" oninput="renderPaletes()">
       </div>
-      <!-- Filtros rápidos período -->
-      <div class="ent-period-btns">
-        <button class="ent-period-btn active" id="ent-btn-todos" onclick="setEntPeriodo('todos')">Todos</button>
-        <button class="ent-period-btn" id="ent-btn-hoje" onclick="setEntPeriodo('hoje')">Hoje</button>
-        <button class="ent-period-btn" id="ent-btn-semana" onclick="setEntPeriodo('semana')">Esta semana</button>
-        <button class="ent-period-btn" id="ent-btn-mes" onclick="setEntPeriodo('mes')">Este mês</button>
+      <div class="pal-view-toggle">
+        <button class="pal-view-btn active" id="pal-view-grid" onclick="setPalView('grid')">Cards</button>
+        <button class="pal-view-btn" id="pal-view-table" onclick="setPalView('table')">Tabela</button>
       </div>
-      <!-- Filtro por datas customizado -->
-      <input type="date" id="ent-data-ini" style="padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:11px;background:var(--surface2);color:var(--txt);outline:none;" onchange="setEntPeriodo('custom')">
-      <span style="font-size:11px;color:var(--txt3)">até</span>
-      <input type="date" id="ent-data-fim" style="padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:11px;background:var(--surface2);color:var(--txt);outline:none;" onchange="setEntPeriodo('custom')">
-
-      <button class="btn-export-ent" onclick="exportarEntregues()">
+      <button class="btn-export-pal" onclick="exportarPaletes()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Exportar PDF
       </button>
-      <span class="entregues-period-lbl" id="ent-period-lbl">Carregando…</span>
     </div>
 
-    <div class="entregues-table-wrap">
-      <div class="entregues-table-title">
-        <span>📋 Canhotos — Notas Entregues</span>
-        <span id="ent-page-lbl" style="font-size:11px;color:var(--txt3);font-weight:400"></span>
-      </div>
-      <div style="overflow-x:auto">
-        <table class="entregues-table">
-          <thead>
-            <tr>
-              <th onclick="sortEntregues('numero_nf')" id="th-nf">NF</th>
-              <th onclick="sortEntregues('cliente')" id="th-cli">Cliente</th>
-              <th onclick="sortEntregues('valor')" id="th-val">Valor</th>
-              <th onclick="sortEntregues('data_emissao')" id="th-emissao">Emissão</th>
-              <th onclick="sortEntregues('data_entrega')" id="th-entrega">Data Entrega</th>
-              <th>Tentativas</th>
-              <th>Transportadora</th>
-              <th>Obs</th>
-            </tr>
-          </thead>
-          <tbody id="ent-tbody"></tbody>
-        </table>
-      </div>
-      <div id="ent-empty" class="entregues-empty" style="display:none">
-        <div class="entregues-empty-icon">📦</div>
-        <div>Nenhuma nota entregue encontrada.</div>
-        <div style="font-size:11px;margin-top:4px">As notas são transferidas automaticamente após confirmação de entrega.</div>
-      </div>
-    </div>
-
-    <div class="pagination-bar" id="ent-pagination" style="display:none">
-      <button class="pag-btn" id="pag-prev" onclick="changePage(-1)">← Anterior</button>
-      <div id="pag-pages" style="display:flex;gap:4px;align-items:center"></div>
-      <button class="pag-btn" id="pag-next" onclick="changePage(1)">Próxima →</button>
-      <span class="pag-info" id="pag-info"></span>
-    </div>
-  </div>
-
-  <!-- PÁGINA RELATÓRIOS -->
-  <div id="page-relatorios">
-    <div class="rel-source-note">
-      <span>📦</span>
-      <span>Os relatórios são gerados a partir dos dados do módulo <strong>Entregues</strong> (Firebase), garantindo precisão e persistência.</span>
-    </div>
-
-    <div class="rel-header-card">
-      <div class="rel-field">
-        <label class="rel-label">DATA INÍCIO</label>
-        <input class="rel-input" type="date" id="rel-inicio">
-      </div>
-      <div class="rel-field">
-        <label class="rel-label">DATA FIM</label>
-        <input class="rel-input" type="date" id="rel-fim">
-      </div>
-      <!-- Atalhos de período -->
-      <div class="rel-shortcuts">
-        <button class="rel-shortcut" onclick="relSetPeriodo('hoje')">Hoje</button>
-        <button class="rel-shortcut" onclick="relSetPeriodo('semana')">Semana</button>
-        <button class="rel-shortcut" onclick="relSetPeriodo('mes')">Mês</button>
-        <button class="rel-shortcut" onclick="relSetPeriodo('trimestre')">Trimestre</button>
-        <button class="rel-shortcut" onclick="relSetPeriodo('ano')">Ano</button>
-      </div>
-      <button class="btn-rel" onclick="gerarRelatorio()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        Gerar Relatório
-      </button>
-      <button class="btn-rel secondary" onclick="exportarRelatorio()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Exportar PDF
-      </button>
-    </div>
-
-    <!-- KPIs -->
-    <div class="rel-kpis" id="rel-kpis" style="display:none">
-      <div class="rel-kpi" style="--kpi-color:var(--green)">
-        <div class="rel-kpi-label">Entregas Realizadas</div>
-        <div class="rel-kpi-value" id="kpi-entregas">0</div>
-        <div class="rel-kpi-sub" id="kpi-entregas-sub">no período</div>
-      </div>
-      <div class="rel-kpi" style="--kpi-color:var(--amber)">
-        <div class="rel-kpi-label">Tentativas / Devoluções</div>
-        <div class="rel-kpi-value" id="kpi-tentativas">0</div>
-        <div class="rel-kpi-sub">devoluções registradas</div>
-      </div>
-      <div class="rel-kpi" style="--kpi-color:var(--red)">
-        <div class="rel-kpi-label">Notas Deletadas</div>
-        <div class="rel-kpi-value" id="kpi-deletadas">0</div>
-        <div class="rel-kpi-sub">excluídas após tentativa</div>
-      </div>
-      <div class="rel-kpi" style="--kpi-color:var(--blue)">
-        <div class="rel-kpi-label">Valor Transportado</div>
-        <div class="rel-kpi-value" id="kpi-valor" style="font-size:16px;padding-top:4px">R$ 0</div>
-        <div class="rel-kpi-sub">soma das notas entregues</div>
-      </div>
-      <div class="rel-kpi" style="--kpi-color:var(--violet)">
-        <div class="rel-kpi-label">Total de Notas</div>
-        <div class="rel-kpi-value" id="kpi-total">0</div>
-        <div class="rel-kpi-sub">movimentadas no período</div>
-      </div>
-      <div class="rel-kpi" style="--kpi-color:#0f4c81">
-        <div class="rel-kpi-label">Transportadora</div>
-        <div class="rel-kpi-value" id="kpi-transportadora">0</div>
-        <div class="rel-kpi-sub">notas fora do estado</div>
-      </div>
-    </div>
-
-    <!-- Tabela -->
-    <div class="rel-table-wrap" id="rel-table-wrap" style="display:none">
-      <div class="rel-table-title">
-        <span>Histórico detalhado — Entregas</span>
-        <span id="rel-periodo-label" style="font-size:12px;color:var(--txt3);font-weight:400"></span>
-      </div>
-      <div style="overflow-x:auto">
-        <table class="rel-table">
+    <div id="pal-content">
+      <div class="pal-grid" id="pal-grid"></div>
+      <div class="pal-table-wrap" id="pal-table-wrap" style="display:none">
+        <table class="pal-table">
           <thead>
             <tr>
               <th>NF</th>
               <th>Cliente</th>
               <th>Valor</th>
-              <th>Emissão</th>
-              <th>Data Entrega</th>
-              <th>Tentativas</th>
-              <th>Transportadora</th>
-              <th>Observações</th>
+              <th>Data Retirada</th>
+              <th>Paletes</th>
+              <th>Status</th>
+              <th>Ações</th>
             </tr>
           </thead>
-          <tbody id="rel-tbody"></tbody>
+          <tbody id="pal-tbody"></tbody>
         </table>
       </div>
-    </div>
-
-    <div id="rel-empty-state" style="display:none;padding:40px;text-align:center;color:var(--txt3);font-size:13px">
-      <div style="font-size:36px;margin-bottom:10px">📊</div>
-      <div>Nenhuma entrega encontrada no período selecionado.</div>
-      <div style="font-size:11px;margin-top:6px;color:var(--txt3)">Selecione um período e clique em <strong>Gerar Relatório</strong>.</div>
     </div>
   </div>
 
@@ -944,10 +930,31 @@ a { color: inherit; text-decoration: none; }
 <!-- TOAST CONTAINER -->
 <div id="toast-container"></div>
 
+<!-- MODAL: PALETES -->
+<div class="modal-backdrop" id="modal-paletes">
+  <div class="modal">
+    <div class="modal-title">Selecionar Quantidade de Paletes</div>
+    <div class="modal-sub" id="paletes-subtitle">Selecione de 1 a 20 paletes para esta nota fiscal.</div>
+    <div class="paletes-grid" id="paletes-grid"></div>
+    <button class="paletes-zero-btn" onclick="zerarPaletes()" title="Define a quantidade como 0 (nenhum palete)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="8" y1="8" x2="16" y2="16"/>
+        <line x1="16" y1="8" x2="8" y2="16"/>
+      </svg>
+      Zerar Paletes (definir como 0)
+    </button>
+    <div class="modal-footer">
+      <button class="btn-modal cancel" onclick="closeModal('modal-paletes')">Cancelar</button>
+      <button class="btn-modal green" onclick="confirmarPaletes()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: DELETE -->
 <div class="modal-backdrop" id="modal-del">
   <div class="modal">
-    <div class="modal-title">🗑 Excluir nota</div>
+    <div class="modal-title">Excluir nota</div>
     <div class="modal-sub" id="del-subtitle">Tem certeza que deseja excluir esta nota fiscal? Esta ação não pode ser desfeita.</div>
     <div class="modal-footer">
       <button class="btn-modal cancel" onclick="closeModal('modal-del')">Cancelar</button>
@@ -959,14 +966,14 @@ a { color: inherit; text-decoration: none; }
 <!-- MODAL: DEVOLUÇÃO -->
 <div class="modal-backdrop" id="modal-devolver">
   <div class="modal">
-    <div class="modal-title">↩️ Registrar Devolução</div>
+    <div class="modal-title">Registrar Devolução</div>
     <div class="modal-sub" id="devolver-subtitle">Esta nota será devolvida e voltará para Coleta Solicitada.</div>
     <div class="modal-obs-body" style="margin-bottom:0">
       <textarea id="devolver-motivo" placeholder="Motivo da devolução (opcional)…" style="height:80px"></textarea>
     </div>
     <div class="modal-footer">
       <button class="btn-modal cancel" onclick="closeModal('modal-devolver')">Cancelar</button>
-      <button class="btn-modal danger" onclick="confirmDevolver()">↩️ Confirmar Devolução</button>
+      <button class="btn-modal danger" onclick="confirmDevolver()">Confirmar Devolução</button>
     </div>
   </div>
 </div>
@@ -974,12 +981,12 @@ a { color: inherit; text-decoration: none; }
 <!-- MODAL: IMPORT -->
 <div class="modal-backdrop" id="modal-import">
   <div class="modal" style="width:500px">
-    <div class="modal-title">📂 Importar Nota Fiscal</div>
+    <div class="modal-title">Importar Nota Fiscal</div>
     <div class="modal-sub">Selecione arquivos XML (notas) e/ou PDF (DANFE) — ou preencha manualmente.</div>
 
     <div class="import-tabs">
-      <button class="import-tab active" id="tab-xml" onclick="switchImportTab('xml')">📄 Importar XML / PDF</button>
-      <button class="import-tab" id="tab-manual" onclick="switchImportTab('manual')">✏️ Entrada Manual</button>
+      <button class="import-tab active" id="tab-xml" onclick="switchImportTab('xml')">Importar XML / PDF</button>
+      <button class="import-tab" id="tab-manual" onclick="switchImportTab('manual')">Entrada Manual</button>
     </div>
 
     <div class="import-panel active" id="import-panel-xml">
@@ -987,7 +994,14 @@ a { color: inherit; text-decoration: none; }
            onclick="document.getElementById('file-input').click()"
            ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
         <input type="file" id="file-input" multiple accept=".xml,.pdf" onchange="onFileSelect(event)">
-        <div style="font-size:24px;margin-bottom:6px">📄</div>
+        <div style="margin-bottom:6px;color:var(--blue)">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="12" y1="18" x2="12" y2="12"/>
+            <polyline points="9 15 12 12 15 15"/>
+          </svg>
+        </div>
         <div style="font-weight:600;color:var(--txt2);margin-bottom:2px">Clique ou arraste arquivos XML e PDF aqui</div>
         <div style="font-size:11px;color:var(--txt3)">Aceita .xml · .pdf (DANFE) · múltiplos arquivos</div>
       </div>
@@ -1027,28 +1041,28 @@ a { color: inherit; text-decoration: none; }
       </div>
       <div class="modal-footer">
         <button class="btn-modal cancel" onclick="closeModal('modal-import')">Fechar</button>
-        <button class="btn-modal save" onclick="doManualImport()">💾 Salvar Nota</button>
+        <button class="btn-modal save" onclick="doManualImport()">Salvar Nota</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- MODAL: BACKUP/REIMPORT -->
+<!-- MODAL: BACKUP -->
 <div class="modal-backdrop" id="modal-backup">
   <div class="modal" style="width:480px">
-    <div class="modal-title">💾 Backup & Reimportação</div>
+    <div class="modal-title">Backup & Reimportação</div>
     <div class="modal-sub">Baixe um backup completo de todos os dados do sistema ou reimporte um backup salvo anteriormente.</div>
 
     <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
       <div style="background:var(--green-lt);border:1px solid #bbf7d0;border-radius:8px;padding:12px 14px">
-        <div style="font-size:12px;font-weight:700;color:var(--green-dk);margin-bottom:4px">📥 Baixar Backup Completo</div>
-        <div style="font-size:11px;color:var(--txt2);margin-bottom:8px">Exporta todas as notas (ativas, arquivadas e entregues) + histórico em formato JSON.</div>
-        <button class="btn-modal save" style="font-size:12px;padding:7px 14px" onclick="downloadBackup()">⬇️ Baixar Backup JSON</button>
+        <div style="font-size:12px;font-weight:700;color:var(--green-dk);margin-bottom:4px">Baixar Backup Completo</div>
+        <div style="font-size:11px;color:var(--txt2);margin-bottom:8px">Exporta todas as notas em formato JSON.</div>
+        <button class="btn-modal save" style="font-size:12px;padding:7px 14px" onclick="downloadBackup()">Baixar Backup JSON</button>
       </div>
 
       <div style="background:var(--blue-lt);border:1px solid #bfdbfe;border-radius:8px;padding:12px 14px">
-        <div style="font-size:12px;font-weight:700;color:var(--blue-dk);margin-bottom:4px">📤 Reimportar Backup</div>
-        <div style="font-size:11px;color:var(--txt2);margin-bottom:8px">Selecione um arquivo JSON de backup para visualizar e restaurar os dados.</div>
+        <div style="font-size:12px;font-weight:700;color:var(--blue-dk);margin-bottom:4px">Reimportar Backup</div>
+        <div style="font-size:11px;color:var(--txt2);margin-bottom:8px">Selecione um arquivo JSON de backup para restaurar os dados.</div>
         <label style="display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:7px 14px;border-radius:6px;cursor:pointer;transition:background .15s">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
           Selecionar arquivo
@@ -1059,13 +1073,13 @@ a { color: inherit; text-decoration: none; }
     </div>
 
     <div id="backup-preview" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px;font-size:11px">
-      <div style="font-weight:700;color:var(--txt);margin-bottom:6px">📋 Prévia do backup:</div>
+      <div style="font-weight:700;color:var(--txt);margin-bottom:6px">Prévia do backup:</div>
       <div id="backup-preview-content"></div>
     </div>
 
     <div class="modal-footer">
       <button class="btn-modal cancel" onclick="closeModal('modal-backup')">Fechar</button>
-      <button class="btn-modal save" id="btn-restore-backup" style="display:none" onclick="restaurarBackup()">♻️ Restaurar Notas Ativas</button>
+      <button class="btn-modal save" id="btn-restore-backup" style="display:none" onclick="restaurarBackup()">Restaurar Notas Ativas</button>
     </div>
   </div>
 </div>
@@ -1073,10 +1087,9 @@ a { color: inherit; text-decoration: none; }
 <!-- FIREBASE SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, getDocs }
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* ── CONFIG ── */
 const firebaseConfig = {
   apiKey:            "AIzaSyDdjg1KhnGDUs5s-LUwRSsb6xRK-dnp3Ag",
   authDomain:        "expedicao-ee9d1.firebaseapp.com",
@@ -1087,7 +1100,9 @@ const firebaseConfig = {
   measurementId:     "G-E07ZXV2X1P"
 };
 
-/* ── HELPERS ── */
+/* ═══════════════════════════════════════════
+   HELPERS GLOBAIS
+═══════════════════════════════════════════ */
 const toast = window.toast = function(msg, type='') {
   const c = document.getElementById('toast-container');
   const t = document.createElement('div');
@@ -1110,22 +1125,44 @@ const openModal = window.openModal = id =>
 const closeModal = window.closeModal = id =>
   document.getElementById(id).classList.remove('open');
 
-/* ── STATE ── */
 window._state = { notas: [], db: null, unsubscribe: null };
 window._backupData = null;
 
-/* ── FIREBASE INIT ── */
+/* ═══════════════════════════════════════════
+   BADGE DE PALETES — declarada como function (hoisted)
+═══════════════════════════════════════════ */
+function updatePaletesBadge() {
+  const pendentes = window._state.notas.filter(n =>
+    n.status === 'retirada' &&
+    (n.paletes_qty || 0) > 0 &&
+    !n.paletes_devolvidos
+  );
+  const badge = document.getElementById('nav-pal-badge');
+  if (!badge) return;
+  if (pendentes.length > 0) {
+    badge.textContent = pendentes.length;
+    badge.style.display = 'inline-flex';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+window.updatePaletesBadge = updatePaletesBadge;
+
+/* ═══════════════════════════════════════════
+   FIREBASE INIT
+═══════════════════════════════════════════ */
 function setDot(state) {
   const dot = document.getElementById('fb-dot');
+  if (!dot) return;
   dot.className = 'fb-dot' + (state==='ok' ? '' : state==='connecting' ? ' connecting' : ' offline');
 }
 
-// Verifica Cloudinary
 (async function checkCloudinary() {
   const dot = document.getElementById('cld-dot');
+  if (!dot) return;
   dot.className = 'cld-dot connecting';
   try {
-    const res = await fetch(`https://api.cloudinary.com/v1_1/drq9dfckg/image/upload`, {method:'OPTIONS'});
+    await fetch(`https://api.cloudinary.com/v1_1/drq9dfckg/image/upload`, {method:'OPTIONS'});
     dot.className = 'cld-dot';
   } catch {
     dot.className = 'cld-dot';
@@ -1134,12 +1171,14 @@ function setDot(state) {
 
 (async function init() {
   try {
+    console.log('[Firebase] Inicializando…');
     const app = initializeApp(firebaseConfig);
     window._state.db = getFirestore(app);
     setDot('connecting');
     setStatus('Conectando ao Firebase…');
     startListener();
   } catch(e) {
+    console.error('[Firebase] Erro na inicialização:', e);
     setDot('offline');
     setStatus('Erro ao conectar: ' + e.message);
     toast('Erro Firebase: ' + e.message, 'error');
@@ -1151,36 +1190,53 @@ function startListener() {
   if (!db) return;
   if (window._state.unsubscribe) window._state.unsubscribe();
   const q = query(collection(db, 'notas'), orderBy('numero_nf_int', 'asc'));
+
   window._state.unsubscribe = onSnapshot(q, snap => {
-    window._state.notas = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    setDot('ok');
-    setStatus('✓— ' + window._state.notas.length + ' nota(s)');
-    renderAll();
-    // Atualiza módulo Entregues se estiver ativo
-    if (document.getElementById('page-entregues').classList.contains('active')) {
-      renderEntregues();
+    try {
+      console.log('[Firebase] Snapshot recebido:', snap.docs.length, 'documentos');
+      window._state.notas = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      setDot('ok');
+      setStatus('✓ ' + window._state.notas.length + ' nota(s)');
+      renderAll();
+      updatePaletesBadge();
+      if (document.getElementById('page-paletes')?.classList.contains('active')) {
+        renderPaletes();
+      }
+    } catch(err) {
+      console.error('[onSnapshot] Erro no callback:', err);
+      toast('Erro ao processar dados: ' + err.message, 'error');
     }
-    // Atualiza relatório se estiver ativo e já gerado
-    if (document.getElementById('page-relatorios').classList.contains('active') &&
-        window._relEventos) {
-      gerarRelatorio();
-    }
-  }, () => {
+  }, err => {
+    console.warn('[Firebase] Query com orderBy falhou, tentando sem orderBy:', err.message);
     const q2 = collection(db, 'notas');
     window._state.unsubscribe = onSnapshot(q2, snap => {
-      window._state.notas = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-        .sort((a,b) => (parseInt(a.numero_nf)||0) - (parseInt(b.numero_nf)||0));
-      setDot('ok');
-      setStatus('Firebase conectado ✓ — ' + window._state.notas.length + ' nota(s)');
-      renderAll();
-      if (document.getElementById('page-entregues').classList.contains('active')) {
-        renderEntregues();
+      try {
+        console.log('[Firebase] Snapshot fallback recebido:', snap.docs.length, 'documentos');
+        window._state.notas = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+          .sort((a,b) => (parseInt(a.numero_nf)||0) - (parseInt(b.numero_nf)||0));
+        setDot('ok');
+        setStatus('Firebase ✓ — ' + window._state.notas.length + ' nota(s)');
+        renderAll();
+        updatePaletesBadge();
+        if (document.getElementById('page-paletes')?.classList.contains('active')) {
+          renderPaletes();
+        }
+      } catch(err2) {
+        console.error('[onSnapshot fallback] Erro no callback:', err2);
+        toast('Erro ao processar dados: ' + err2.message, 'error');
       }
-    }, err2 => { setDot('offline'); setStatus('Erro: ' + err2.message); });
+    }, err2 => {
+      console.error('[Firebase] Erro final:', err2);
+      setDot('offline');
+      setStatus('Erro: ' + err2.message);
+      toast('Erro Firebase: ' + err2.message, 'error');
+    });
   });
 }
 
-/* ── CRUD ── */
+/* ═══════════════════════════════════════════
+   CRUD
+═══════════════════════════════════════════ */
 async function addNota(nota) {
   nota.data_lancamento = new Date().toLocaleString('pt-BR');
   nota.data_status     = nota.data_lancamento;
@@ -1192,7 +1248,10 @@ async function addNota(nota) {
   nota.data_entrega    = '';
   nota.tentativas_entrega = 0;
   nota.historico       = [];
-  nota.atencao         = false; // Estado de atenção
+  nota.atencao         = false;
+  nota.paletes_qty     = nota.paletes_qty || 0;
+  nota.paletes_devolvidos = nota.paletes_devolvidos || false;
+  nota.ts_retirada     = null;
 
   if (nota.chave && nota.chave.length > 10) {
     if (window._state.notas.find(n => n.chave === nota.chave)) return { result: 'dup', id: null };
@@ -1202,12 +1261,21 @@ async function addNota(nota) {
   try {
     const docRef = await addDoc(collection(window._state.db, 'notas'), nota);
     return { result: 'ok', id: docRef.id };
-  } catch(e) { toast('Erro ao salvar: ' + e.message, 'error'); return { result: 'err', id: null }; }
+  } catch(e) {
+    console.error('[addNota] Erro:', e);
+    toast('Erro ao salvar: ' + e.message, 'error');
+    return { result: 'err', id: null };
+  }
 }
 
 window._updateStatus = async function(id, status) {
   const ts = new Date().toLocaleString('pt-BR');
-  try { await updateDoc(doc(window._state.db, 'notas', id), { status, data_status: ts }); }
+  const update = { status, data_status: ts };
+  if (status === 'retirada') update.ts_retirada = Date.now();
+  if (status !== 'retirada') {
+    update.paletes_devolvidos = false;
+  }
+  try { await updateDoc(doc(window._state.db, 'notas', id), update); }
   catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
@@ -1222,26 +1290,106 @@ window._toggleForaEstado = async function(id) {
   const novo = !nota.fora_estado;
   try {
     await updateDoc(doc(window._state.db, 'notas', id), { fora_estado: novo });
-    toast(novo ? '🗺️ Nota marcada como Transportadora' : 'Nota desmarcada como Transportadora', novo ? 'warn' : '');
+    toast(novo ? 'Nota marcada como Transportadora' : 'Nota desmarcada', novo ? 'warn' : '');
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
-// Função para alternar o estado de atenção do card
 window._toggleAtencao = async function(id) {
   const nota = window._state.notas.find(n => n.id === id);
   if (!nota) return;
   const novoEstado = !nota.atencao;
   try {
     await updateDoc(doc(window._state.db, 'notas', id), { atencao: novoEstado });
-    toast(novoEstado ? '🔔 Atenção ativada para esta nota!' : '🔕 Atenção desativada', novoEstado ? 'warn' : '');
-    // O card será atualizado automaticamente pelo listener do Firebase
+    toast(novoEstado ? 'Atenção ativada!' : 'Atenção desativada', novoEstado ? 'warn' : '');
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
+/* ═══════════════════════════════════════════
+   PALETES
+═══════════════════════════════════════════ */
+let _paletesNotaId = null;
+
+window.openPaletesModal = function(id) {
+  const nota = window._state.notas.find(n => n.id === id);
+  if (!nota) return;
+  _paletesNotaId = id;
+  document.getElementById('paletes-subtitle').textContent =
+    `NF ${nota.numero_nf} — ${nota.cliente || 'Sem cliente'}`;
+  renderPaletesGrid(nota.paletes_qty || 0);
+  openModal('modal-paletes');
+};
+
+function renderPaletesGrid(selected) {
+  const grid = document.getElementById('paletes-grid');
+  grid.innerHTML = '';
+  for (let i = 1; i <= 20; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'paletes-opt' + (i === selected ? ' selected' : '');
+    btn.textContent = i;
+    btn.onclick = () => {
+      grid.querySelectorAll('.paletes-opt').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    };
+    grid.appendChild(btn);
+  }
+}
+
+/* ── NOVO: zerar paletes diretamente do modal ── */
+window.zerarPaletes = async function() {
+  if (!_paletesNotaId) return;
+  const nota = window._state.notas.find(n => n.id === _paletesNotaId);
+  if (!nota) return;
+  try {
+    await updateDoc(doc(window._state.db, 'notas', _paletesNotaId), {
+      paletes_qty: 0,
+      paletes_devolvidos: true,
+      data_devolucao_paletes: new Date().toLocaleString('pt-BR')
+    });
+    closeModal('modal-paletes');
+    toast(`Paletes da NF ${nota.numero_nf} zerados`, 'warn');
+  } catch(e) { toast('Erro: ' + e.message, 'error'); }
+};
+
+window.confirmarPaletes = async function() {
+  if (!_paletesNotaId) return;
+  const selected = document.querySelector('.paletes-opt.selected');
+  if (!selected) { toast('Selecione uma quantidade de paletes', 'warn'); return; }
+  const qty = parseInt(selected.textContent);
+  const nota = window._state.notas.find(n => n.id === _paletesNotaId);
+  try {
+    const update = { paletes_qty: qty };
+    // Se o usuário escolher uma quantidade > 0, considera que não foi devolvido
+    if (qty > 0) {
+      update.paletes_devolvidos = false;
+      update.data_devolucao_paletes = null;
+    }
+    await updateDoc(doc(window._state.db, 'notas', _paletesNotaId), update);
+    closeModal('modal-paletes');
+    toast(`${qty} palete(s) registrado(s) para NF ${nota?.numero_nf || ''}`, 'success');
+  } catch(e) { toast('Erro: ' + e.message, 'error'); }
+};
+
+window.marcarPaletesDevolvidos = async function(id) {
+  const nota = window._state.notas.find(n => n.id === id);
+  if (!nota) return;
+  if (!confirm(`Confirmar devolução dos ${nota.paletes_qty} paletes da NF ${nota.numero_nf}?`)) return;
+  try {
+    await updateDoc(doc(window._state.db, 'notas', id), {
+      paletes_devolvidos: true,
+      paletes_qty: 0,
+      data_devolucao_paletes: new Date().toLocaleString('pt-BR')
+    });
+    toast('Paletes devolvidos!', 'success');
+  } catch(e) { toast('Erro: ' + e.message, 'error'); }
+};
+
+/* ═══════════════════════════════════════════
+   DELETE
+═══════════════════════════════════════════ */
 window._deleteNota = async function(id) {
   const nota = window._state.notas.find(n => n.id === id);
   if (nota) {
-    const ev = {
+    _registrarEventoHistorico({
       tipo: 'deletada',
       numero_nf: nota.numero_nf,
       cliente: nota.cliente || '',
@@ -1252,11 +1400,7 @@ window._deleteNota = async function(id) {
       fora_estado: nota.fora_estado || false,
       data_evento: new Date().toLocaleString('pt-BR'),
       ts: Date.now()
-    };
-    _registrarEventoHistorico(ev);
-    if (nota.files && nota.files.length) {
-      try { await updateDoc(doc(window._state.db, 'notas', id), { files: [] }); } catch(_) {}
-    }
+    });
   }
   try {
     await deleteDoc(doc(window._state.db, 'notas', id));
@@ -1264,7 +1408,6 @@ window._deleteNota = async function(id) {
   } catch(e) { toast('Erro ao excluir: ' + e.message, 'error'); }
 };
 
-/* Histórico global em localStorage */
 function _registrarEventoHistorico(ev) {
   try {
     let hist = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]');
@@ -1272,10 +1415,12 @@ function _registrarEventoHistorico(ev) {
     const limite = Date.now() - (365 * 24 * 60 * 60 * 1000);
     hist = hist.filter(e => (e.ts || 0) > limite);
     localStorage.setItem('nf_historico_v1', JSON.stringify(hist));
-  } catch(e) { console.warn('Erro ao salvar histórico:', e); }
+  } catch(e) { console.warn('Erro histórico:', e); }
 }
 
-/* ── MARCAR ENTREGUE — com contagem regressiva ── */
+/* ═══════════════════════════════════════════
+   ENTREGUE COM COUNTDOWN
+═══════════════════════════════════════════ */
 window.markEntregue = async function(id) {
   const ts = new Date().toLocaleString('pt-BR');
   const nota = window._state.notas.find(n => n.id === id);
@@ -1289,12 +1434,10 @@ window.markEntregue = async function(id) {
     await updateDoc(doc(window._state.db, 'notas', id), {
       entregue: true,
       data_entrega: ts,
-      // Marca para transferência automática para módulo Entregues
       pendente_transferencia: true,
       ts_entrega: Date.now()
     });
 
-    // Registra no histórico
     _registrarEventoHistorico({
       tipo: 'entregue',
       numero_nf: nota.numero_nf,
@@ -1308,15 +1451,11 @@ window.markEntregue = async function(id) {
       ts: Date.now()
     });
 
-    toast('Nota marcada como Entregue ✅ — transferindo em 20s…', 'success');
-
-    // Inicia contagem regressiva no card
+    toast('Nota marcada como Entregue — arquivando em 20s…', 'success');
     iniciarCountdown(id, 20);
-
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
-/* Contagem regressiva antes de arquivar */
 const _countdowns = {};
 
 function iniciarCountdown(id, segundos) {
@@ -1324,25 +1463,21 @@ function iniciarCountdown(id, segundos) {
     clearInterval(_countdowns[id].interval);
     clearTimeout(_countdowns[id].timeout);
   }
-
   let restante = segundos;
 
   function updateUI() {
     const card = document.querySelector(`.card[data-id="${id}"]`);
     if (!card) return;
-
-    // Remove countdown anterior se existir
     card.querySelector('.card-countdown-banner')?.remove();
     card.querySelector('.card-countdown-bar')?.remove();
 
     const banner = document.createElement('div');
     banner.className = 'card-countdown-banner';
     banner.innerHTML = `
-      <span>✅ Entregue — movendo para Canhotos em</span>
-      <span class="card-countdown-num" id="cd-num-${id}">${restante}</span>
+      <span>Movendo em</span>
+      <span class="card-countdown-num" id="cd-num-${id}">${restante}s</span>
       <button class="card-countdown-cancel" onclick="cancelarCountdown('${id}')">Cancelar</button>
     `;
-
     const bar = document.createElement('div');
     bar.className = 'card-countdown-bar';
 
@@ -1358,25 +1493,20 @@ function iniciarCountdown(id, segundos) {
     interval: setInterval(() => {
       restante--;
       const numEl = document.getElementById(`cd-num-${id}`);
-      if (numEl) numEl.textContent = restante;
-      if (restante <= 0) {
-        clearInterval(_countdowns[id].interval);
-      }
+      if (numEl) numEl.textContent = restante + 's';
+      if (restante <= 0) clearInterval(_countdowns[id].interval);
     }, 1000),
 
     timeout: setTimeout(async () => {
       clearInterval(_countdowns[id].interval);
       delete _countdowns[id];
-      // Arquiva a nota (remove do board, mantém nos Entregues)
       try {
         await updateDoc(doc(window._state.db, 'notas', id), {
           arquivada: true,
           pendente_transferencia: false
         });
-        toast('Nota transferida para Canhotos ✅', 'success');
-      } catch(e) {
-        toast('Erro ao arquivar: ' + e.message, 'error');
-      }
+        toast('Nota arquivada', 'success');
+      } catch(e) { toast('Erro ao arquivar: ' + e.message, 'error'); }
     }, segundos * 1000)
   };
 }
@@ -1387,7 +1517,6 @@ window.cancelarCountdown = async function(id) {
     clearTimeout(_countdowns[id].timeout);
     delete _countdowns[id];
   }
-  // Desfaz a marcação de entregue
   try {
     await updateDoc(doc(window._state.db, 'notas', id), {
       entregue: false,
@@ -1395,29 +1524,19 @@ window.cancelarCountdown = async function(id) {
       pendente_transferencia: false,
       ts_entrega: null
     });
-    // Remove do histórico local (último evento)
     try {
       let hist = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]');
       const nota = window._state.notas.find(n => n.id === id);
       hist = hist.filter(e => !(e.numero_nf === nota?.numero_nf && e.tipo === 'entregue'));
       localStorage.setItem('nf_historico_v1', JSON.stringify(hist));
     } catch {}
-    toast('Entrega cancelada ↩️', 'warn');
-  } catch(e) {
-    toast('Erro: ' + e.message, 'error');
-  }
-};
-
-/* ── REMOVER ENTREGUE (arquivar manual) ── */
-window.archiveNota = async function(id) {
-  if (!confirm('Mover esta nota para Canhotos (Entregues)? Ela ficará registrada no histórico.')) return;
-  try {
-    await updateDoc(doc(window._state.db, 'notas', id), { arquivada: true, pendente_transferencia: false });
-    toast('Nota movida para Canhotos ✅', 'success');
+    toast('Entrega cancelada', 'warn');
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
-/* ── DEVOLUÇÃO ── */
+/* ═══════════════════════════════════════════
+   DEVOLUÇÃO
+═══════════════════════════════════════════ */
 let _devolId = null;
 window.openDevolverModal = function(id, numero_nf) {
   _devolId = id;
@@ -1435,7 +1554,7 @@ window.confirmDevolver = async function() {
   const ts = new Date().toLocaleString('pt-BR');
   const tentativas = (nota.tentativas_entrega || 0) + 1;
 
-  const logTentativa = `↩ Tentativa ${tentativas} em ${ts}${motivo ? ': ' + motivo : ''}`;
+  const logTentativa = `Tentativa ${tentativas} em ${ts}${motivo ? ': ' + motivo : ''}`;
   const obsAtual = nota.observacao || '';
   const novaObs = obsAtual ? obsAtual + '\n' + logTentativa : logTentativa;
 
@@ -1447,7 +1566,8 @@ window.confirmDevolver = async function() {
       pendente_transferencia: false,
       tentativas_entrega: tentativas,
       observacao: novaObs,
-      data_status: ts
+      data_status: ts,
+      paletes_devolvidos: false
     });
     _registrarEventoHistorico({
       tipo: 'tentativa',
@@ -1466,85 +1586,9 @@ window.confirmDevolver = async function() {
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
-/* ── BAIXAR ENTREGUES → PDF + ARQUIVAR ── */
-window.baixarEntregues = async function() {
-  const entregues = window._state.notas.filter(n =>
-    n.status === 'retirada' && n.entregue && !n.arquivada
-  );
-
-  if (!entregues.length) {
-    toast('Nenhuma nota marcada como Entregue nesta coluna', 'warn');
-    return;
-  }
-
-  const total = entregues.reduce((s, n) => s + (parseFloat(n.valor)||0), 0)
-    .toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
-
-  const rows = entregues.map(n => `
-    <tr>
-      <td><strong>${n.numero_nf}</strong></td>
-      <td>${n.cliente||'—'}</td>
-      <td>R$ ${parseFloat(n.valor||0).toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
-      <td>${n.data_emissao||'—'}</td>
-      <td>${n.data_entrega||'—'}</td>
-      <td>${n.tentativas_entrega > 0 ? n.tentativas_entrega + ' tentativa(s)' : '1ª entrega'}</td>
-    </tr>`).join('');
-
-  const printHTML = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
-<title>Notas Entregues — ${new Date().toLocaleDateString('pt-BR')}</title>
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:Arial,sans-serif;padding:28px;color:#111;font-size:13px}
-  header{margin-bottom:24px;border-bottom:3px solid #1d4ed8;padding-bottom:16px;display:flex;justify-content:space-between;align-items:flex-end}
-  h1{font-size:22px;font-weight:700;color:#1d4ed8;margin-bottom:4px}
-  .sub{font-size:12px;color:#6b7280}
-  .badge{background:#059669;color:#fff;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700}
-  table{width:100%;border-collapse:collapse;margin-bottom:16px}
-  thead tr{background:#1d4ed8;color:#fff}
-  th{padding:10px 12px;text-align:left;font-size:11px;letter-spacing:.05em;font-weight:700;text-transform:uppercase}
-  td{padding:9px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;vertical-align:middle}
-  tr:nth-child(even) td{background:#f9fafb}
-  .total-row td{font-weight:700;border-top:2px solid #1d4ed8;background:#eff4ff;color:#1d4ed8}
-  footer{margin-top:20px;font-size:11px;color:#9ca3af;text-align:center}
-  @media print{@page{margin:1cm;size:A4 landscape}}
-</style></head><body>
-<header>
-  <div>
-    <h1>📦 Notas Entregues</h1>
-    <div class="sub">Gerado em ${new Date().toLocaleString('pt-BR')}</div>
-  </div>
-  <div class="badge">${entregues.length} nota(s)</div>
-</header>
-<table>
-  <thead><tr><th>NF</th><th>Cliente</th><th>Valor</th><th>Emissão</th><th>Data de Entrega</th><th>Tentativas</th></tr></thead>
-  <tbody>${rows}
-    <tr class="total-row">
-      <td colspan="2">TOTAL</td>
-      <td>R$ ${total}</td>
-      <td colspan="3">${entregues.length} nota(s) entregue(s)</td>
-    </table>
-  </tbody>
-</table>
-<footer>Sistema de Expedição — Notas Fiscais | Criado por: Leandro NP</footer>
-<script>window.onload=()=>{setTimeout(()=>window.print(),300)}<\/script>
-</body></html>`;
-
-  const w = window.open('', '_blank');
-  if (!w) { toast('Permita pop-ups para gerar o PDF', 'warn'); return; }
-  w.document.write(printHTML);
-  w.document.close();
-
-  let count = 0;
-  for (const n of entregues) {
-    try {
-      await updateDoc(doc(window._state.db, 'notas', n.id), { arquivada: true });
-      count++;
-    } catch(e) { console.warn('Erro ao arquivar:', n.numero_nf, e); }
-  }
-  toast(`${count} nota(s) exportada(s) e movida(s) para Canhotos ✅`, 'success');
-};
-
-/* ── PARSE XML ── */
+/* ═══════════════════════════════════════════
+   PARSE XML
+═══════════════════════════════════════════ */
 function parseXML(text) {
   try {
     const parser = new DOMParser();
@@ -1573,7 +1617,9 @@ function parseXML(text) {
   } catch { return null; }
 }
 
-/* ── CLOUDINARY UPLOAD ── */
+/* ═══════════════════════════════════════════
+   CLOUDINARY
+═══════════════════════════════════════════ */
 const CLOUDINARY_CLOUD = 'drq9dfckg';
 const CLOUDINARY_PRESET = 'nf_uploads';
 
@@ -1629,12 +1675,9 @@ window.handleCardFileUpload = async function(event, nfId) {
     const url = await uploadToCloudinary(file);
     const ext = file.name.split('.').pop().toLowerCase();
     const type = ext === 'pdf' ? 'pdf' : 'img';
-    const fileEntry = {
-      url, name: file.name, type,
-      createdAt: new Date().toLocaleString('pt-BR')
-    };
+    const fileEntry = { url, name: file.name, type, createdAt: new Date().toLocaleString('pt-BR') };
     await saveFileToNota(nfId, fileEntry);
-    toast(`Arquivo anexado à NF ${nota.numero_nf} ✅`, 'success');
+    toast(`Arquivo anexado à NF ${nota.numero_nf}`, 'success');
   } catch(e) {
     toast('Erro no upload: ' + e.message, 'error');
   } finally {
@@ -1642,7 +1685,9 @@ window.handleCardFileUpload = async function(event, nfId) {
   }
 };
 
-/* ── IMPORT FILES ── */
+/* ═══════════════════════════════════════════
+   IMPORT
+═══════════════════════════════════════════ */
 let _importFiles = [];
 let _importPdfs  = [];
 
@@ -1687,17 +1732,17 @@ function renderImportList() {
   list.innerHTML = allItems.map(item => {
     let statusTxt='', statusClass='', icon='📄';
     if (item.kind === 'pdf') {
-      icon = '🟥';
-      if (item.status === 'ready')    { statusTxt = `✓ NF ${item.nf}`; statusClass = 'ok'; }
-      if (item.status === 'error')    { statusTxt = '✗ NF não identificada'; statusClass = 'err'; }
-      if (item.status === 'uploaded') { statusTxt = '✓ Enviado';  statusClass = 'ok'; }
-      if (item.status === 'notfound') { statusTxt = '⚠ NF não no sistema'; statusClass = 'err'; }
+      icon = 'PDF';
+      if (item.status === 'ready')    { statusTxt = `OK NF ${item.nf}`; statusClass = 'ok'; }
+      if (item.status === 'error')    { statusTxt = 'NF não identificada'; statusClass = 'err'; }
+      if (item.status === 'uploaded') { statusTxt = 'Enviado';  statusClass = 'ok'; }
+      if (item.status === 'notfound') { statusTxt = 'NF não no sistema'; statusClass = 'err'; }
     } else {
-      if (item.status==='ready')    { statusTxt='✓ Válido';    statusClass='ok'; }
-      if (item.status==='error')    { statusTxt='✗ Inválido';  statusClass='err'; }
-      if (item.status==='dup')      { statusTxt='Duplicado';   statusClass='dup'; }
+      if (item.status==='ready')    { statusTxt='Válido';    statusClass='ok'; }
+      if (item.status==='error')    { statusTxt='Inválido';  statusClass='err'; }
+      if (item.status==='dup')      { statusTxt='Duplicado'; statusClass='dup'; }
       if (item.status==='pending')  { statusTxt='Lendo…'; }
-      if (item.status==='imported') { statusTxt='✓ Importado'; statusClass='ok'; }
+      if (item.status==='imported') { statusTxt='Importado'; statusClass='ok'; }
     }
     return `<div class="upload-file-item">
       <span class="upload-file-icon">${icon}</span>
@@ -1745,9 +1790,7 @@ window.doImport = async function() {
     renderImportList();
   }
 
-  if (pdfItems.length) {
-    await new Promise(r => setTimeout(r, 1200));
-  }
+  if (pdfItems.length) await new Promise(r => setTimeout(r, 1200));
 
   for (let idx=0; idx<pdfItems.length; idx++) {
     const item = pdfItems[idx];
@@ -1757,10 +1800,7 @@ window.doImport = async function() {
     let nota = window._state.notas.find(n => n.numero_nf === item.nf && !n.arquivada);
     if (!nota && nfToId[item.nf]) nota = { id: nfToId[item.nf], numero_nf: item.nf, files: [] };
 
-    if (!nota) {
-      item.status = 'notfound'; pdfErr++;
-      renderImportList(); continue;
-    }
+    if (!nota) { item.status = 'notfound'; pdfErr++; renderImportList(); continue; }
 
     try {
       const url = await uploadToCloudinary(item.file);
@@ -1772,16 +1812,15 @@ window.doImport = async function() {
 
   progText.textContent = 'Concluído!';
   const parts=[];
-  if (ok)     parts.push(`✅ ${ok} XML importado(s)`);
-  if (dup)    parts.push(`⚠️ ${dup} duplicado(s)`);
-  if (err)    parts.push(`❌ ${err} erro(s)`);
-  if (pdfOk)  parts.push(`📎 ${pdfOk} PDF(s) vinculado(s)`);
-  if (pdfErr) parts.push(`⚠️ ${pdfErr} PDF(s) sem NF`);
+  if (ok)     parts.push(`${ok} XML importado(s)`);
+  if (dup)    parts.push(`${dup} duplicado(s)`);
+  if (err)    parts.push(`${err} erro(s)`);
+  if (pdfOk)  parts.push(`${pdfOk} PDF(s) vinculado(s)`);
+  if (pdfErr) parts.push(`${pdfErr} PDF(s) sem NF`);
   toast(parts.join(' · '), ok||pdfOk ? 'success' : 'warn');
   document.getElementById('btn-do-import').disabled = false;
 };
 
-/* ── IMPORT MANUAL ── */
 window.doManualImport = async function() {
   const nf      = document.getElementById('manual-nf').value.trim();
   const cliente = document.getElementById('manual-cliente').value.trim();
@@ -1802,18 +1841,20 @@ window.doManualImport = async function() {
   });
 
   if (result.result === 'ok') {
-    toast(`NF ${nf} adicionada com sucesso ✅`, 'success');
+    toast(`NF ${nf} adicionada`, 'success');
     ['manual-nf','manual-cliente','manual-valor','manual-data','manual-chave']
       .forEach(id => { document.getElementById(id).value = ''; });
     closeModal('modal-import');
   } else if (result.result === 'dup') {
-    toast(`NF ${nf} já existe no sistema`, 'warn');
+    toast(`NF ${nf} já existe`, 'warn');
   } else {
-    toast('Erro ao salvar a nota', 'error');
+    toast('Erro ao salvar', 'error');
   }
 };
 
-/* ── OBS INLINE ── */
+/* ═══════════════════════════════════════════
+   OBS INLINE
+═══════════════════════════════════════════ */
 window.openObsInline = function(id) {
   document.querySelectorAll('.card-obs-editor.open').forEach(el => {
     if (el.dataset.id !== id) closeObsInline(el.dataset.id, false);
@@ -1842,11 +1883,13 @@ window.saveObsInline = async function(id) {
   window._savedObsId = id;
   await window._updateObs(id, txt);
   closeObsInline(id, true);
-  toast('Observação salva ✅', 'success');
+  toast('Observação salva', 'success');
   setTimeout(() => { if (window._savedObsId === id) window._savedObsId = null; }, 2000);
 };
 
-/* ── DELETE MODAL ── */
+/* ═══════════════════════════════════════════
+   DELETE MODAL
+═══════════════════════════════════════════ */
 let _delId = null;
 window.openDelModal = (id, numero_nf) => {
   _delId = id;
@@ -1859,31 +1902,25 @@ window.confirmDelete = async () => {
   closeModal('modal-del');
 };
 
-/* ── FECHAR MODAL CLICANDO FORA ── */
 document.querySelectorAll('.modal-backdrop').forEach(b => {
   b.addEventListener('click', e => { if (e.target===b) b.classList.remove('open'); });
 });
 
 /* ═══════════════════════════════════════════
-   NAVEGAÇÃO DE PÁGINAS
+   NAVEGAÇÃO
 ═══════════════════════════════════════════ */
 window.switchPage = function(page) {
   const board = document.getElementById('board');
-  const pageEnt = document.getElementById('page-entregues');
-  const pageRel = document.getElementById('page-relatorios');
+  const pagePal = document.getElementById('page-paletes');
   const navBoard = document.getElementById('nav-board');
-  const navEnt = document.getElementById('nav-entregues');
-  const navRel = document.getElementById('nav-rel');
+  const navPal = document.getElementById('nav-paletes');
   const searchWrap = document.getElementById('search-wrap');
   const btnImport = document.getElementById('btn-import-topbar');
 
-  // Reset todos
   board.style.display = 'none';
-  pageEnt.classList.remove('active');
-  pageRel.classList.remove('active');
+  pagePal.classList.remove('active');
   navBoard.classList.remove('active');
-  navEnt.classList.remove('active');
-  navRel.classList.remove('active');
+  navPal.classList.remove('active');
   searchWrap.style.display = 'none';
   btnImport.style.display = 'none';
 
@@ -1892,349 +1929,196 @@ window.switchPage = function(page) {
     navBoard.classList.add('active');
     searchWrap.style.display = '';
     btnImport.style.display = '';
-  } else if (page === 'entregues') {
-    pageEnt.classList.add('active');
-    navEnt.classList.add('active');
-    renderEntregues();
-  } else if (page === 'relatorios') {
-    pageRel.classList.add('active');
-    navRel.classList.add('active');
-    // Definir datas padrão: mês atual
-    const hoje = new Date();
-    const ini = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
-    const fim = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
-    const fmt = d => d.toISOString().slice(0,10);
-    if (!document.getElementById('rel-inicio').value)
-      document.getElementById('rel-inicio').value = fmt(ini);
-    if (!document.getElementById('rel-fim').value)
-      document.getElementById('rel-fim').value = fmt(fim);
+  } else if (page === 'paletes') {
+    pagePal.classList.add('active');
+    navPal.classList.add('active');
+    renderPaletes();
   }
 };
 
 /* ═══════════════════════════════════════════
-   MÓDULO ENTREGUES — CONTROLE DE CANHOTOS
-   Lê direto do Firebase (notas arquivadas+entregues)
+   RENDER PALETES
 ═══════════════════════════════════════════ */
-let _entPage = 1;
-const _entPerPage = 25;
-let _entSortField = 'ts_entrega';
-let _entSortDir = 'desc';
-let _entPeriodo = 'todos';
+let _palView = 'grid';
 
-/* Retorna todas as notas que são canhotos (entregues e arquivadas) */
-function getNotasEntregues() {
-  // Inclui: arquivadas + entregues=true OU arquivadas sem entregue explícito (baixadas via Baixar Entregues)
-  return window._state.notas.filter(n =>
-    n.entregue === true || (n.arquivada === true && n.data_entrega)
+window.setPalView = function(v) {
+  _palView = v;
+  document.getElementById('pal-view-grid').classList.toggle('active', v === 'grid');
+  document.getElementById('pal-view-table').classList.toggle('active', v === 'table');
+  renderPaletes();
+};
+
+const renderPaletes = window.renderPaletes = function() {
+  const q = (document.getElementById('pal-search')?.value || '').toLowerCase().trim();
+
+  let pendentes = window._state.notas.filter(n =>
+    n.status === 'retirada' &&
+    (n.paletes_qty || 0) > 0 &&
+    !n.paletes_devolvidos
   );
-}
 
-window.setEntPeriodo = function(periodo) {
-  _entPeriodo = periodo;
-  _entPage = 1;
+  const devolvidos = window._state.notas.filter(n =>
+    n.status === 'retirada' &&
+    n.paletes_devolvidos &&
+    (n.data_devolucao_paletes)
+  );
 
-  // Atualiza botões ativos
-  ['todos','hoje','semana','mes'].forEach(p => {
-    const btn = document.getElementById(`ent-btn-${p}`);
-    if (btn) btn.classList.toggle('active', p === periodo);
-  });
-
-  // Se custom, não marca nenhum botão
-  if (periodo === 'custom') {
-    ['todos','hoje','semana','mes'].forEach(p => {
-      const btn = document.getElementById(`ent-btn-${p}`);
-      if (btn) btn.classList.remove('active');
-    });
-  }
-
-  renderEntregues();
-};
-
-window.sortEntregues = function(field) {
-  if (_entSortField === field) {
-    _entSortDir = _entSortDir === 'asc' ? 'desc' : 'asc';
-  } else {
-    _entSortField = field;
-    _entSortDir = 'desc';
-  }
-  _entPage = 1;
-  renderEntregues();
-};
-
-function filtrarPorPeriodo(notas) {
-  const hoje = new Date();
-  hoje.setHours(0,0,0,0);
-
-  if (_entPeriodo === 'todos') return notas;
-
-  if (_entPeriodo === 'custom') {
-    const iniStr = document.getElementById('ent-data-ini').value;
-    const fimStr = document.getElementById('ent-data-fim').value;
-    if (!iniStr && !fimStr) return notas;
-    const ini = iniStr ? new Date(iniStr + 'T00:00:00') : new Date(0);
-    const fim = fimStr ? new Date(fimStr + 'T23:59:59') : new Date(9999999999999);
-    return notas.filter(n => {
-      const t = n.ts_entrega || parseDataEntrega(n.data_entrega);
-      return t >= ini.getTime() && t <= fim.getTime();
-    });
-  }
-
-  if (_entPeriodo === 'hoje') {
-    return notas.filter(n => {
-      const t = n.ts_entrega || parseDataEntrega(n.data_entrega);
-      const d = new Date(t);
-      d.setHours(0,0,0,0);
-      return d.getTime() === hoje.getTime();
-    });
-  }
-
-  if (_entPeriodo === 'semana') {
-    const inicioSemana = new Date(hoje);
-    inicioSemana.setDate(hoje.getDate() - hoje.getDay());
-    return notas.filter(n => {
-      const t = n.ts_entrega || parseDataEntrega(n.data_entrega);
-      return t >= inicioSemana.getTime();
-    });
-  }
-
-  if (_entPeriodo === 'mes') {
-    const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
-    return notas.filter(n => {
-      const t = n.ts_entrega || parseDataEntrega(n.data_entrega);
-      return t >= inicioMes.getTime();
-    });
-  }
-
-  return notas;
-}
-
-// Converte data_entrega (string pt-BR) para timestamp
-function parseDataEntrega(str) {
-  if (!str) return 0;
-  try {
-    // Formato: "dd/mm/yyyy, hh:mm:ss" ou "dd/mm/yyyy hh:mm:ss"
-    const parts = str.replace(', ', ' ').split(' ');
-    const dateParts = parts[0].split('/');
-    if (dateParts.length === 3) {
-      const d = new Date(dateParts[2], dateParts[1]-1, dateParts[0]);
-      return d.getTime();
-    }
-    return 0;
-  } catch { return 0; }
-}
-
-const renderEntregues = window.renderEntregues = function() {
-  let notas = getNotasEntregues();
-
-  // Filtro de busca
-  const q = (document.getElementById('ent-search')?.value || '').toLowerCase().trim();
-  if (q) notas = notas.filter(n =>
+  if (q) pendentes = pendentes.filter(n =>
     (n.numero_nf||'').toLowerCase().includes(q) ||
     (n.cliente||'').toLowerCase().includes(q)
   );
 
-  // Filtro de período
-  notas = filtrarPorPeriodo(notas);
+  const totalQty = pendentes.reduce((s,n) => s + (n.paletes_qty || 0), 0);
+  document.getElementById('pal-total-notas').textContent = pendentes.length;
+  document.getElementById('pal-total-qty').textContent = totalQty;
+  document.getElementById('pal-total-devolvidos').textContent = devolvidos.length;
 
-  // Ordenação
-  notas = [...notas].sort((a, b) => {
-    let va = a[_entSortField] || 0;
-    let vb = b[_entSortField] || 0;
-    if (_entSortField === 'valor') {
-      va = parseFloat(a.valor) || 0;
-      vb = parseFloat(b.valor) || 0;
-    } else if (_entSortField === 'ts_entrega') {
-      va = a.ts_entrega || parseDataEntrega(a.data_entrega);
-      vb = b.ts_entrega || parseDataEntrega(b.data_entrega);
-    } else if (typeof va === 'string') {
-      va = va.toLowerCase(); vb = (vb||'').toString().toLowerCase();
-    }
-    if (va < vb) return _entSortDir === 'asc' ? -1 : 1;
-    if (va > vb) return _entSortDir === 'asc' ? 1 : -1;
-    return 0;
-  });
-
-  // Atualiza headers de sort
-  ['nf','cli','val','emissao','entrega'].forEach(h => {
-    const th = document.getElementById(`th-${h}`);
-    if (!th) return;
-    th.classList.remove('sort-asc', 'sort-desc');
-  });
-  const fieldToId = { numero_nf:'th-nf', cliente:'th-cli', valor:'th-val', data_emissao:'th-emissao', ts_entrega:'th-entrega' };
-  const sortHeader = document.getElementById(fieldToId[_entSortField]);
-  if (sortHeader) sortHeader.classList.add(`sort-${_entSortDir}`);
-
-  // KPIs globais (todos os entregues, sem filtro de período)
-  const todas = getNotasEntregues();
-  const agora = new Date();
-  const inicioMes = new Date(agora.getFullYear(), agora.getMonth(), 1).getTime();
-  const inicioSemana = new Date(agora);
-  inicioSemana.setDate(agora.getDate() - agora.getDay());
-  inicioSemana.setHours(0,0,0,0);
-
-  document.getElementById('ent-total-count').textContent = todas.length;
-  document.getElementById('ent-total-valor').textContent = 'R$ ' +
-    todas.reduce((s,n) => s + (parseFloat(n.valor)||0), 0)
-    .toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
-  document.getElementById('ent-mes-count').textContent =
-    todas.filter(n => (n.ts_entrega || parseDataEntrega(n.data_entrega)) >= inicioMes).length;
-  document.getElementById('ent-semana-count').textContent =
-    todas.filter(n => (n.ts_entrega || parseDataEntrega(n.data_entrega)) >= inicioSemana.getTime()).length;
-
-  // Label período
-  const lblPeriodo = {
-    todos: `Total: ${notas.length} nota(s)`,
-    hoje: `Hoje: ${notas.length} nota(s)`,
-    semana: `Esta semana: ${notas.length} nota(s)`,
-    mes: `Este mês: ${notas.length} nota(s)`,
-    custom: `Período selecionado: ${notas.length} nota(s)`
-  };
-  const periodLbl = document.getElementById('ent-period-lbl');
-  if (periodLbl) periodLbl.textContent = lblPeriodo[_entPeriodo] || `${notas.length} nota(s)`;
-
-  // Paginação
-  const totalPages = Math.max(1, Math.ceil(notas.length / _entPerPage));
-  _entPage = Math.min(_entPage, totalPages);
-  const start = (_entPage - 1) * _entPerPage;
-  const pagNotas = notas.slice(start, start + _entPerPage);
-
-  const tbody = document.getElementById('ent-tbody');
-  const empty = document.getElementById('ent-empty');
-
-  if (!notas.length) {
-    tbody.innerHTML = '';
-    if (empty) empty.style.display = 'block';
+  if (_palView === 'grid') {
+    document.getElementById('pal-grid').style.display = 'grid';
+    document.getElementById('pal-table-wrap').style.display = 'none';
+    renderPaletesGridView(pendentes);
   } else {
-    if (empty) empty.style.display = 'none';
-    tbody.innerHTML = pagNotas.map(n => {
-      const valFmt = parseFloat(n.valor||0)
-        ? 'R$ ' + parseFloat(n.valor).toLocaleString('pt-BR',{minimumFractionDigits:2})
-        : '—';
-      const tentBadge = (n.tentativas_entrega > 0)
-        ? `<span class="entregues-badge tentativas">↩ ${n.tentativas_entrega}x</span>`
-        : `<span class="entregues-badge">1ª entrega</span>`;
-      const foraBadge = n.fora_estado
-        ? `<span class="entregues-badge fora">🗺️ Transp.</span>` : '—';
-      const obsTxt = n.observacao
-        ? `<div class="canhoto-obs" title="${(n.observacao||'').replace(/"/g,"'")}">📝 ${n.observacao.split('\n')[0]}</div>`
-        : '<span style="color:var(--txt3)">—</span>';
-      // Data de entrega formatada
-      const dataEntrega = n.data_entrega || '—';
-
-      return `<tr>
-        <td style="font-family:var(--mono);font-weight:700;color:var(--green-dk)">${n.numero_nf}</td>
-        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${n.cliente||''}">${n.cliente||'—'}</td>
-        <td style="font-weight:600">${valFmt}</td>
-        <td style="font-size:11px;color:var(--txt3)">${n.data_emissao||'—'}</td>
-        <td style="font-size:11px;color:var(--green);font-weight:600">✅ ${dataEntrega}</td>
-        <td>${tentBadge}</td>
-        <td>${foraBadge}</td>
-        <td>${obsTxt}</td>
-      </tr>`;
-    }).join('');
-  }
-
-  // Paginação
-  const pagBar = document.getElementById('ent-pagination');
-  const pagLbl = document.getElementById('ent-page-lbl');
-  if (pagLbl) pagLbl.textContent = notas.length ? `${start+1}–${Math.min(start+_entPerPage, notas.length)} de ${notas.length}` : '';
-
-  if (notas.length > _entPerPage) {
-    pagBar.style.display = 'flex';
-    const prevBtn = document.getElementById('pag-prev');
-    const nextBtn = document.getElementById('pag-next');
-    prevBtn.disabled = _entPage <= 1;
-    nextBtn.disabled = _entPage >= totalPages;
-
-    const pagesDiv = document.getElementById('pag-pages');
-    pagesDiv.innerHTML = '';
-    for (let p = 1; p <= totalPages; p++) {
-      if (p === 1 || p === totalPages || Math.abs(p - _entPage) <= 2) {
-        const btn = document.createElement('button');
-        btn.className = 'pag-btn' + (p === _entPage ? ' active' : '');
-        btn.textContent = p;
-        btn.onclick = () => { _entPage = p; renderEntregues(); };
-        pagesDiv.appendChild(btn);
-      } else if (Math.abs(p - _entPage) === 3) {
-        const span = document.createElement('span');
-        span.textContent = '…';
-        span.style.cssText = 'color:var(--txt3);padding:0 4px;font-size:12px';
-        pagesDiv.appendChild(span);
-      }
-    }
-    document.getElementById('pag-info').textContent = `Pág. ${_entPage} de ${totalPages}`;
-  } else {
-    pagBar.style.display = 'none';
+    document.getElementById('pal-grid').style.display = 'none';
+    document.getElementById('pal-table-wrap').style.display = 'block';
+    renderPaletesTableView(pendentes);
   }
 };
 
-window.changePage = function(dir) {
-  _entPage = Math.max(1, _entPage + dir);
-  renderEntregues();
-};
+function renderPaletesGridView(pendentes) {
+  const grid = document.getElementById('pal-grid');
+  if (!pendentes.length) {
+    grid.innerHTML = `<div class="pal-empty">
+      <div class="pal-empty-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+          <path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/>
+          <path d="M9 13h6"/>
+          <path d="M9 17h6"/>
+        </svg>
+      </div>
+      <div style="font-size:15px;font-weight:600;color:var(--txt2);margin-bottom:4px">Nenhum palete pendente</div>
+      <div style="font-size:12px">Quando uma nota chegar em <strong>Retiradas</strong> com paletes definidos, aparecerá aqui.</div>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = pendentes.map(n => {
+    const valFmt = parseFloat(n.valor||0)
+      ? 'R$ ' + parseFloat(n.valor).toLocaleString('pt-BR',{minimumFractionDigits:2})
+      : '—';
+    const dataRet = n.data_status || n.data_lancamento || '—';
+    return `
+      <div class="pal-card">
+        <div class="pal-card-header">
+          <span class="pal-card-nf">NF ${n.numero_nf}</span>
+          <span class="pal-card-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+              <path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/>
+            </svg>
+            ${n.paletes_qty}
+          </span>
+        </div>
+        <div class="pal-card-cli" title="${n.cliente||''}">${n.cliente||'—'}</div>
+        <div class="pal-card-info">
+          <div><strong>Valor:</strong> ${valFmt}</div>
+          <div><strong>Retirada em:</strong> ${dataRet}</div>
+          ${n.fora_estado ? '<div style="color:#1d4ed8;font-weight:600">Transportadora</div>' : ''}
+        </div>
+        <div class="pal-card-footer">
+          <button class="btn-action" style="color:var(--teal-dk);background:var(--teal-lt);border-color:#5eead4;font-weight:700" onclick="marcarPaletesDevolvidos('${n.id}')">
+            Marcar como Devolvido
+          </button>
+          <button class="btn-action" style="margin-left:auto" onclick="openPaletesModal('${n.id}')">
+            Editar Qtd
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
 
-/* Exportar PDF da página Entregues */
-window.exportarEntregues = function() {
-  let notas = getNotasEntregues();
-  const q = (document.getElementById('ent-search')?.value || '').toLowerCase().trim();
-  if (q) notas = notas.filter(n =>
-    (n.numero_nf||'').toLowerCase().includes(q) || (n.cliente||'').toLowerCase().includes(q)
+function renderPaletesTableView(pendentes) {
+  const tbody = document.getElementById('pal-tbody');
+  if (!pendentes.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--txt3)">Nenhum palete pendente</td></tr>';
+    return;
+  }
+  tbody.innerHTML = pendentes.map(n => {
+    const valFmt = parseFloat(n.valor||0)
+      ? 'R$ ' + parseFloat(n.valor).toLocaleString('pt-BR',{minimumFractionDigits:2})
+      : '—';
+    return `
+      <tr>
+        <td style="font-family:var(--mono);font-weight:700;color:var(--teal-dk)">${n.numero_nf}</td>
+        <td>${n.cliente||'—'}</td>
+        <td>${valFmt}</td>
+        <td style="font-size:11px;color:var(--txt3)">${n.data_status||'—'}</td>
+        <td><span class="pal-qty-cell">${n.paletes_qty}</span></td>
+        <td>${n.fora_estado ? '<span style="color:#1d4ed8;font-weight:600">Transp.</span>' : 'Pendente'}</td>
+        <td>
+          <button class="btn-action" style="color:var(--teal-dk);background:var(--teal-lt);border-color:#5eead4;font-weight:700" onclick="marcarPaletesDevolvidos('${n.id}')">
+            Devolver
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+window.exportarPaletes = function() {
+  const pendentes = window._state.notas.filter(n =>
+    n.status === 'retirada' &&
+    (n.paletes_qty || 0) > 0 &&
+    !n.paletes_devolvidos
   );
-  notas = filtrarPorPeriodo(notas);
 
-  if (!notas.length) { toast('Nenhuma nota para exportar', 'warn'); return; }
+  if (!pendentes.length) { toast('Nenhum palete pendente para exportar', 'warn'); return; }
 
-  const total = notas.reduce((s,n) => s + (parseFloat(n.valor)||0), 0)
-    .toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
-
-  const rows = notas.map(n => `
+  const totalQty = pendentes.reduce((s,n) => s + (n.paletes_qty || 0), 0);
+  const rows = pendentes.map(n => `
     <tr>
       <td><strong>${n.numero_nf}</strong></td>
       <td>${n.cliente||'—'}</td>
       <td>${parseFloat(n.valor||0)?'R$ '+parseFloat(n.valor).toLocaleString('pt-BR',{minimumFractionDigits:2}):'—'}</td>
-      <td>${n.data_emissao||'—'}</td>
-      <td>${n.data_entrega||'—'}</td>
-      <td>${n.tentativas_entrega > 0 ? n.tentativas_entrega+'x' : '1ª entrega'}</td>
-      <td>${n.fora_estado ? 'Transportadora' : '—'}</td>
-      <td>${(n.observacao||'').split('\n')[0] || '—'}</td>
+      <td>${n.data_status||'—'}</td>
+      <td style="text-align:center;font-weight:800;color:#0f766e;font-size:14px">${n.paletes_qty}</td>
     </tr>`).join('');
 
   const printHTML = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
-<title>Controle de Canhotos</title>
+<title>Paletes a Retornar</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:Arial,sans-serif;padding:24px;color:#111;font-size:12px}
-  header{margin-bottom:20px;border-bottom:3px solid #059669;padding-bottom:14px;display:flex;justify-content:space-between;align-items:flex-end}
-  h1{font-size:20px;font-weight:700;color:#059669;margin-bottom:4px}
+  header{margin-bottom:20px;border-bottom:3px solid #0d9488;padding-bottom:14px;display:flex;justify-content:space-between;align-items:flex-end}
+  h1{font-size:20px;font-weight:700;color:#0d9488;margin-bottom:4px}
   .sub{font-size:11px;color:#6b7280}
-  .badge{background:#059669;color:#fff;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700}
+  .badge{background:#0d9488;color:#fff;padding:6px 14px;border-radius:6px;font-size:13px;font-weight:700}
   table{width:100%;border-collapse:collapse}
-  thead tr{background:#059669;color:#fff}
-  th{padding:8px 10px;text-align:left;font-size:9px;letter-spacing:.05em;font-weight:700;text-transform:uppercase}
-  td{padding:7px 10px;border-bottom:1px solid #e5e7eb;font-size:11px;vertical-align:middle}
-  tr:nth-child(even) td{background:#f0fdf4}
-  .total-row td{font-weight:700;border-top:2px solid #059669;background:#ecfdf5;color:#047857}
+  thead tr{background:#0d9488;color:#fff}
+  th{padding:9px 12px;text-align:left;font-size:10px;letter-spacing:.05em;font-weight:700;text-transform:uppercase}
+  td{padding:8px 12px;border-bottom:1px solid #e5e7eb;font-size:11px}
+  tr:nth-child(even) td{background:#f0fdfa}
+  .total-row td{font-weight:700;border-top:2px solid #0d9488;background:#ccfbf1;color:#0f766e}
   footer{margin-top:16px;font-size:10px;color:#9ca3af;text-align:center}
-  @media print{@page{margin:1cm;size:A4 landscape}}
+  @media print{@page{margin:1cm;size:A4 portrait}}
 </style></head><body>
 <header>
   <div>
-    <h1>📦 Controle de Canhotos — Notas Entregues</h1>
+    <h1>Paletes a Retornar</h1>
     <div class="sub">Gerado em ${new Date().toLocaleString('pt-BR')}</div>
   </div>
-  <div class="badge">${notas.length} nota(s)</div>
+  <div class="badge">${totalQty} paletes · ${pendentes.length} nota(s)</div>
 </header>
 <table>
-  <thead><tr><th>NF</th><th>Cliente</th><th>Valor</th><th>Emissão</th><th>Data Entrega</th><th>Tentativas</th><th>Transportadora</th><th>Observações</th></tr></thead>
+  <thead><tr><th>NF</th><th>Cliente</th><th>Valor</th><th>Data Retirada</th><th style="text-align:center">Paletes</th></tr></thead>
   <tbody>${rows}
     <tr class="total-row">
-      <td colspan="2">TOTAL ENTREGUE</td>
-      <td>R$ ${total}</td>
-      <td colspan="5">${notas.length} nota(s)</td>
+      <td colspan="4">TOTAL DE PALETES A RETORNAR</td>
+      <td style="text-align:center;font-size:16px">${totalQty}</td>
     </tr>
   </tbody>
 </table>
-<footer>Sistema de Expedição — Notas Fiscais | Criado por: Leandro NP</footer>
+<footer>Expedição — Sistema de Notas Fiscais | Criado por: Leandro NP</footer>
 <script>window.onload=()=>{setTimeout(()=>window.print(),300)}<\/script>
 </body></html>`;
 
@@ -2242,346 +2126,6 @@ window.exportarEntregues = function() {
   if (!w) { toast('Permita pop-ups para gerar o PDF', 'warn'); return; }
   w.document.write(printHTML);
   w.document.close();
-};
-
-/* ═══════════════════════════════════════════
-   RELATÓRIOS — puxando dados do módulo Entregues (Firebase)
-═══════════════════════════════════════════ */
-
-/* Atalhos de período para relatório */
-window.relSetPeriodo = function(periodo) {
-  const hoje = new Date();
-  let ini, fim;
-  if (periodo === 'hoje') {
-    ini = fim = hoje;
-  } else if (periodo === 'semana') {
-    ini = new Date(hoje); ini.setDate(hoje.getDate() - hoje.getDay()); fim = hoje;
-  } else if (periodo === 'mes') {
-    ini = new Date(hoje.getFullYear(), hoje.getMonth(), 1); fim = new Date(hoje.getFullYear(), hoje.getMonth()+1, 0);
-  } else if (periodo === 'trimestre') {
-    const q = Math.floor(hoje.getMonth() / 3);
-    ini = new Date(hoje.getFullYear(), q * 3, 1);
-    fim = new Date(hoje.getFullYear(), q * 3 + 3, 0);
-  } else if (periodo === 'ano') {
-    ini = new Date(hoje.getFullYear(), 0, 1);
-    fim = new Date(hoje.getFullYear(), 11, 31);
-  }
-  const fmt = d => d.toISOString().slice(0,10);
-  document.getElementById('rel-inicio').value = fmt(ini);
-  document.getElementById('rel-fim').value = fmt(fim);
-};
-
-window.gerarRelatorio = function() {
-  const iniStr = document.getElementById('rel-inicio').value;
-  const fimStr = document.getElementById('rel-fim').value;
-  if (!iniStr || !fimStr) { toast('Selecione as datas de início e fim', 'warn'); return; }
-
-  const ini = new Date(iniStr + 'T00:00:00');
-  const fim = new Date(fimStr + 'T23:59:59');
-  if (ini > fim) { toast('Data início deve ser anterior à data fim', 'warn'); return; }
-
-  // ── Fonte 1: Notas entregues no Firebase (canhotos)
-  const notasEntregues = getNotasEntregues().filter(n => {
-    const t = n.ts_entrega || parseDataEntrega(n.data_entrega);
-    return t >= ini.getTime() && t <= fim.getTime();
-  });
-
-  // ── Fonte 2: Histórico localStorage (tentativas e deletadas)
-  let hist = [];
-  try { hist = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]'); } catch {}
-
-  const histPeriodo = hist.filter(e => {
-    const t = e.ts || 0;
-    return t >= ini.getTime() && t <= fim.getTime();
-  });
-
-  // Monta eventos: entregues do Firebase + tentativas/deletadas do histórico
-  const evs = [];
-
-  // Adiciona entregues do Firebase
-  notasEntregues.forEach(n => {
-    evs.push({
-      tipo: 'entregue',
-      numero_nf: n.numero_nf,
-      cliente: n.cliente || '',
-      valor: n.valor || '0',
-      data_emissao: n.data_emissao || '',
-      observacao: n.observacao || '',
-      tentativas_entrega: n.tentativas_entrega || 0,
-      fora_estado: n.fora_estado || false,
-      data_evento: n.data_entrega || '',
-      ts: n.ts_entrega || parseDataEntrega(n.data_entrega)
-    });
-  });
-
-  // Adiciona tentativas e deletadas do histórico (não duplicar com Firebase)
-  const nfsFirebase = new Set(notasEntregues.map(n => n.numero_nf));
-  histPeriodo.forEach(e => {
-    if (e.tipo === 'entregue' && nfsFirebase.has(e.numero_nf)) return; // Já veio do Firebase
-    evs.push(e);
-  });
-
-  // Ordena por data mais recente
-  evs.sort((a,b) => b.ts - a.ts);
-
-  // KPIs
-  const entregues   = evs.filter(e => e.tipo === 'entregue');
-  const tentativas  = evs.filter(e => e.tipo === 'tentativa');
-  const deletadas   = evs.filter(e => e.tipo === 'deletada');
-  const transportadora = entregues.filter(e => e.fora_estado);
-  const valorTotal  = entregues.reduce((s,e) => s + (parseFloat(e.valor)||0), 0);
-
-  document.getElementById('kpi-entregas').textContent   = entregues.length;
-  document.getElementById('kpi-tentativas').textContent = tentativas.length;
-  document.getElementById('kpi-deletadas').textContent  = deletadas.length;
-  document.getElementById('kpi-total').textContent      = evs.length;
-  document.getElementById('kpi-transportadora').textContent = transportadora.length;
-  document.getElementById('kpi-valor').textContent      = 'R$ ' + valorTotal.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
-
-  const fmtData = s => s ? s.slice(0,10).split('-').reverse().join('/') : '—';
-  document.getElementById('rel-periodo-label').textContent =
-    `${fmtData(iniStr)} até ${fmtData(fimStr)} — ${evs.length} evento(s)`;
-
-  const tbody = document.getElementById('rel-tbody');
-  if (!evs.length) {
-    tbody.innerHTML = '';
-    document.getElementById('rel-kpis').style.display = 'grid';
-    document.getElementById('rel-table-wrap').style.display = 'none';
-    document.getElementById('rel-empty-state').style.display = 'block';
-    window._relEventos = [];
-    return;
-  }
-
-  const badgeMap = {
-    entregue:  `<span class="rel-badge entregue">✅ Entregue</span>`,
-    tentativa: `<span class="rel-badge tentativa">↩ Devolução</span>`,
-    deletada:  `<span class="rel-badge deletada">🗑 Excluída</span>`
-  };
-
-  tbody.innerHTML = evs.map(e => {
-    let sitExtra = '';
-    if (e.tentativas_entrega > 1) sitExtra = ` <span style="font-size:10px;color:var(--amber-dk)">(${e.tentativas_entrega}ª tentativa)</span>`;
-    if (e.tipo === 'tentativa' && e.tentativas_entrega) sitExtra = ` <span style="font-size:10px;color:var(--amber-dk)">(tentativa ${e.tentativas_entrega})</span>`;
-    const valFmt = parseFloat(e.valor||0) ? 'R$ ' + parseFloat(e.valor).toLocaleString('pt-BR',{minimumFractionDigits:2}) : '—';
-    const obsTxt = e.observacao ? e.observacao.replace(/</g,'&lt;').replace(/\n/g,'<br>') : '<span style="color:var(--txt3)">—</span>';
-    const transpBadge = e.fora_estado
-      ? `<span class="rel-badge" style="background:#dbeafe;color:#1d4ed8">🗺️ Transp.</span>` : '—';
-    return `<tr>
-      <td style="font-family:var(--mono);font-weight:600">${e.numero_nf}</td>
-      <td>${e.cliente || '—'}</td>
-      <td style="font-weight:500">${valFmt}</td>
-      <td>${e.data_emissao || '—'}</td>
-      <td>${e.data_evento || '—'}</td>
-      <td>${e.tentativas_entrega||0}</td>
-      <td>${transpBadge}</td>
-      <td style="max-width:220px;font-size:11px;color:var(--txt2)">${(badgeMap[e.tipo]||e.tipo)}${sitExtra}</td>
-    </tr>`;
-  }).join('');
-
-  document.getElementById('rel-kpis').style.display = 'grid';
-  document.getElementById('rel-table-wrap').style.display = 'block';
-  document.getElementById('rel-empty-state').style.display = 'none';
-  window._relEventos = evs;
-  window._relPeriodo = { ini: iniStr, fim: fimStr };
-};
-
-window.exportarRelatorio = function() {
-  const evs = window._relEventos;
-  if (!evs || !evs.length) { toast('Gere o relatório primeiro', 'warn'); return; }
-  const { ini, fim } = window._relPeriodo || {};
-  const fmtData = s => s ? s.slice(0,10).split('-').reverse().join('/') : '—';
-
-  const entregues  = evs.filter(e => e.tipo === 'entregue');
-  const tentativas = evs.filter(e => e.tipo === 'tentativa');
-  const deletadas  = evs.filter(e => e.tipo === 'deletada');
-  const transportadora = entregues.filter(e => e.fora_estado);
-  const valorTotal = entregues.reduce((s,e) => s + (parseFloat(e.valor)||0), 0);
-
-  const situacaoTxt = { entregue: 'Entregue', tentativa: 'Devolução', deletada: 'Excluída' };
-
-  const rows = evs.map(e => `
-    <tr>
-      <td><strong>${e.numero_nf}</strong></td>
-      <td>${e.cliente||'—'}</td>
-      <td>${parseFloat(e.valor||0) ? 'R$ '+parseFloat(e.valor).toLocaleString('pt-BR',{minimumFractionDigits:2}) : '—'}</td>
-      <td>${e.data_emissao||'—'}</td>
-      <td>${e.data_evento||'—'}</td>
-      <td>${e.tentativas_entrega||0}</td>
-      <td>${e.fora_estado ? 'Transportadora' : '—'}</td>
-      <td>${situacaoTxt[e.tipo]||e.tipo}${e.tentativas_entrega>1?' ('+e.tentativas_entrega+'ª)':''}</td>
-    </tr>`).join('');
-
-  const printHTML = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
-<title>Relatório de Entregas</title>
-<style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:Arial,sans-serif;padding:24px;color:#111;font-size:12px}
-  header{margin-bottom:20px;border-bottom:3px solid #1d4ed8;padding-bottom:14px;display:flex;justify-content:space-between;align-items:flex-end}
-  h1{font-size:20px;font-weight:700;color:#1d4ed8;margin-bottom:4px}
-  .sub{font-size:11px;color:#6b7280}
-  .kpis{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
-  .kpi{border:1px solid #e5e7eb;border-radius:8px;padding:10px 14px;flex:1;min-width:90px;border-top:3px solid}
-  .kpi.green{border-top-color:#059669}.kpi.amber{border-top-color:#d97706}.kpi.red{border-top-color:#dc2626}.kpi.blue{border-top-color:#2563eb}.kpi.navy{border-top-color:#1e40af}
-  .kpi-label{font-size:9px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
-  .kpi-value{font-size:18px;font-weight:700;color:#111}
-  table{width:100%;border-collapse:collapse}
-  thead tr{background:#1d4ed8;color:#fff}
-  th{padding:8px 10px;text-align:left;font-size:9px;letter-spacing:.05em;font-weight:700;text-transform:uppercase}
-  td{padding:7px 10px;border-bottom:1px solid #e5e7eb;vertical-align:top;font-size:11px}
-  tr:nth-child(even) td{background:#f9fafb}
-  footer{margin-top:16px;font-size:10px;color:#9ca3af;text-align:center}
-  @media print{@page{margin:1cm;size:A4 landscape}}
-</style></head><body>
-<header>
-  <div>
-    <h1>📊 Relatório de Entregas</h1>
-    <div class="sub">Período: ${fmtData(ini)} até ${fmtData(fim)} · Gerado em ${new Date().toLocaleString('pt-BR')}</div>
-  </div>
-</header>
-<div class="kpis">
-  <div class="kpi green"><div class="kpi-label">Entregues</div><div class="kpi-value">${entregues.length}</div></div>
-  <div class="kpi amber"><div class="kpi-label">Devoluções</div><div class="kpi-value">${tentativas.length}</div></div>
-  <div class="kpi red"><div class="kpi-label">Excluídas</div><div class="kpi-value">${deletadas.length}</div></div>
-  <div class="kpi navy"><div class="kpi-label">Transportadora</div><div class="kpi-value">${transportadora.length}</div></div>
-  <div class="kpi blue"><div class="kpi-label">Valor Transportado</div><div class="kpi-value" style="font-size:13px">R$ ${valorTotal.toLocaleString('pt-BR',{minimumFractionDigits:2})}</div></div>
-</div>
-<table>
-  <thead><tr><th>NF</th><th>Cliente</th><th>Valor</th><th>Emissão</th><th>Data Entrega</th><th>Tentativas</th><th>Transportadora</th><th>Situação</th></tr></thead>
-  <tbody>${rows}</tbody>
-</table>
-<footer>Sistema de Expedição — Notas Fiscais | Criado por: Leandro NP</footer>
-<script>window.onload=()=>{setTimeout(()=>window.print(),300)}<\/script>
-</body></html>`;
-
-  const w = window.open('', '_blank');
-  if (!w) { toast('Permita pop-ups para gerar o PDF', 'warn'); return; }
-  w.document.write(printHTML);
-  w.document.close();
-};
-
-/* ═══════════════════════════════════════════
-   BACKUP & REIMPORTAÇÃO
-═══════════════════════════════════════════ */
-window.fazerBackup = function() { openModal('modal-backup'); };
-
-window.downloadBackup = async function() {
-  toast('Gerando backup…', '');
-  try {
-    // Pega todas as notas (incluindo arquivadas)
-    const notas = window._state.notas;
-
-    // Histórico localStorage
-    let hist = [];
-    try { hist = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]'); } catch {}
-
-    const backup = {
-      versao: '1.3',
-      gerado_em: new Date().toLocaleString('pt-BR'),
-      gerado_em_iso: new Date().toISOString(),
-      total_notas: notas.length,
-      total_historico: hist.length,
-      notas: notas,
-      historico: hist
-    };
-
-    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `backup-nf-${new Date().toISOString().slice(0,10)}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    toast(`Backup gerado: ${notas.length} notas + ${hist.length} históricos ✅`, 'success');
-  } catch(e) {
-    toast('Erro ao gerar backup: ' + e.message, 'error');
-  }
-};
-
-window.lerArquivoBackup = function(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const statusEl = document.getElementById('backup-import-status');
-  const previewEl = document.getElementById('backup-preview');
-  const previewContent = document.getElementById('backup-preview-content');
-  const restoreBtn = document.getElementById('btn-restore-backup');
-
-  statusEl.textContent = 'Lendo arquivo…';
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (!data.notas || !Array.isArray(data.notas)) {
-        statusEl.textContent = '❌ Arquivo inválido — não é um backup do sistema.';
-        return;
-      }
-      window._backupData = data;
-      statusEl.textContent = `✅ Arquivo válido — ${data.notas.length} notas encontradas`;
-
-      // Preview
-      const ativas = data.notas.filter(n => !n.arquivada && !n.entregue).length;
-      const entregues = data.notas.filter(n => n.entregue || n.arquivada).length;
-      const hist = data.historico ? data.historico.length : 0;
-
-      previewContent.innerHTML = `
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div><strong>Gerado em:</strong> ${data.gerado_em || '—'}</div>
-          <div><strong>Versão:</strong> ${data.versao || '—'}</div>
-          <div><strong>Notas ativas:</strong> ${ativas}</div>
-          <div><strong>Notas entregues/arquivadas:</strong> ${entregues}</div>
-          <div><strong>Histórico:</strong> ${hist} eventos</div>
-          <div><strong>Total notas:</strong> ${data.notas.length}</div>
-        </div>
-        <div style="margin-top:8px;color:var(--amber-dk);font-size:10px;font-weight:600">⚠️ A restauração adicionará apenas notas ATIVAS que não existem no sistema atual. Não remove dados existentes.</div>
-      `;
-      previewEl.style.display = 'block';
-      restoreBtn.style.display = 'inline-flex';
-    } catch {
-      statusEl.textContent = '❌ Erro ao ler o arquivo. Verifique se é um JSON válido.';
-      previewEl.style.display = 'none';
-      restoreBtn.style.display = 'none';
-    }
-  };
-  reader.readAsText(file);
-};
-
-window.restaurarBackup = async function() {
-  const data = window._backupData;
-  if (!data || !data.notas) { toast('Nenhum backup carregado', 'warn'); return; }
-
-  const notasAtivas = data.notas.filter(n => !n.arquivada && !n.entregue);
-  if (!notasAtivas.length) { toast('Nenhuma nota ativa para restaurar', 'warn'); return; }
-
-  if (!confirm(`Restaurar ${notasAtivas.length} nota(s) ativa(s) do backup? Duplicatas serão ignoradas.`)) return;
-
-  let ok = 0, dup = 0, err = 0;
-  for (const nota of notasAtivas) {
-    // Remove campos que o Firebase gerencia
-    const { id, ...dadosNota } = nota;
-    dadosNota.restaurado_em = new Date().toLocaleString('pt-BR');
-    dadosNota.fonte_backup = true;
-
-    const result = await addNota(dadosNota);
-    if (result.result === 'ok') ok++;
-    else if (result.result === 'dup') dup++;
-    else err++;
-  }
-
-  // Restaura histórico localStorage
-  if (data.historico && data.historico.length) {
-    try {
-      let histAtual = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]');
-      const idsExist = new Set(histAtual.map(e => e.ts + '_' + e.numero_nf));
-      const novos = data.historico.filter(e => !idsExist.has(e.ts + '_' + e.numero_nf));
-      histAtual = [...histAtual, ...novos];
-      localStorage.setItem('nf_historico_v1', JSON.stringify(histAtual));
-    } catch {}
-  }
-
-  const msg = `Restauração: ✅ ${ok} importada(s)${dup ? ` · ⚠️ ${dup} duplicada(s)` : ''}${err ? ` · ❌ ${err} erro(s)` : ''}`;
-  toast(msg, ok > 0 ? 'success' : 'warn');
-  closeModal('modal-backup');
 };
 
 /* ═══════════════════════════════════════════
@@ -2592,6 +2136,14 @@ const ACCENT = {
   lancada:'var(--col-l)', aguardando:'var(--col-a)',
   solicitada:'var(--col-s)', retirada:'var(--col-r)'
 };
+
+/* Ícone SVG de pallet inline (para usar em cards, sem depender de emoji) */
+const SVG_PALLET_SMALL = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%">
+  <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
+  <path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/>
+  <path d="M9 13h6"/>
+  <path d="M9 17h6"/>
+</svg>`;
 
 const renderAll = window.renderAll = function() {
   const q = document.getElementById('search-input').value.toLowerCase().trim();
@@ -2622,7 +2174,7 @@ const renderAll = window.renderAll = function() {
       if (!body.querySelector('.empty')) {
         const el = document.createElement('div');
         el.className = 'empty';
-        el.innerHTML = '<div class="empty-icon">🗂</div><div>Nenhuma nota</div>';
+        el.innerHTML = '<div class="empty-icon">—</div><div>Nenhuma nota</div>';
         body.appendChild(el);
       }
     } else { body.querySelector('.empty')?.remove(); }
@@ -2640,13 +2192,13 @@ function buildCard(nota) {
   const hasObs = !!(nota.observacao && nota.observacao.trim());
   const foraEstado = !!nota.fora_estado;
   const emAtencao = !!nota.atencao;
-  
+
   card.className = 'card'
     + (isEntregue ? ' card-entregue' : '')
     + (hasObs ? ' card-has-obs' : '')
     + (foraEstado ? ' card-fora-estado' : '')
     + (emAtencao ? ' card-atencao' : '');
-    
+
   card.dataset.id = nota.id;
   card.style.setProperty('--accent', foraEstado ? '#db2777' : (ACCENT[nota.status] || ACCENT.lancada));
   const locked = isEntregue && nota.status === 'retirada';
@@ -2654,7 +2206,9 @@ function buildCard(nota) {
   card.innerHTML = cardHTML(nota);
   if (!locked) {
     card.addEventListener('dragstart', e => {
-      if (e.target.closest('.card-obs-section')) { e.preventDefault(); return; }
+      if (e.target.closest('.card-obs-section') || e.target.closest('.card-actions') || e.target.closest('.paletes-section') || e.target.closest('.card-files-bar')) {
+        e.preventDefault(); return;
+      }
       onDragStart(e, nota.id, nota.numero_nf, nota.cliente, nota.status);
     });
     card.addEventListener('dragend', e => onDragEnd(e));
@@ -2678,12 +2232,11 @@ function updateCardInPlace(card, nota) {
     + (hasObs ? ' card-has-obs' : '')
     + (foraEstado ? ' card-fora-estado' : '')
     + (emAtencao ? ' card-atencao' : '');
-    
+
   card.draggable = !locked;
   card.style.setProperty('--accent', foraEstado ? '#db2777' : (ACCENT[nota.status] || ACCENT.lancada));
   card.innerHTML = cardHTML(nota);
 
-  // Restaura countdown se estava em andamento
   if (_countdowns[nota.id]) {
     const banner = document.createElement('div');
     banner.className = 'card-countdown-banner';
@@ -2707,13 +2260,18 @@ function updateCardInPlace(card, nota) {
   }
 
   if (!locked) {
-    card.addEventListener('dragstart', e => onDragStart(e, nota.id, nota.numero_nf, nota.cliente, nota.status));
+    card.addEventListener('dragstart', e => {
+      if (e.target.closest('.card-obs-section') || e.target.closest('.card-actions') || e.target.closest('.paletes-section') || e.target.closest('.card-files-bar')) {
+        e.preventDefault(); return;
+      }
+      onDragStart(e, nota.id, nota.numero_nf, nota.cliente, nota.status);
+    });
     card.addEventListener('dragend',   e => onDragEnd(e));
   }
 }
 
 function cardHTML(nota) {
-  const { id, numero_nf, cliente, valor, data_emissao, status, observacao, entregue, data_entrega, tentativas_entrega, fora_estado, atencao } = nota;
+  const { id, numero_nf, cliente, valor, data_emissao, status, observacao, entregue, data_entrega, tentativas_entrega, fora_estado, atencao, paletes_qty } = nota;
   const hasObs = !!(observacao && observacao.trim());
   const foraEstado = !!fora_estado;
   const emAtencao = !!atencao;
@@ -2725,54 +2283,50 @@ function cardHTML(nota) {
   const stamp = entregue ? `<div class="card-stamp">ENTREGUE</div>` : '';
 
   const foraEstadoBadge = foraEstado
-    ? `<span class="card-fora-badge">🗺️ Transportadora</span>` : '';
+    ? `<span class="card-fora-badge">Transportadora</span>` : '';
 
   const tentativaBadge = (tentativas > 0 && !entregue)
-    ? `<span class="card-tentativa-badge">↩ ${tentativas}ª tentativa</span>` : '';
+    ? `<span class="card-tentativa-badge">${tentativas}ª tentativa</span>` : '';
 
   const entregarBtn = (status === 'retirada' && !entregue)
-    ? `<button class="btn-action entregue" onclick="markEntregue('${id}')">
+    ? `<button class="btn-action entregue" onclick="event.stopPropagation();markEntregue('${id}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         Entregue
        </button>` : '';
 
   const devolverBtn = (status === 'retirada')
-    ? `<button class="btn-action devolver" onclick="openDevolverModal('${id}','${numero_nf}')">
+    ? `<button class="btn-action devolver" onclick="event.stopPropagation();openDevolverModal('${id}','${numero_nf}')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
         Devolução
        </button>` : '';
 
-  const removerBtn = (status === 'retirada' && entregue)
-    ? `<button class="btn-action remover" onclick="archiveNota('${id}')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
-        → Canhotos
-       </button>` : '';
-
   const foraEstadoBtn = foraEstado
     ? `<button class="btn-action fora-estado-on" onclick="event.stopPropagation();_toggleForaEstado('${id}')">
-        🗺️ Transportadora
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Transportadora
        </button>`
     : `<button class="btn-action fora-estado-off" onclick="event.stopPropagation();_toggleForaEstado('${id}')">
-        🗺️ Transportadora?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Transportadora?
        </button>`;
 
-  // Botão de atenção - alterna o estado
   const atencaoBtn = emAtencao
     ? `<button class="btn-action atencao atencao-active" onclick="event.stopPropagation();_toggleAtencao('${id}')" title="Desativar atenção">
-        🔔 Atenção
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Atenção
        </button>`
-    : `<button class="btn-action atencao" onclick="event.stopPropagation();_toggleAtencao('${id}')" title="Chamar atenção para este card">
-        🔕 Chamar Atenção
+    : `<button class="btn-action atencao" onclick="event.stopPropagation();_toggleAtencao('${id}')" title="Chamar atenção">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:11px;height:11px"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Atenção
        </button>`;
 
-  const deleteBtn = `<button class="btn-action del" onclick="openDelModal('${id}','${numero_nf}')">
+  const deleteBtn = `<button class="btn-action del" onclick="event.stopPropagation();openDelModal('${id}','${numero_nf}')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
      </button>`;
 
   const entreguneDateBadge = (entregue && data_entrega)
-    ? `<span class="card-date entregue-date">🕐 ${data_entrega}</span>` : '';
+    ? `<span class="card-date entregue-date">${data_entrega}</span>` : '';
 
-  // Barra de arquivos
   const files = nota.files || [];
   const pdfFile = files.find(f => f.type === 'pdf');
   const xmlFile = files.find(f => f.type === 'xml');
@@ -2781,11 +2335,11 @@ function cardHTML(nota) {
   const svgUp   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`;
 
   const btnPdf = pdfFile
-    ? `<a href="${getCloudinaryDownloadUrl(pdfFile.url)}" target="_blank" class="btn-dl pdf" title="Baixar DANFE (PDF)">${svgDown} PDF</a>`
+    ? `<a href="${getCloudinaryDownloadUrl(pdfFile.url)}" target="_blank" class="btn-dl pdf" title="Baixar DANFE (PDF)" onclick="event.stopPropagation()">${svgDown} PDF</a>`
     : `<button class="btn-dl pdf dim" disabled title="Nenhum PDF">${svgDown} PDF</button>`;
 
   const btnXml = xmlFile
-    ? `<a href="${xmlFile.url}" target="_blank" class="btn-dl xml" title="Baixar XML">${svgDown} XML</a>`
+    ? `<a href="${xmlFile.url}" target="_blank" class="btn-dl xml" title="Baixar XML" onclick="event.stopPropagation()">${svgDown} XML</a>`
     : `<button class="btn-dl xml dim" disabled title="Nenhum XML">${svgDown} XML</button>`;
 
   const uploadTrigger = `
@@ -2793,7 +2347,7 @@ function cardHTML(nota) {
       <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="handleCardFileUpload(event,'${id}')">
       ${svgUp} Anexar
     </label>
-    <span class="card-upload-progress" id="upload-prog-${id}">⏳ Enviando…</span>`;
+    <span class="card-upload-progress" id="upload-prog-${id}">Enviando…</span>`;
 
   const filesBar = `
     <div class="card-files-bar">
@@ -2802,17 +2356,28 @@ function cardHTML(nota) {
       ${uploadTrigger}
     </div>`;
 
+  const qty = paletes_qty || 0;
+  const paletesHTML = `
+    <div class="paletes-section ${qty > 0 ? 'has-paletes' : 'is-zero'}">
+      <span class="paletes-icon-wrap">${SVG_PALLET_SMALL}</span>
+      <span class="paletes-label">PALETES</span>
+      <span class="paletes-value ${qty === 0 ? 'zero' : ''}">${qty === 0 ? '—' : qty}</span>
+      <button class="btn-paletes-open" onclick="event.stopPropagation();openPaletesModal('${id}')">
+        ${qty > 0 ? 'Alterar' : 'Definir'}
+      </button>
+    </div>`;
+
   const obsSection = `
     <div class="card-obs-section">
       ${hasObs
-        ? `<div class="card-obs-display" id="obs-display-${id}" onclick="openObsInline('${id}')">${obsDisplay}</div>`
-        : `<div class="card-obs-placeholder" id="obs-display-${id}" onclick="openObsInline('${id}')">+ Adicionar observação</div>`
+        ? `<div class="card-obs-display" id="obs-display-${id}" onclick="event.stopPropagation();openObsInline('${id}')">${obsDisplay}</div>`
+        : `<div class="card-obs-placeholder" id="obs-display-${id}" onclick="event.stopPropagation();openObsInline('${id}')">+ Adicionar observação</div>`
       }
       <div class="card-obs-editor" id="obs-editor-${id}" data-id="${id}">
         <textarea class="card-obs-textarea" placeholder="Digite a observação…">${obsEscaped}</textarea>
         <div class="card-obs-footer">
-          <button class="btn-obs-cancel" onclick="closeObsInline('${id}')">Cancelar</button>
-          <button class="btn-obs-save" onclick="saveObsInline('${id}')">💾 Salvar</button>
+          <button class="btn-obs-cancel" onclick="event.stopPropagation();closeObsInline('${id}')">Cancelar</button>
+          <button class="btn-obs-save" onclick="event.stopPropagation();saveObsInline('${id}')">Salvar</button>
         </div>
       </div>
     </div>`;
@@ -2830,26 +2395,36 @@ function cardHTML(nota) {
       ${tentativaBadge}
       ${foraEstadoBadge}
     </div>
+    ${paletesHTML}
     ${filesBar}
     ${obsSection}
     <div class="card-actions">
-      ${entregarBtn}${devolverBtn}${removerBtn}
+      ${entregarBtn}${devolverBtn}
       ${foraEstadoBtn}
       ${atencaoBtn}
       ${deleteBtn}
     </div>`;
 }
 
-/* ── DRAG & DROP ── */
+/* ═══════════════════════════════════════════
+   DRAG & DROP
+═══════════════════════════════════════════ */
 let _dragId = null, _dragStatus = null;
+let _dragStartX = 0, _dragStartY = 0;
+let _dragThresholdMet = false;
 
 function onDragStart(e, id, nf, cli, status) {
-  _dragId = id; _dragStatus = status;
+  _dragId = id;
+  _dragStatus = status;
+  _dragThresholdMet = false;
+  _dragStartX = e.clientX || 0;
+  _dragStartY = e.clientY || 0;
+
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('text/plain', id);
 
   const ghost = document.createElement('div');
-  ghost.style.cssText = 'position:fixed;top:-999px;left:-999px;width:1px;height:1px;';
+  ghost.style.cssText = 'position:fixed;top:-999px;left:-999px;width:1px;height:1px;opacity:0;';
   document.body.appendChild(ghost);
   e.dataTransfer.setDragImage(ghost, 0, 0);
   setTimeout(()=>ghost.remove(), 0);
@@ -2858,26 +2433,37 @@ function onDragStart(e, id, nf, cli, status) {
   document.getElementById('ghost-nf').textContent  = 'NF ' + nf;
   document.getElementById('ghost-cli').textContent = (cli||'').length>24 ? (cli||'').slice(0,24)+'…' : (cli||'');
   g.style.setProperty('--ghost-color', ACCENT[status] || '#888');
-  g.classList.add('visible');
-  e.currentTarget.classList.add('dragging');
+
+  setTimeout(() => {
+    if (_dragId === id) {
+      g.classList.add('visible');
+      e.currentTarget?.classList?.add('dragging');
+    }
+  }, 50);
 
   window._ghostMove = ev => {
+    if (!_dragThresholdMet) {
+      const dist = Math.abs(ev.clientX - _dragStartX) + Math.abs(ev.clientY - _dragStartY);
+      if (dist > 4) _dragThresholdMet = true;
+    }
     g.style.left = (ev.clientX + 14) + 'px';
     g.style.top  = (ev.clientY + 10) + 'px';
   };
-  document.addEventListener('mousemove', window._ghostMove);
+  document.addEventListener('mousemove', window._ghostMove, { passive: true });
 }
 
 function onDragEnd(e) {
-  e.currentTarget.classList.remove('dragging');
+  e.currentTarget?.classList?.remove('dragging');
   document.getElementById('drag-ghost').classList.remove('visible');
   document.removeEventListener('mousemove', window._ghostMove);
   document.querySelectorAll('.column').forEach(c => c.classList.remove('drag-over'));
+  _dragId = null;
 }
 
 document.querySelectorAll('.column').forEach(col => {
   col.addEventListener('dragover', e => {
-    e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
     document.querySelectorAll('.column').forEach(c => c.classList.remove('drag-over'));
     col.classList.add('drag-over');
   });
@@ -2897,6 +2483,124 @@ document.querySelectorAll('.column').forEach(col => {
   });
 });
 
+/* ═══════════════════════════════════════════
+   BACKUP
+═══════════════════════════════════════════ */
+window.fazerBackup = function() { openModal('modal-backup'); };
+
+window.downloadBackup = async function() {
+  toast('Gerando backup…', '');
+  try {
+    const notas = window._state.notas;
+    let hist = [];
+    try { hist = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]'); } catch {}
+
+    const backup = {
+      versao: '2.2',
+      gerado_em: new Date().toLocaleString('pt-BR'),
+      gerado_em_iso: new Date().toISOString(),
+      total_notas: notas.length,
+      total_historico: hist.length,
+      notas: notas,
+      historico: hist
+    };
+
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `backup-expedicao-${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast(`Backup: ${notas.length} notas`, 'success');
+  } catch(e) {
+    toast('Erro ao gerar backup: ' + e.message, 'error');
+  }
+};
+
+window.lerArquivoBackup = function(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const statusEl = document.getElementById('backup-import-status');
+  const previewEl = document.getElementById('backup-preview');
+  const previewContent = document.getElementById('backup-preview-content');
+  const restoreBtn = document.getElementById('btn-restore-backup');
+
+  statusEl.textContent = 'Lendo arquivo…';
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.notas || !Array.isArray(data.notas)) {
+        statusEl.textContent = 'Arquivo inválido.';
+        return;
+      }
+      window._backupData = data;
+      statusEl.textContent = `Válido — ${data.notas.length} notas`;
+
+      const ativas = data.notas.filter(n => !n.arquivada && !n.entregue).length;
+      const entregues = data.notas.filter(n => n.entregue || n.arquivada).length;
+      const hist = data.historico ? data.historico.length : 0;
+
+      previewContent.innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div><strong>Gerado:</strong> ${data.gerado_em || '—'}</div>
+          <div><strong>Versão:</strong> ${data.versao || '—'}</div>
+          <div><strong>Ativas:</strong> ${ativas}</div>
+          <div><strong>Arquivadas:</strong> ${entregues}</div>
+          <div><strong>Histórico:</strong> ${hist}</div>
+          <div><strong>Total:</strong> ${data.notas.length}</div>
+        </div>
+        <div style="margin-top:8px;color:var(--amber-dk);font-size:10px;font-weight:600">Adiciona apenas notas ATIVAS que não existem.</div>
+      `;
+      previewEl.style.display = 'block';
+      restoreBtn.style.display = 'inline-flex';
+    } catch {
+      statusEl.textContent = 'JSON inválido.';
+      previewEl.style.display = 'none';
+      restoreBtn.style.display = 'none';
+    }
+  };
+  reader.readAsText(file);
+};
+
+window.restaurarBackup = async function() {
+  const data = window._backupData;
+  if (!data || !data.notas) { toast('Nenhum backup carregado', 'warn'); return; }
+  const notasAtivas = data.notas.filter(n => !n.arquivada && !n.entregue);
+  if (!notasAtivas.length) { toast('Nenhuma nota ativa', 'warn'); return; }
+  if (!confirm(`Restaurar ${notasAtivas.length} nota(s)? Duplicatas serão ignoradas.`)) return;
+
+  let ok = 0, dup = 0, err = 0;
+  for (const nota of notasAtivas) {
+    const { id, ...dadosNota } = nota;
+    dadosNota.restaurado_em = new Date().toLocaleString('pt-BR');
+    const result = await addNota(dadosNota);
+    if (result.result === 'ok') ok++;
+    else if (result.result === 'dup') dup++;
+    else err++;
+  }
+
+  if (data.historico && data.historico.length) {
+    try {
+      let histAtual = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]');
+      const idsExist = new Set(histAtual.map(e => e.ts + '_' + e.numero_nf));
+      const novos = data.historico.filter(e => !idsExist.has(e.ts + '_' + e.numero_nf));
+      histAtual = [...histAtual, ...novos];
+      localStorage.setItem('nf_historico_v1', JSON.stringify(histAtual));
+    } catch {}
+  }
+
+  toast(`Restauração: ${ok} ok${dup ? ` · ${dup} dup` : ''}${err ? ` · ${err} err` : ''}`, ok > 0 ? 'success' : 'warn');
+  closeModal('modal-backup');
+};
+
+/* Inicializa badge após carregar */
+setTimeout(() => {
+  try { updatePaletesBadge(); } catch(e) { console.warn('Badge init:', e); }
+}, 500);
 </script>
 
 <!-- LOGIN LOGIC -->
