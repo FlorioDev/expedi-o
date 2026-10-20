@@ -487,7 +487,7 @@ a { color: inherit; text-decoration: none; }
 .upload-area input { display: none; }
 .upload-files-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
 .upload-file-item { display: flex; align-items: center; gap: 8px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; font-size: 12px; }
-.upload-file-icon { font-size: 16px; flex-shrink: 0; }
+.upload-file-icon { font-size: 11px; font-weight: 700; flex-shrink: 0; padding: 2px 6px; background: var(--border); border-radius: 4px; color: var(--txt2); }
 .upload-file-name { flex: 1; color: var(--txt); font-family: var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .upload-file-status { font-size: 11px; color: var(--txt3); }
 .upload-file-status.ok  { color: var(--green); font-weight: 600; }
@@ -671,13 +671,6 @@ a { color: inherit; text-decoration: none; }
   padding: 3px 10px;
   border-radius: 6px;
 }
-
-/* Estilo inline para ícone do pallet (SVG) */
-.icon-pallet {
-  display: inline-block;
-  vertical-align: middle;
-  flex-shrink: 0;
-}
 </style>
 </head>
 <body>
@@ -791,7 +784,7 @@ a { color: inherit; text-decoration: none; }
 
       <div class="topbar-creator">
         <span class="topbar-creator-name">Criado por: Leandro NP</span>
-        <span class="topbar-creator-version">Versão 2.2</span>
+        <span class="topbar-creator-version">Versão 2.4</span>
       </div>
 
       <button class="btn-logout" onclick="doLogout()" title="Sair">
@@ -1334,7 +1327,6 @@ function renderPaletesGrid(selected) {
   }
 }
 
-/* ── NOVO: zerar paletes diretamente do modal ── */
 window.zerarPaletes = async function() {
   if (!_paletesNotaId) return;
   const nota = window._state.notas.find(n => n.id === _paletesNotaId);
@@ -1358,7 +1350,6 @@ window.confirmarPaletes = async function() {
   const nota = window._state.notas.find(n => n.id === _paletesNotaId);
   try {
     const update = { paletes_qty: qty };
-    // Se o usuário escolher uma quantidade > 0, considera que não foi devolvido
     if (qty > 0) {
       update.paletes_devolvidos = false;
       update.data_devolucao_paletes = null;
@@ -1627,9 +1618,11 @@ async function uploadToCloudinary(file) {
   const fd = new FormData();
   fd.append('file', file);
   fd.append('upload_preset', CLOUDINARY_PRESET);
-  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
-    method: 'POST', body: fd
-  });
+
+  // Mantendo o endpoint /image/upload para PDFs, pois é o que gera as URLs válidas na sua conta
+  const endpoint = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`;
+
+  const res = await fetch(endpoint, { method: 'POST', body: fd });
   if (!res.ok) throw new Error('Cloudinary HTTP ' + res.status);
   const data = await res.json();
   if (data.error) throw new Error(data.error.message);
@@ -1638,25 +1631,9 @@ async function uploadToCloudinary(file) {
 
 function getCloudinaryDownloadUrl(url) {
   if (!url) return '#';
-  let fixed = url.replace('/raw/upload/', '/image/upload/');
-  fixed = fixed.replace('/image/upload/', '/image/upload/fl_attachment/');
-  return fixed;
-}
-
-function extractNFfromPDFFilename(filename) {
-  const match = filename.match(/^(\d{44})-/);
-  if (!match) return null;
-  const key = match[1];
-  const nNF = key.substring(25, 34);
-  return parseInt(nNF, 10).toString();
-}
-
-async function saveFileToNota(notaId, fileEntry) {
-  const nota = window._state.notas.find(n => n.id === notaId);
-  const existing = (nota && nota.files) ? nota.files : [];
-  const filtered = existing.filter(f => f.type !== fileEntry.type);
-  const newFiles = [...filtered, fileEntry];
-  await updateDoc(doc(window._state.db, 'notas', notaId), { files: newFiles });
+  // Se quiser forçar o download, adiciona ?dl=1
+  const sep = url.includes('?') ? '&' : '?';
+  return url + sep + 'dl=1';
 }
 
 window.handleCardFileUpload = async function(event, nfId) {
@@ -1683,6 +1660,25 @@ window.handleCardFileUpload = async function(event, nfId) {
   } finally {
     if (progressEl) { progressEl.style.display = 'none'; progressEl.classList.remove('active'); }
   }
+};
+
+async function saveFileToNota(notaId, fileEntry) {
+  const nota = window._state.notas.find(n => n.id === notaId);
+  const existing = (nota && nota.files) ? nota.files : [];
+  const filtered = existing.filter(f => f.type !== fileEntry.type);
+  const newFiles = [...filtered, fileEntry];
+  await updateDoc(doc(window._state.db, 'notas', notaId), { files: newFiles });
+}
+
+window.abrirArquivo = async function(notaId, tipo) {
+  const nota = window._state.notas.find(n => n.id === notaId);
+  if (!nota) return;
+  const file = (nota.files || []).find(f => f.type === tipo);
+  if (!file) return;
+
+  // Apenas abre a URL original (que já funciona) ou adiciona ?dl=1 para download
+  const finalUrl = tipo === 'pdf' ? getCloudinaryDownloadUrl(file.url) : file.url;
+  window.open(finalUrl, '_blank', 'noopener');
 };
 
 /* ═══════════════════════════════════════════
@@ -1725,12 +1721,20 @@ function handleFiles(files) {
   renderImportList();
 }
 
+function extractNFfromPDFFilename(filename) {
+  const match = filename.match(/^(\d{44})-/);
+  if (!match) return null;
+  const key = match[1];
+  const nNF = key.substring(25, 34);
+  return parseInt(nNF, 10).toString();
+}
+
 function renderImportList() {
   const list = document.getElementById('upload-files-list');
   const allItems = [..._importFiles, ..._importPdfs];
   if (!allItems.length) { list.innerHTML=''; return; }
   list.innerHTML = allItems.map(item => {
-    let statusTxt='', statusClass='', icon='📄';
+    let statusTxt='', statusClass='', icon='XML';
     if (item.kind === 'pdf') {
       icon = 'PDF';
       if (item.status === 'ready')    { statusTxt = `OK NF ${item.nf}`; statusClass = 'ok'; }
@@ -2137,7 +2141,6 @@ const ACCENT = {
   solicitada:'var(--col-s)', retirada:'var(--col-r)'
 };
 
-/* Ícone SVG de pallet inline (para usar em cards, sem depender de emoji) */
 const SVG_PALLET_SMALL = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:100%;height:100%">
   <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
   <path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/>
@@ -2335,11 +2338,11 @@ function cardHTML(nota) {
   const svgUp   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`;
 
   const btnPdf = pdfFile
-    ? `<a href="${getCloudinaryDownloadUrl(pdfFile.url)}" target="_blank" class="btn-dl pdf" title="Baixar DANFE (PDF)" onclick="event.stopPropagation()">${svgDown} PDF</a>`
+    ? `<a href="#" onclick="event.stopPropagation();abrirArquivo('${id}','pdf');return false;" class="btn-dl pdf" title="Abrir/baixar DANFE (PDF)">${svgDown} PDF</a>`
     : `<button class="btn-dl pdf dim" disabled title="Nenhum PDF">${svgDown} PDF</button>`;
 
   const btnXml = xmlFile
-    ? `<a href="${xmlFile.url}" target="_blank" class="btn-dl xml" title="Baixar XML" onclick="event.stopPropagation()">${svgDown} XML</a>`
+    ? `<a href="${xmlFile.url}" target="_blank" rel="noopener" class="btn-dl xml" title="Baixar XML" onclick="event.stopPropagation()">${svgDown} XML</a>`
     : `<button class="btn-dl xml dim" disabled title="Nenhum XML">${svgDown} XML</button>`;
 
   const uploadTrigger = `
@@ -2496,7 +2499,7 @@ window.downloadBackup = async function() {
     try { hist = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]'); } catch {}
 
     const backup = {
-      versao: '2.2',
+      versao: '2.4',
       gerado_em: new Date().toLocaleString('pt-BR'),
       gerado_em_iso: new Date().toISOString(),
       total_notas: notas.length,
