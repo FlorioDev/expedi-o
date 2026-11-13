@@ -136,11 +136,11 @@ a { color: inherit; text-decoration: none; }
 #topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 20px; height: 66px; display: flex; align-items: center; gap: 14px; flex-shrink: 0; position: relative; z-index: 100; }
 
 .logo { display: flex; align-items: center; gap: 10px; position: relative; }
-.logo-icon { width: 38px; height: 38px; background: var(--blue); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; overflow: hidden; cursor: pointer; position: relative; transition: var(--transition); }
-.logo-icon:hover { filter: brightness(1.1); }
-.logo-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 9px; }
-.logo-icon svg { color: #fff; }
-.logo-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.4); color: #fff; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .2s; }
+.logo-icon { width: 38px; height: 38px; background: var(--surface2); border-radius: 9px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; overflow: hidden; cursor: pointer; position: relative; transition: var(--transition); }
+.logo-icon:hover { filter: brightness(0.95); }
+.logo-icon img { width: 100%; height: 100%; object-fit: contain; padding: 2px; }
+.logo-icon svg { color: var(--txt3); }
+.logo-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.5); color: #fff; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .2s; }
 .logo-icon:hover .logo-overlay { opacity: 1; }
 .logo-overlay svg { width: 16px; height: 16px; }
 
@@ -240,7 +240,7 @@ a { color: inherit; text-decoration: none; }
 .col-body { flex: 1; overflow-y: auto; padding: 10px 8px; display: flex; flex-direction: column; gap: 7px; }
 
 /* ═══════════════════════════════════════════
-   CARD
+   CARD (NOVO DESIGN)
 ═══════════════════════════════════════════ */
 .card {
   background: var(--surface);
@@ -375,6 +375,8 @@ a { color: inherit; text-decoration: none; }
   color: var(--txt2); background: var(--surface2);
   border: 1px solid var(--border);
   cursor: pointer;
+  position: relative;
+  z-index: 20; /* CORREÇÃO DE CLIQUE */
 }
 .btn-action:hover { background: var(--bg); border-color: var(--border2); color: var(--txt); }
 .btn-action:active { transform: scale(.96); }
@@ -395,17 +397,18 @@ a { color: inherit; text-decoration: none; }
 
 .nav-arrows {
   display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
-  overflow: hidden; margin-left: auto;
+  overflow: hidden; margin-left: auto; position: relative; z-index: 20; /* CORREÇÃO DE CLIQUE */
 }
 .btn-nav-arrow {
   background: transparent; color: var(--txt3); cursor: pointer;
   padding: 4px 8px; display: flex; align-items: center; justify-content: center;
   transition: all .15s ease; border-right: 1px solid var(--border);
+  min-width: 28px; min-height: 24px; /* Garante tamanho mínimo de clique */
 }
 .btn-nav-arrow:last-child { border-right: none; }
 .btn-nav-arrow:hover:not(:disabled) { background: var(--blue-lt); color: var(--blue); }
 .btn-nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; background: var(--surface2); }
-.btn-nav-arrow svg { width: 11px; height: 11px; }
+.btn-nav-arrow svg { width: 11px; height: 11px; pointer-events: none; }
 
 /* ═══════════════════════════════════════════
    MODALS E OUTROS
@@ -598,7 +601,7 @@ a { color: inherit; text-decoration: none; }
   <!-- TOPBAR -->
   <div id="topbar">
     <div class="logo">
-      <div class="logo-icon" onclick="document.getElementById('logo-input').click()" title="Alterar Logo da Empresa">
+      <div class="logo-icon" onclick="openModal('modal-logo')" title="Alterar Logo da Empresa">
         <img id="logo-img" src="" style="display:none;">
         <svg id="logo-default-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/>
@@ -610,7 +613,6 @@ a { color: inherit; text-decoration: none; }
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
         </div>
       </div>
-      <input type="file" id="logo-input" accept="image/*" style="display:none" onchange="uploadLogo(event)">
       <span class="logo-text">Expedição</span>
     </div>
     
@@ -663,7 +665,7 @@ a { color: inherit; text-decoration: none; }
 
       <div class="topbar-creator">
         <span class="topbar-creator-name">Leandro NP</span>
-        <span class="topbar-creator-version">Versão 2.7</span>
+        <span class="topbar-creator-version">Versão 2.8</span>
       </div>
 
       <button class="btn-fullscreen" onclick="toggleFullScreen()" title="Tela Cheia">
@@ -802,6 +804,24 @@ a { color: inherit; text-decoration: none; }
 
 <!-- TOAST CONTAINER -->
 <div id="toast-container"></div>
+
+<!-- MODAL: LOGO -->
+<div class="modal-backdrop" id="modal-logo">
+  <div class="modal">
+    <div class="modal-title">Configurar Logo da Empresa</div>
+    <div class="modal-sub">Insira o link (URL) da imagem. O link será salvo no banco de dados e a imagem aparecerá para todos os usuários.</div>
+    
+    <div class="form-field full">
+      <label class="form-label">URL DA IMAGEM</label>
+      <input class="form-input" id="logo-url-input" type="text" placeholder="Ex: https://suaempresa.com/logo.png" value="https://lojaflorioalimentos.com.br/wp-content/uploads/2020/03/logo-florio-1006x800.jpeg">
+    </div>
+    
+    <div class="modal-footer">
+      <button class="btn-modal cancel" onclick="closeModal('modal-logo')">Cancelar</button>
+      <button class="btn-modal save" onclick="salvarLogo()">Salvar Logo</button>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL: PALETES -->
 <div class="modal-backdrop" id="modal-paletes">
@@ -960,7 +980,7 @@ a { color: inherit; text-decoration: none; }
 <!-- FIREBASE SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy }
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, getDoc, setDoc }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1019,12 +1039,75 @@ function setDot(state) {
     const app = initializeApp(firebaseConfig);
     window._state.db = getFirestore(app);
     setDot('connecting');
+    loadLogo();
     startListener();
+    setInterval(limparNotasAntigas, 1000 * 60 * 60); // Checa notas antigas a cada 1 hora
   } catch(e) {
     setDot('offline');
     toast('Erro Firebase: ' + e.message, 'error');
   }
 })();
+
+// ── Carregar Logo do Firebase ──
+async function loadLogo() {
+  try {
+    const docRef = doc(window._state.db, 'config', 'logo');
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists() && docSnap.data().url) {
+      aplicarLogo(docSnap.data().url);
+    }
+  } catch(e) { console.warn('Erro ao carregar logo:', e); }
+}
+
+window.salvarLogo = async function() {
+  const url = document.getElementById('logo-url-input').value.trim();
+  if (!url) { toast('Insira uma URL válida', 'warn'); return; }
+  try {
+    await setDoc(doc(window._state.db, 'config', 'logo'), { url });
+    aplicarLogo(url);
+    closeModal('modal-logo');
+    toast('Logo salva com sucesso!', 'success');
+  } catch(e) {
+    toast('Erro ao salvar logo: ' + e.message, 'error');
+  }
+};
+
+function aplicarLogo(url) {
+  const img = document.getElementById('logo-img');
+  const svg = document.getElementById('logo-default-svg');
+  if (url) {
+    img.src = url;
+    img.style.display = 'block';
+    svg.style.display = 'none';
+  } else {
+    img.style.display = 'none';
+    svg.style.display = 'block';
+  }
+}
+
+// ── Exclusão de Notas Antigas (15 dias) ──
+async function limparNotasAntigas() {
+  const agora = Date.now();
+  const quinzeDias = 15 * 24 * 60 * 60 * 1000;
+  
+  const antigas = window._state.notas.filter(n => 
+    n.status === 'retirada' && 
+    n.ts_retirada && 
+    (agora - n.ts_retirada) > quinzeDias
+  );
+
+  if (antigas.length === 0) return;
+
+  console.log(`Limpando ${antigas.length} notas antigas...`);
+  for (const nota of antigas) {
+    try {
+      await deleteDoc(doc(window._state.db, 'notas', nota.id));
+      console.log(`Nota ${nota.numero_nf} excluída automaticamente.`);
+    } catch(e) {
+      console.error(`Erro ao excluir nota ${nota.numero_nf}:`, e);
+    }
+  }
+}
 
 function startListener() {
   const { db } = window._state;
@@ -1839,7 +1922,6 @@ function cardHTML(nota) {
     </div>
   `;
 
-  // Formata a data de emissão para DD/MM/YYYY se estiver no padrão YYYY/MM/DD
   let dataExibicao = data_emissao || '';
   if (dataExibicao.match(/^\d{4}\/\d{2}\/\d{2}$/)) {
     dataExibicao = dataExibicao.split('/').reverse().join('/');
@@ -1922,135 +2004,6 @@ window.toggleFullScreen = function() {
     if (document.exitFullscreen) { document.exitFullscreen(); }
     document.getElementById('fs-icon').innerHTML = `<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>`;
   }
-};
-
-window.uploadLogo = async function(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  toast('Enviando logo…', '');
-  try {
-    const url = await uploadToCloudinary(file);
-    localStorage.setItem('empresa_logo_url', url);
-    aplicarLogo(url);
-    toast('Logo atualizada com sucesso!', 'success');
-  } catch(e) {
-    toast('Erro ao enviar logo: ' + e.message, 'error');
-  }
-};
-
-function aplicarLogo(url) {
-  const img = document.getElementById('logo-img');
-  const svg = document.getElementById('logo-default-svg');
-  if (url) {
-    img.src = url;
-    img.style.display = 'block';
-    svg.style.display = 'none';
-  } else {
-    img.style.display = 'none';
-    svg.style.display = 'block';
-  }
-}
-
-// Carrega logo salva ao iniciar
-const savedLogo = localStorage.getItem('empresa_logo_url');
-if (savedLogo) aplicarLogo(savedLogo);
-
-/* ═══════════════════════════════════════════
-   BACKUP E OUTROS
-═══════════════════════════════════════════ */
-window.fazerBackup = function() { openModal('modal-backup'); };
-
-window.downloadBackup = async function() {
-  toast('Gerando backup…', '');
-  try {
-    const notas = window._state.notas;
-    let hist = [];
-    try { hist = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]'); } catch {}
-    const backup = {
-      versao: '2.7', gerado_em: new Date().toLocaleString('pt-BR'),
-      gerado_em_iso: new Date().toISOString(), total_notas: notas.length,
-      total_historico: hist.length, notas: notas, historico: hist
-    };
-    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `backup-expedicao-${new Date().toISOString().slice(0,10)}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    toast(`Backup: ${notas.length} notas`, 'success');
-  } catch(e) { toast('Erro ao gerar backup: ' + e.message, 'error'); }
-};
-
-window.lerArquivoBackup = function(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const statusEl = document.getElementById('backup-import-status');
-  const previewEl = document.getElementById('backup-preview');
-  const previewContent = document.getElementById('backup-preview-content');
-  const restoreBtn = document.getElementById('btn-restore-backup');
-
-  statusEl.textContent = 'Lendo arquivo…';
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (!data.notas || !Array.isArray(data.notas)) { statusEl.textContent = 'Arquivo inválido.'; return; }
-      window._backupData = data;
-      statusEl.textContent = `Válido — ${data.notas.length} notas`;
-      const ativas = data.notas.filter(n => !n.arquivada && !n.entregue).length;
-      const entregues = data.notas.filter(n => n.entregue || n.arquivada).length;
-      const hist = data.historico ? data.historico.length : 0;
-      previewContent.innerHTML = `
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div><strong>Gerado:</strong> ${data.gerado_em || '—'}</div>
-          <div><strong>Versão:</strong> ${data.versao || '—'}</div>
-          <div><strong>Ativas:</strong> ${ativas}</div>
-          <div><strong>Arquivadas:</strong> ${entregues}</div>
-          <div><strong>Histórico:</strong> ${hist}</div>
-          <div><strong>Total:</strong> ${data.notas.length}</div>
-        </div>
-        <div style="margin-top:8px;color:var(--amber-dk);font-size:10px;font-weight:600">Adiciona apenas notas ATIVAS que não existem.</div>
-      `;
-      previewEl.style.display = 'block';
-      restoreBtn.style.display = 'inline-flex';
-    } catch {
-      statusEl.textContent = 'JSON inválido.';
-      previewEl.style.display = 'none';
-      restoreBtn.style.display = 'none';
-    }
-  };
-  reader.readAsText(file);
-};
-
-window.restaurarBackup = async function() {
-  const data = window._backupData;
-  if (!data || !data.notas) { toast('Nenhum backup carregado', 'warn'); return; }
-  const notasAtivas = data.notas.filter(n => !n.arquivada && !n.entregue);
-  if (!notasAtivas.length) { toast('Nenhuma nota ativa', 'warn'); return; }
-  if (!confirm(`Restaurar ${notasAtivas.length} nota(s)? Duplicatas serão ignoradas.`)) return;
-  let ok = 0, dup = 0, err = 0;
-  for (const nota of notasAtivas) {
-    const { id, ...dadosNota } = nota;
-    dadosNota.restaurado_em = new Date().toLocaleString('pt-BR');
-    const result = await addNota(dadosNota);
-    if (result.result === 'ok') ok++;
-    else if (result.result === 'dup') dup++;
-    else err++;
-  }
-  if (data.historico && data.historico.length) {
-    try {
-      let histAtual = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]');
-      const idsExist = new Set(histAtual.map(e => e.ts + '_' + e.numero_nf));
-      const novos = data.historico.filter(e => !idsExist.has(e.ts + '_' + e.numero_nf));
-      histAtual = [...histAtual, ...novos];
-      localStorage.setItem('nf_historico_v1', JSON.stringify(histAtual));
-    } catch {}
-  }
-  toast(`Restauração: ${ok} ok${dup ? ` · ${dup} dup` : ''}${err ? ` · ${err} err` : ''}`, ok > 0 ? 'success' : 'warn');
-  closeModal('modal-backup');
 };
 
 setTimeout(() => { try { updatePaletesBadge(); } catch(e) {} }, 500);
