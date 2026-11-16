@@ -367,7 +367,6 @@ a { color: inherit; text-decoration: none; }
    AÇÕES (FOOTER DO CARD)
 ═══════════════════════════════════════════ */
 .card-actions { display: flex; align-items: center; gap: 4px; row-gap: 6px; padding-top: 8px; border-top: 1px solid var(--border); flex-wrap: wrap; min-width: 0; }
-.card-actions > * { flex-shrink: 0; }
 .btn-action {
   display: inline-flex; align-items: center; justify-content: center; gap: 4px;
   font-size: 11px; font-weight: 600;
@@ -548,6 +547,83 @@ a { color: inherit; text-decoration: none; }
 .pal-table tbody tr:last-child td { border-bottom: none; }
 .pal-table tbody tr:hover td { background: var(--teal-lt); }
 .pal-qty-cell { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; background: var(--green-lt); border: 1.5px solid var(--green); color: var(--green-dk); font-weight: 800; font-family: var(--mono); font-size: 14px; padding: 3px 10px; border-radius: 6px; }
+
+/* ═══════════════════════════════════════════
+   V2.9 — CARDS COMPACTOS, MENU ⋯, IDADE, TOTAIS
+═══════════════════════════════════════════ */
+.col-total { font-size: 11px; font-weight: 600; color: var(--txt2); font-family: var(--mono); white-space: nowrap; }
+.col-total:empty { display: none; }
+
+.card { padding: 10px 12px; }
+.card-top { margin-bottom: 3px; }
+.card-cli { margin-bottom: 6px; font-size: 12.5px; }
+.card-meta { gap: 6px; margin-bottom: 8px; }
+.card-date { font-size: 11px; color: var(--txt2); }
+.card-age { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--surface2); color: var(--txt2); border: 1px solid var(--border); white-space: nowrap; }
+.card-age.warn { background: var(--amber-lt); color: var(--amber-dk); border-color: #FDE68A; }
+.card-age.late { background: var(--red-lt); color: var(--red); border-color: #fecaca; }
+
+.chip-paletes { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; padding: 3px 10px 3px 7px; min-height: 24px; border-radius: 99px; border: 1px dashed var(--border2); color: var(--txt2); background: transparent; transition: var(--transition); position: relative; z-index: 20; }
+.chip-paletes .chip-ico { width: 13px; height: 13px; display: inline-flex; flex-shrink: 0; pointer-events: none; }
+.chip-paletes span { pointer-events: none; }
+.chip-paletes:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-lt); }
+.chip-paletes.has { border-style: solid; background: var(--green-lt); border-color: #a7f3d0; color: var(--green-dk); }
+.chip-paletes.has:hover { background: #d1fae5; border-color: var(--green); }
+
+.card-obs-section { margin-bottom: 0; }
+.card-obs-display { margin-bottom: 8px; font-size: 12px; }
+.card-obs-placeholder { margin-bottom: 8px; padding: 6px 8px; font-size: 11.5px; }
+.card-obs-editor.open { margin-bottom: 8px; }
+
+.card-actions { gap: 6px; padding-top: 8px; margin-top: 2px; }
+.card-primary { display: flex; gap: 6px; flex: 1 1 100%; min-width: 0; }
+.card-primary .btn-action { flex: 1; min-height: 32px; padding: 6px 10px; font-size: 12px; border-radius: 8px; }
+
+
+.nav-arrows { margin-left: auto; border-radius: 8px; border-color: var(--border2); }
+.btn-nav-arrow { min-width: 34px; min-height: 32px; padding: 0; color: var(--txt2); }
+.btn-nav-arrow svg { width: 15px; height: 15px; }
+.btn-nav-arrow:hover:not(:disabled) { background: var(--blue); color: #fff; }
+.btn-nav-arrow:disabled { opacity: .35; background: var(--surface2); cursor: not-allowed; }
+
+.card.card-arrived::after { content: ''; position: absolute; inset: -2px; border-radius: inherit; pointer-events: none; box-shadow: 0 0 0 3px var(--accent); opacity: 0; animation: arrivedRing 1.4s ease-out; }
+@keyframes arrivedRing { 0% { opacity: .85; } 100% { opacity: 0; } }
+
+
+/* ═══ Botões de ação no rodapé (32px) ═══ */
+.btn-action.btn-icon-only { width: 32px; height: 32px; padding: 0; border-radius: 8px; }
+.btn-action.btn-icon-only svg { width: 16px; height: 16px; }
+.btn-action.fora-estado-on { color: #0369a1; background: #e0f2fe; border-color: #7dd3fc; }
+
+/* ═══ Tooltip rápido ═══ */
+.ui-tip { position: fixed; z-index: 2000; max-width: 240px; background: #111827; color: #fff; font-size: 11.5px; font-weight: 600; line-height: 1.35; padding: 6px 10px; border-radius: 7px; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity .12s; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+.ui-tip.show { opacity: 1; visibility: visible; }
+
+/* ═══ Seleção em lote (coluna Retiradas) ═══ */
+.col-sel-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; padding: 4px 9px; min-height: 26px; border-radius: 7px; border: 1px solid var(--border2); background: var(--surface); color: var(--txt2); transition: var(--transition); }
+.col-sel-btn:hover { background: var(--surface2); color: var(--txt); }
+.col-sel-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+.col-sel-btn svg { width: 13px; height: 13px; pointer-events: none; }
+.sel-bar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 8px 10px; background: var(--blue-lt); border-bottom: 1px solid #bfdbfe; flex-shrink: 0; }
+.sel-bar[hidden] { display: none; }
+.sel-count { font-size: 11.5px; font-weight: 700; color: var(--blue-dk); margin-right: auto; }
+.sel-btn { font-size: 11.5px; font-weight: 700; padding: 5px 10px; min-height: 28px; border-radius: 7px; border: 1px solid var(--border2); background: var(--surface); color: var(--txt2); }
+.sel-btn:hover:not(:disabled) { background: var(--surface2); }
+.sel-btn.danger { background: var(--red); border-color: var(--red); color: #fff; }
+.sel-btn.danger:hover:not(:disabled) { background: #b91c1c; }
+.sel-btn:disabled { opacity: .45; cursor: not-allowed; }
+.card-top-l { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.card-sel-box { display: none; }
+.card.card-selectable { cursor: pointer; }
+.card-selectable .card-sel-box { display: inline-flex; width: 18px; height: 18px; border: 2px solid var(--border2); border-radius: 5px; background: var(--surface); align-items: center; justify-content: center; flex-shrink: 0; }
+.card-selectable.card-selected .card-sel-box { background: var(--blue); border-color: var(--blue); }
+.card-selectable.card-selected .card-sel-box::after { content: ''; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-1px, -1px); }
+.card.card-selectable.card-selected { background: var(--blue-lt); border-color: var(--blue); box-shadow: 0 0 0 2px rgba(37,99,235,.2); }
+.sel-mode #col-retirada .card button, .sel-mode #col-retirada .card .card-obs-display, .sel-mode #col-retirada .card .card-obs-placeholder, .sel-mode #col-retirada .card .nav-arrows { pointer-events: none; }
+.card .card-stamp { top: -8px; right: 14px; }
+.col-title { min-width: max-content; }
+@media (max-width: 1400px) { .col-sel-btn .lbl { display: none; } .col-sel-btn { padding: 4px 7px; } }
+.sel-mode #col-retirada .card .card-actions, .sel-mode #col-retirada .card .card-obs-section, .sel-mode #col-retirada .chip-paletes { opacity: .4; }
 </style>
 </head>
 <body>
@@ -667,7 +743,7 @@ a { color: inherit; text-decoration: none; }
 
       <div class="topbar-creator">
         <span class="topbar-creator-name">Leandro NP</span>
-        <span class="topbar-creator-version">Versão 2.8</span>
+        <span class="topbar-creator-version">Versão 2.10</span>
       </div>
 
       <button class="btn-fullscreen" onclick="toggleFullScreen()" title="Tela Cheia">
@@ -689,6 +765,7 @@ a { color: inherit; text-decoration: none; }
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Lançadas
         </span>
+        <span class="col-total" id="tot-lancada" title="Valor total das notas nesta coluna"></span>
         <span class="col-count" id="cnt-lancada">0</span>
       </div>
       <div class="drop-indicator">Arraste para cá</div>
@@ -702,6 +779,7 @@ a { color: inherit; text-decoration: none; }
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           Separado
         </span>
+        <span class="col-total" id="tot-aguardando" title="Valor total das notas nesta coluna"></span>
         <span class="col-count" id="cnt-aguardando">0</span>
       </div>
       <div class="drop-indicator">Arraste para cá</div>
@@ -715,6 +793,7 @@ a { color: inherit; text-decoration: none; }
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
           Coleta Solicitada
         </span>
+        <span class="col-total" id="tot-solicitada" title="Valor total das notas nesta coluna"></span>
         <span class="col-count" id="cnt-solicitada">0</span>
       </div>
       <div class="drop-indicator">Arraste para cá</div>
@@ -728,7 +807,15 @@ a { color: inherit; text-decoration: none; }
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           Retiradas
         </span>
+        <span class="col-total" id="tot-retirada" title="Valor total das notas nesta coluna"></span>
         <span class="col-count" id="cnt-retirada">0</span>
+        <button class="col-sel-btn" id="btn-sel-mode" onclick="toggleSelMode()" data-tip="Selecionar várias notas para excluir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><polyline points="8 12 11 15 16 9"/></svg><span class="lbl">Selecionar</span></button>
+      </div>
+      <div class="sel-bar" id="sel-bar" hidden>
+        <button class="sel-btn" onclick="selToggleAll()"><span id="sel-all-label">Selecionar todas</span></button>
+        <span class="sel-count" id="sel-count">0 selecionadas</span>
+        <button class="sel-btn danger" id="sel-del" onclick="openDelSelModal()" disabled>Excluir<span class="n"></span></button>
+        <button class="sel-btn" onclick="toggleSelMode(false)">Cancelar</button>
       </div>
       <div class="drop-indicator">Arraste para cá</div>
       <div class="col-body" id="body-retirada"></div>
@@ -849,7 +936,7 @@ a { color: inherit; text-decoration: none; }
 <!-- MODAL: DELETE -->
 <div class="modal-backdrop" id="modal-del">
   <div class="modal">
-    <div class="modal-title">Excluir nota</div>
+    <div class="modal-title" id="del-title">Excluir nota</div>
     <div class="modal-sub" id="del-subtitle">Tem certeza que deseja excluir esta nota fiscal? Esta ação não pode ser desfeita.</div>
     <div class="modal-footer">
       <button class="btn-modal cancel" onclick="closeModal('modal-del')">Cancelar</button>
@@ -1278,7 +1365,7 @@ window.marcarPaletesDevolvidos = async function(id) {
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
-window._deleteNota = async function(id) {
+window._deleteNota = async function(id, silent = false) {
   const nota = window._state.notas.find(n => n.id === id);
   if (nota) {
     _registrarEventoHistorico({
@@ -1287,8 +1374,8 @@ window._deleteNota = async function(id) {
       fora_estado: nota.fora_estado || false, data_evento: new Date().toLocaleString('pt-BR'), ts: Date.now()
     });
   }
-  try { await deleteDoc(doc(window._state.db, 'notas', id)); toast('Nota excluída', 'warn'); }
-  catch(e) { toast('Erro ao excluir: ' + e.message, 'error'); }
+  try { await deleteDoc(doc(window._state.db, 'notas', id)); if (!silent) toast('Nota excluída', 'warn'); return true; }
+  catch(e) { toast('Erro ao excluir: ' + e.message, 'error'); return false; }
 };
 
 function _registrarEventoHistorico(ev) {
@@ -1611,12 +1698,33 @@ window.saveObsInline = async function(id) {
 };
 
 let _delId = null;
+let _delIds = [];
 window.openDelModal = (id, numero_nf) => {
-  _delId = id;
+  _delId = id; _delIds = [];
+  document.getElementById('del-title').textContent = 'Excluir nota';
   document.getElementById('del-subtitle').textContent = `Tem certeza que deseja excluir a NF ${numero_nf}? Esta ação não pode ser desfeita.`;
   openModal('modal-del');
 };
+window.openDelSelModal = () => {
+  const ids = [...window._selIds];
+  if (!ids.length) return;
+  _delIds = ids; _delId = null;
+  const nfs = ids.map(id => (notaById(id) || {}).numero_nf).filter(Boolean);
+  const lista = nfs.slice(0, 8).join(', ') + (nfs.length > 8 ? ` e mais ${nfs.length - 8}` : '');
+  document.getElementById('del-title').textContent = ids.length === 1 ? 'Excluir nota selecionada' : `Excluir ${ids.length} notas selecionadas`;
+  document.getElementById('del-subtitle').textContent = `Tem certeza que deseja excluir as NFs ${lista}? Esta ação não pode ser desfeita.`;
+  openModal('modal-del');
+};
 window.confirmDelete = async () => {
+  if (_delIds.length) {
+    const ids = [..._delIds]; _delIds = [];
+    closeModal('modal-del');
+    let ok = 0;
+    for (const id of ids) { if (await window._deleteNota(id, true)) ok++; }
+    if (ok) toast(ok === 1 ? '1 nota excluída' : `${ok} notas excluídas`, 'warn');
+    toggleSelMode(false);
+    return;
+  }
   await window._deleteNota(_delId);
   closeModal('modal-del');
 };
@@ -1757,19 +1865,34 @@ const renderAll = window.renderAll = function() {
   if (q) notas = notas.filter(n => (n.numero_nf||'').toLowerCase().includes(q) || (n.cliente||'').toLowerCase().includes(q));
 
   STATUS_ORDER.forEach(st => {
-    const mine = notas.filter(n=>n.status===st);
+    const mine = notas.filter(n=>n.status===st)
+      .sort((a,b) => (parseInt(a.numero_nf)||0) - (parseInt(b.numero_nf)||0));
     const body = document.getElementById('body-'+st);
     document.getElementById('cnt-'+st).textContent = mine.length;
+    const tot = mine.reduce((sum,n) => sum + (parseFloat(n.valor)||0), 0);
+    const totEl = document.getElementById('tot-'+st);
+    if (totEl) totEl.textContent = tot > 0 ? fmtVal(tot) : '';
 
     const existing = {};
     body.querySelectorAll('.card[data-id]').forEach(el => existing[el.dataset.id]=el);
     const idsNow = new Set(mine.map(n=>n.id));
     Object.keys(existing).forEach(id => { if (!idsNow.has(id)) existing[id].remove(); });
 
+    if (mine.length) body.querySelector('.empty')?.remove();
+    let cursor = body.firstElementChild;
     mine.forEach(nota => {
       let card = existing[nota.id];
       if (card) { updateCardInPlace(card, nota); }
-      else { card = buildCard(nota); body.appendChild(card); }
+      else {
+        card = buildCard(nota);
+        if (window._boardReady) {            // chegou de outra coluna / nota nova: destaca
+          card.classList.add('card-arrived');
+          setTimeout(() => card.classList.remove('card-arrived'), 1500);
+        }
+      }
+      // mantém a ordem por número da NF sem mexer em cards que já estão no lugar
+      if (card === cursor) cursor = cursor.nextElementSibling;
+      else body.insertBefore(card, cursor);
     });
 
     if (!mine.length) {
@@ -1779,8 +1902,15 @@ const renderAll = window.renderAll = function() {
         el.innerHTML = '<div class="empty-icon">—</div><div>Nenhuma nota</div>';
         body.appendChild(el);
       }
-    } else { body.querySelector('.empty')?.remove(); }
+    }
   });
+  window._boardReady = true;
+  updateAges();
+  if (window._selMode) {
+    const vis = new Set([...document.querySelectorAll('#body-retirada .card[data-id]')].map(c => c.dataset.id));
+    [...window._selIds].forEach(id => { if (!vis.has(id)) window._selIds.delete(id); });
+    updateSelBar();
+  }
 };
 
 function fmtVal(v) {
@@ -1799,21 +1929,21 @@ function buildCard(nota) {
     + (isEntregue ? ' card-entregue' : '')
     + (hasObs ? ' card-has-obs' : '')
     + (foraEstado ? ' card-fora-estado' : '')
-    + (emAtencao ? ' card-atencao' : '');
+    + (emAtencao ? ' card-atencao' : '') + selClass(nota);
 
   card.dataset.id = nota.id;
   card.style.setProperty('--accent', foraEstado ? '#0ea5e9' : (ACCENT[nota.status] || ACCENT.lancada));
   const locked = isEntregue && nota.status === 'retirada';
   card.draggable = !locked;
   card.dataset.locked = locked ? '1' : '';
-  card._sig = JSON.stringify(nota) + (_countdowns[nota.id] ? '|cd' : '');
+  card._sig = cardSig(nota);
   card.innerHTML = cardHTML(nota);
   return card;
 }
 
 function updateCardInPlace(card, nota) {
   // Não recria o card se nada mudou (evita destruir botões entre mousedown e mouseup)
-  const sig = JSON.stringify(nota) + (_countdowns[nota.id] ? '|cd' : '');
+  const sig = cardSig(nota);
   if (card._sig === sig) return;
   // Usuário está pressionando algo dentro do card: adia a atualização
   if (card.matches(':active')) { window._pendingRender = true; return; }
@@ -1832,7 +1962,7 @@ function updateCardInPlace(card, nota) {
     + (isEntregue ? ' card-entregue' : '')
     + (hasObs ? ' card-has-obs' : '')
     + (foraEstado ? ' card-fora-estado' : '')
-    + (emAtencao ? ' card-atencao' : '');
+    + (emAtencao ? ' card-atencao' : '') + selClass(nota);
 
   card.draggable = !locked;
   card.dataset.locked = locked ? '1' : '';
@@ -1862,6 +1992,137 @@ function updateCardInPlace(card, nota) {
   }
 }
 
+
+/* ═══════════════════════════════════════════
+   IDADE DA NOTA NA COLUNA
+═══════════════════════════════════════════ */
+const AGE_WARN_H = 24;   // a partir de 24h fica amarelo
+const AGE_LATE_H = 72;   // a partir de 72h fica vermelho
+function parseBR(str) {
+  const m = String(str || '').match(/(\d{2})\/(\d{2})\/(\d{4})[,\s]+(\d{2}):(\d{2})/);
+  return m ? new Date(+m[3], +m[2]-1, +m[1], +m[4], +m[5]).getTime() : null;
+}
+function fmtAge(ms) {
+  const min = Math.floor(ms / 60000);
+  if (min < 1) return 'agora';
+  if (min < 60) return `há ${min} min`;
+  const h = Math.floor(min / 60);
+  if (h < 24) return `há ${h} h`;
+  const d = Math.floor(h / 24);
+  return `há ${d} ${d === 1 ? 'dia' : 'dias'}`;
+}
+function ageClass(ms) { const h = ms / 3600000; return h >= AGE_LATE_H ? ' late' : (h >= AGE_WARN_H ? ' warn' : ''); }
+function notaTs(nota) {
+  if (nota.status === 'retirada' && nota.ts_retirada) return nota.ts_retirada;
+  return parseBR(nota.data_status) || parseBR(nota.data_lancamento) || null;
+}
+function updateAges() {
+  document.querySelectorAll('.card-age[data-ts]').forEach(el => {
+    const ms = Math.max(0, Date.now() - Number(el.dataset.ts));
+    el.textContent = fmtAge(ms);
+    el.className = 'card-age' + ageClass(ms);
+  });
+}
+setInterval(updateAges, 60000);
+
+/* ═══════════════════════════════════════════
+   ÍCONES DOS BOTÕES
+═══════════════════════════════════════════ */
+const ICO = {
+  note:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>',
+  pin:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+  bell:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
+  trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>'
+};
+/* ═══════════════════════════════════════════
+   TOOLTIP RÁPIDO (aparece ao passar o mouse; não é cortado pelas colunas)
+═══════════════════════════════════════════ */
+const _tipEl = document.createElement('div');
+_tipEl.className = 'ui-tip';
+document.body.appendChild(_tipEl);
+let _tipTarget = null, _tipTimer = null;
+function hideTip() { clearTimeout(_tipTimer); _tipEl.classList.remove('show'); _tipTarget = null; }
+document.addEventListener('mouseover', e => {
+  const el = e.target.closest ? e.target.closest('[data-tip], .card [title]') : null;
+  if (!el) { if (_tipTarget) hideTip(); return; }
+  if (el === _tipTarget) return;
+  if (el.hasAttribute('title')) { el.dataset.tip = el.getAttribute('title'); el.removeAttribute('title'); }
+  const text = el.dataset.tip;
+  hideTip();
+  if (!text) return;
+  _tipTarget = el;
+  _tipTimer = setTimeout(() => {
+    if (!el.isConnected) { hideTip(); return; }
+    _tipEl.textContent = text;
+    const r = el.getBoundingClientRect(), w = _tipEl.offsetWidth, h = _tipEl.offsetHeight;
+    let left = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), window.innerWidth - w - 8);
+    let top = r.top - h - 8;
+    if (top < 8) top = r.bottom + 8;
+    _tipEl.style.left = left + 'px';
+    _tipEl.style.top = top + 'px';
+    _tipEl.classList.add('show');
+  }, 120);
+});
+document.addEventListener('pointerdown', hideTip, true);
+document.addEventListener('mouseleave', hideTip);
+window.addEventListener('scroll', hideTip, true);
+setInterval(() => { if (_tipTarget && !_tipTarget.isConnected) hideTip(); }, 300);
+
+/* ═══════════════════════════════════════════
+   SELEÇÃO EM LOTE (coluna Retiradas)
+═══════════════════════════════════════════ */
+window._selMode = false;
+window._selIds = new Set();
+const notaById = id => window._state.notas.find(n => n.id === id);
+function selActive(nota) { return window._selMode && nota.status === 'retirada'; }
+function selClass(nota) { return selActive(nota) ? ' card-selectable' + (window._selIds.has(nota.id) ? ' card-selected' : '') : ''; }
+function cardSig(nota) {
+  return JSON.stringify(nota) + (_countdowns[nota.id] ? '|cd' : '') + (selActive(nota) ? '|sm' + (window._selIds.has(nota.id) ? 1 : 0) : '');
+}
+function updateSelBar() {
+  const n = window._selIds.size;
+  const cards = [...document.querySelectorAll('#body-retirada .card[data-id]')];
+  const all = cards.length > 0 && cards.every(c => window._selIds.has(c.dataset.id));
+  document.getElementById('sel-count').textContent = n === 1 ? '1 selecionada' : n + ' selecionadas';
+  const del = document.getElementById('sel-del');
+  del.disabled = n === 0;
+  del.querySelector('.n').textContent = n ? ' (' + n + ')' : '';
+  document.getElementById('sel-all-label').textContent = all ? 'Desmarcar todas' : 'Selecionar todas';
+}
+function setCardSelected(card, on) {
+  if (on) window._selIds.add(card.dataset.id); else window._selIds.delete(card.dataset.id);
+  card.classList.toggle('card-selected', on);
+  const nota = notaById(card.dataset.id);
+  if (nota) card._sig = cardSig(nota);
+}
+window.toggleSelMode = function(force) {
+  const on = typeof force === 'boolean' ? force : !window._selMode;
+  window._selMode = on;
+  window._selIds.clear();
+  document.body.classList.toggle('sel-mode', on);
+  document.getElementById('sel-bar').hidden = !on;
+  document.getElementById('btn-sel-mode').classList.toggle('active', on);
+  document.querySelectorAll('.card-obs-editor.open').forEach(el => closeObsInline(el.dataset.id, true));
+  renderAll();
+  updateSelBar();
+};
+window.selToggleAll = function() {
+  const cards = [...document.querySelectorAll('#body-retirada .card[data-id]')];
+  const all = cards.length > 0 && cards.every(c => window._selIds.has(c.dataset.id));
+  cards.forEach(c => setCardSelected(c, !all));
+  updateSelBar();
+};
+document.getElementById('board').addEventListener('click', e => {
+  if (!window._selMode) return;
+  const card = e.target.closest('#col-retirada .card[data-id]');
+  if (!card) return;
+  setCardSelected(card, !window._selIds.has(card.dataset.id));
+  updateSelBar();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && window._selMode && !document.querySelector('.modal-backdrop.open')) toggleSelMode(false);
+});
+
 function cardHTML(nota) {
   const { id, numero_nf, cliente, valor, data_emissao, status, observacao, entregue, data_entrega, tentativas_entrega, fora_estado, atencao, paletes_qty } = nota;
   const hasObs = !!(observacao && observacao.trim());
@@ -1877,39 +2138,25 @@ function cardHTML(nota) {
   const tentativaBadge = (tentativas > 0 && !entregue) ? `<span class="card-tentativa-badge">${tentativas}ª tentativa</span>` : '';
 
   const entregarBtn = (status === 'retirada' && !entregue)
-    ? `<button class="btn-action entregue" onclick="event.stopPropagation();markEntregue('${id}')" title="Marcar como Entregue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Entregue</button>` : '';
+    ? `<button class="btn-action entregue" onclick="event.stopPropagation();markEntregue('${id}')" data-tip="Marcar como Entregue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Entregue</button>` : '';
 
   const devolverBtn = (status === 'retirada')
-    ? `<button class="btn-action devolver" onclick="event.stopPropagation();openDevolverModal('${id}','${numero_nf}')" title="Registrar Devolução"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg> Devolver</button>` : '';
-
-  const foraEstadoBtn = foraEstado
-    ? `<button class="btn-action btn-icon-only fora-estado-on" onclick="event.stopPropagation();_toggleForaEstado('${id}')" title="Remover marcação de Transportadora"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></button>`
-    : `<button class="btn-action btn-icon-only" style="color:var(--txt3)" onclick="event.stopPropagation();_toggleForaEstado('${id}')" title="Marcar como Transportadora"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></button>`;
-
-  const atencaoBtn = emAtencao
-    ? `<button class="btn-action btn-icon-only atencao atencao-active" onclick="event.stopPropagation();_toggleAtencao('${id}')" title="Desativar Atenção"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>`
-    : `<button class="btn-action btn-icon-only" style="color:var(--txt3)" onclick="event.stopPropagation();_toggleAtencao('${id}')" title="Chamar Atenção"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>`;
-
-  const deleteBtn = `<button class="btn-action btn-icon-only del" onclick="event.stopPropagation();openDelModal('${id}','${numero_nf}')" title="Excluir Nota"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>`;
+    ? `<button class="btn-action devolver" onclick="event.stopPropagation();openDevolverModal('${id}','${numero_nf}')" data-tip="Registrar Devolução"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg> Devolver</button>` : '';
 
   const entreguneDateBadge = (entregue && data_entrega) ? `<span class="card-date entregue-date"><svg style="width:10px;height:10px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${data_entrega}</span>` : '';
 
   const qty = paletes_qty || 0;
-  const paletesHTML = `
-    <div class="paletes-section ${qty > 0 ? 'has-paletes' : ''}">
-      <span class="paletes-icon-wrap">${SVG_PALLET_SMALL}</span>
-      <span class="paletes-label">PALETES</span>
-      <span class="paletes-value">${qty}</span>
-      <button class="btn-paletes-open" onclick="event.stopPropagation();openPaletesModal('${id}')" title="${qty > 0 ? 'Alterar quantidade' : 'Definir quantidade'}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      </button>
-    </div>`;
+  const paletesChip = `<button class="chip-paletes ${qty > 0 ? 'has' : ''}" onclick="event.stopPropagation();openPaletesModal('${id}')" data-tip="${qty > 0 ? 'Alterar quantidade de paletes' : 'Definir quantidade de paletes'}"><span class="chip-ico">${SVG_PALLET_SMALL}</span><span>${qty > 0 ? qty + (qty === 1 ? ' palete' : ' paletes') : 'Paletes'}</span></button>`;
+
+  const ts = notaTs(nota);
+  const ageChip = (!entregue && ts)
+    ? `<span class="card-age${ageClass(Date.now() - ts)}" data-ts="${ts}" data-tip="Nesta coluna desde ${data_status_txt(nota)}">${fmtAge(Math.max(0, Date.now() - ts))}</span>` : '';
 
   const obsSection = `
     <div class="card-obs-section">
       ${hasObs
-        ? `<div class="card-obs-display" id="obs-display-${id}" onclick="event.stopPropagation();openObsInline('${id}')">${obsDisplay}</div>`
-        : `<div class="card-obs-placeholder" id="obs-display-${id}" onclick="event.stopPropagation();openObsInline('${id}')">+ Adicionar observação</div>`
+        ? `<div class="card-obs-display" id="obs-display-${id}" onclick="event.stopPropagation();openObsInline('${id}')" data-tip="Clique para editar a observação">${obsDisplay}</div>`
+        : `<div class="card-obs-placeholder" id="obs-display-${id}" onclick="event.stopPropagation();openObsInline('${id}')" data-tip="Clique para adicionar uma observação">+ Adicionar observação</div>`
       }
       <div class="card-obs-editor" id="obs-editor-${id}" data-id="${id}">
         <textarea class="card-obs-textarea" placeholder="Digite a observação…">${obsEscaped}</textarea>
@@ -1924,42 +2171,49 @@ function cardHTML(nota) {
   const isLast = status === 'retirada';
   const navArrowsHTML = `
     <div class="nav-arrows">
-      <button class="btn-nav-arrow" onclick="event.stopPropagation(); moverCard('${id}', -1)" ${isFirst ? 'disabled' : ''} title="Mover para a coluna anterior">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      <button class="btn-nav-arrow" onclick="event.stopPropagation(); moverCard('${id}', -1)" ${isFirst ? 'disabled' : ''} data-tip="Mover para a coluna anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
-      <button class="btn-nav-arrow" onclick="event.stopPropagation(); moverCard('${id}', 1)" ${isLast ? 'disabled' : ''} title="Mover para a próxima coluna">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      <button class="btn-nav-arrow" onclick="event.stopPropagation(); moverCard('${id}', 1)" ${isLast ? 'disabled' : ''} data-tip="Mover para a próxima coluna">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
-    </div>
-  `;
+    </div>`;
+  const foraEstadoBtn = `<button class="btn-action btn-icon-only ${foraEstado ? 'fora-estado-on' : ''}" onclick="event.stopPropagation();_toggleForaEstado('${id}')" data-tip="${foraEstado ? 'Remover marcação de Transportadora' : 'Marcar como Transportadora'}">${ICO.pin}</button>`;
+  const atencaoBtn = `<button class="btn-action btn-icon-only ${emAtencao ? 'atencao atencao-active' : ''}" onclick="event.stopPropagation();_toggleAtencao('${id}')" data-tip="${emAtencao ? 'Desativar Atenção' : 'Chamar Atenção'}">${ICO.bell}</button>`;
+  const deleteBtn = `<button class="btn-action btn-icon-only del" onclick="event.stopPropagation();openDelModal('${id}','${numero_nf}')" data-tip="Excluir Nota">${ICO.trash}</button>`;
+  const selBox = selActive(nota) ? '<span class="card-sel-box"></span>' : '';
 
   let dataExibicao = data_emissao || '';
   if (dataExibicao.match(/^\d{4}\/\d{2}\/\d{2}$/)) {
     dataExibicao = dataExibicao.split('/').reverse().join('/');
   }
+  const primaryHTML = (entregarBtn || devolverBtn) ? `<div class="card-primary">${entregarBtn}${devolverBtn}</div>` : '';
 
   return `
     ${stamp}
     <div class="card-top">
-      <span class="card-nf">NF ${numero_nf}</span>
+      <span class="card-top-l">${selBox}<span class="card-nf">NF ${numero_nf}</span></span>
       <span class="card-valor ${parseFloat(valor)===0?'zero':''}">${fmtVal(valor)}</span>
     </div>
     <div class="card-cli" title="${cliente||''}">${cli}</div>
     <div class="card-meta">
-      ${dataExibicao ? `<span class="card-date">${dataExibicao}</span>` : ''}
+      ${dataExibicao ? `<span class="card-date" data-tip="Data de emissão da nota">${dataExibicao}</span>` : ''}
+      ${ageChip}
       ${entreguneDateBadge}
       ${tentativaBadge}
       ${foraEstadoBadge}
+      ${paletesChip}
     </div>
-    ${paletesHTML}
     ${obsSection}
     <div class="card-actions">
-      ${entregarBtn}${devolverBtn}
-      ${foraEstadoBtn}
-      ${atencaoBtn}
+      ${primaryHTML}
+      ${foraEstadoBtn}${atencaoBtn}
       ${navArrowsHTML}
       ${deleteBtn}
     </div>`;
+}
+function data_status_txt(nota) {
+  return (nota.status === 'retirada' && nota.ts_retirada) ? new Date(nota.ts_retirada).toLocaleString('pt-BR') : (nota.data_status || nota.data_lancamento || '');
 }
 
 /* ═══════════════════════════════════════════
@@ -1968,7 +2222,7 @@ function cardHTML(nota) {
 let _dragId = null, _dragStatus = null;
 document.getElementById('board').addEventListener('dragstart', (e) => {
   const card = e.target.closest('.card');
-  if (!card || card.classList.contains('card-entregue')) { e.preventDefault(); return; }
+  if (!card || card.classList.contains('card-entregue') || window._selMode) { e.preventDefault(); return; }
   if (e.target.closest('button') || e.target.closest('input') || e.target.closest('textarea') || e.target.closest('a') || e.target.closest('label')) { e.preventDefault(); return; }
   _dragId = card.dataset.id;
   _dragStatus = card.closest('.column').dataset.status;
