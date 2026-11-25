@@ -642,6 +642,22 @@ a { color: inherit; text-decoration: none; }
 .hist-dot.t-entregue { background: #059669; } .hist-dot.t-devolucao { background: #d97706; }
 .hist-dot.t-atencao { background: #ec4899; } .hist-dot.t-transportadora { background: #0ea5e9; }
 .hist-dot.t-obs { background: #64748b; } .hist-dot.t-paletes { background: #0d9488; }
+/* ═══ ATENÇÃO — destaque forte ═══ */
+.card.card-atencao { --accent: #dc2626 !important; background: #fff5f5; border-color: #dc2626; border-left-color: #dc2626; animation: atencaoPulse 1.3s ease-in-out infinite; }
+@keyframes atencaoPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0), 0 4px 14px rgba(220, 38, 38, .18); }
+  50%      { box-shadow: 0 0 0 5px rgba(220, 38, 38, .30), 0 4px 14px rgba(220, 38, 38, .28); }
+}
+.card-alert-banner { display: flex; align-items: center; gap: 7px; margin: -10px -12px 8px; padding: 5px 12px; background: linear-gradient(90deg, #dc2626, #e11d48); color: #fff; font-size: 11px; font-weight: 800; letter-spacing: .12em; border-radius: 7px 7px 0 0; }
+.card-alert-banner .alert-ico { display: inline-flex; width: 14px; height: 14px; transform-origin: 50% 10%; animation: bellShake 1.3s ease-in-out infinite; }
+.card-alert-banner .alert-ico svg { width: 100%; height: 100%; }
+@keyframes bellShake { 0%, 55%, 100% { transform: rotate(0); } 62% { transform: rotate(16deg); } 70% { transform: rotate(-14deg); } 78% { transform: rotate(10deg); } 86% { transform: rotate(-6deg); } }
+.btn-action.atencao-active { background: #dc2626 !important; border-color: #b91c1c !important; box-shadow: 0 0 0 3px rgba(220, 38, 38, .25); }
+.col-alert { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 800; color: #fff; background: #dc2626; padding: 2px 8px 2px 6px; border-radius: 99px; flex-shrink: 0; animation: alertBadge 1.3s ease-in-out infinite; }
+.col-alert:empty { display: none; }
+.col-alert svg { width: 12px; height: 12px; }
+@keyframes alertBadge { 0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); } 50% { box-shadow: 0 0 0 4px rgba(220, 38, 38, .25); } }
+@media (prefers-reduced-motion: reduce) { .card.card-atencao, .card-alert-banner .alert-ico, .col-alert { animation: none; } }
 .sel-mode #col-retirada .card .card-actions, .sel-mode #col-retirada .card .card-obs-section, .sel-mode #col-retirada .chip-paletes { opacity: .4; }
 </style>
 </head>
@@ -762,7 +778,7 @@ a { color: inherit; text-decoration: none; }
 
       <div class="topbar-creator">
         <span class="topbar-creator-name">Leandro NP</span>
-        <span class="topbar-creator-version">Versão 2.11</span>
+        <span class="topbar-creator-version">Versão 2.12</span>
       </div>
 
       <button class="btn-fullscreen" onclick="toggleFullScreen()" title="Tela Cheia">
@@ -784,6 +800,7 @@ a { color: inherit; text-decoration: none; }
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Lançadas
         </span>
+        <span class="col-alert" id="alert-lancada"></span>
         <span class="col-total" id="tot-lancada" title="Valor total das notas nesta coluna"></span>
         <span class="col-count" id="cnt-lancada">0</span>
       </div>
@@ -798,6 +815,7 @@ a { color: inherit; text-decoration: none; }
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           Separado
         </span>
+        <span class="col-alert" id="alert-aguardando"></span>
         <span class="col-total" id="tot-aguardando" title="Valor total das notas nesta coluna"></span>
         <span class="col-count" id="cnt-aguardando">0</span>
       </div>
@@ -812,6 +830,7 @@ a { color: inherit; text-decoration: none; }
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
           Coleta Solicitada
         </span>
+        <span class="col-alert" id="alert-solicitada"></span>
         <span class="col-total" id="tot-solicitada" title="Valor total das notas nesta coluna"></span>
         <span class="col-count" id="cnt-solicitada">0</span>
       </div>
@@ -826,6 +845,7 @@ a { color: inherit; text-decoration: none; }
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           Retiradas
         </span>
+        <span class="col-alert" id="alert-retirada"></span>
         <span class="col-total" id="tot-retirada" title="Valor total das notas nesta coluna"></span>
         <span class="col-count" id="cnt-retirada">0</span>
         <button class="col-sel-btn" id="btn-sel-mode" onclick="toggleSelMode()" data-tip="Selecionar várias notas para excluir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><polyline points="8 12 11 15 16 9"/></svg><span class="lbl">Selecionar</span></button>
@@ -1917,10 +1937,16 @@ const renderAll = window.renderAll = function() {
 
   STATUS_ORDER.forEach(st => {
     const mine = notas.filter(n=>n.status===st)
-      .sort((a,b) => (parseInt(a.numero_nf)||0) - (parseInt(b.numero_nf)||0));
+      .sort((a,b) => ((b.atencao && !b.entregue) - (a.atencao && !a.entregue)) || ((parseInt(a.numero_nf)||0) - (parseInt(b.numero_nf)||0)));
     const body = document.getElementById('body-'+st);
     document.getElementById('cnt-'+st).textContent = mine.length;
     const tot = mine.reduce((sum,n) => sum + (parseFloat(n.valor)||0), 0);
+    const nAt = mine.filter(n => n.atencao && !n.entregue).length;
+    const alEl = document.getElementById('alert-'+st);
+    if (alEl) {
+      alEl.innerHTML = nAt ? ICO.bell + '<b>' + nAt + '</b>' : '';
+      alEl.dataset.tip = nAt === 1 ? '1 nota em atenção nesta coluna' : nAt + ' notas em atenção nesta coluna';
+    }
     const totEl = document.getElementById('tot-'+st);
     if (totEl) totEl.textContent = tot > 0 ? fmtVal(tot) : '';
 
@@ -1981,7 +2007,7 @@ function buildCard(nota) {
     + (isEntregue ? ' card-entregue' : '')
     + (hasObs ? ' card-has-obs' : '')
     + (foraEstado ? ' card-fora-estado' : '')
-    + (emAtencao ? ' card-atencao' : '') + selClass(nota);
+    + (emAtencao && !nota.entregue ? ' card-atencao' : '') + selClass(nota);
 
   card.dataset.id = nota.id;
   card.style.setProperty('--accent', foraEstado ? '#0ea5e9' : (ACCENT[nota.status] || ACCENT.lancada));
@@ -2014,7 +2040,7 @@ function updateCardInPlace(card, nota) {
     + (isEntregue ? ' card-entregue' : '')
     + (hasObs ? ' card-has-obs' : '')
     + (foraEstado ? ' card-fora-estado' : '')
-    + (emAtencao ? ' card-atencao' : '') + selClass(nota);
+    + (emAtencao && !nota.entregue ? ' card-atencao' : '') + selClass(nota);
 
   card.draggable = !locked;
   card.dataset.locked = locked ? '1' : '';
@@ -2234,6 +2260,7 @@ function cardHTML(nota) {
   const obsEscaped = (observacao||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const obsDisplay = (observacao||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
 
+  const alertBanner = (emAtencao && !entregue) ? `<div class="card-alert-banner"><span class="alert-ico">${ICO.bell}</span>ATENÇÃO</div>` : '';
   const stamp = entregue ? `<div class="card-stamp">ENTREGUE</div>` : '';
   const foraEstadoBadge = foraEstado ? `<span class="card-fora-badge">Transportadora</span>` : '';
   const tentativaBadge = (tentativas > 0 && !entregue) ? `<span class="card-tentativa-badge">${tentativas}ª tentativa</span>` : '';
@@ -2294,6 +2321,7 @@ function cardHTML(nota) {
 
   return `
     ${stamp}
+    ${alertBanner}
     <div class="card-top">
       <span class="card-top-l">${selBox}<span class="card-nf">NF ${numero_nf}</span></span>
       <span class="card-valor ${parseFloat(valor)===0?'zero':''}">${fmtVal(valor)}</span>
