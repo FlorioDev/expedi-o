@@ -623,6 +623,25 @@ a { color: inherit; text-decoration: none; }
 .card .card-stamp { top: -8px; right: 14px; }
 .col-title { min-width: max-content; }
 @media (max-width: 1400px) { .col-sel-btn .lbl { display: none; } .col-sel-btn { padding: 4px 7px; } }
+/* ═══ Histórico da nota ═══ */
+.modal.hist { max-width: 520px; width: 92vw; }
+.hist-list { max-height: 55vh; overflow-y: auto; margin: 10px 0 4px; padding-right: 4px; }
+.hist-item { display: flex; gap: 12px; padding: 8px 0; position: relative; }
+.hist-item::before { content: ''; position: absolute; left: 5px; top: 22px; bottom: -8px; width: 2px; background: var(--border); }
+.hist-item:last-child::before { display: none; }
+.hist-dot { width: 12px; height: 12px; border-radius: 50%; margin-top: 3px; flex-shrink: 0; background: #94a3b8; box-shadow: 0 0 0 3px var(--surface); position: relative; }
+.hist-body { min-width: 0; }
+.hist-txt { font-size: 13px; font-weight: 600; color: var(--txt); word-break: break-word; white-space: pre-wrap; line-height: 1.4; }
+.hist-when { font-size: 11px; color: var(--txt2); font-family: var(--mono); margin-top: 1px; }
+.hist-item.legacy .hist-txt { color: var(--txt2); font-weight: 500; }
+.hist-item.legacy .hist-dot { opacity: .45; }
+.hist-note { font-size: 11.5px; color: var(--txt2); line-height: 1.45; margin-top: 4px; }
+.hist-note:empty { display: none; }
+.hist-empty { font-size: 13px; color: var(--txt2); padding: 14px 0; }
+.hist-dot.t-lancada { background: #2563eb; } .hist-dot.t-movida { background: #7c3aed; }
+.hist-dot.t-entregue { background: #059669; } .hist-dot.t-devolucao { background: #d97706; }
+.hist-dot.t-atencao { background: #ec4899; } .hist-dot.t-transportadora { background: #0ea5e9; }
+.hist-dot.t-obs { background: #64748b; } .hist-dot.t-paletes { background: #0d9488; }
 .sel-mode #col-retirada .card .card-actions, .sel-mode #col-retirada .card .card-obs-section, .sel-mode #col-retirada .chip-paletes { opacity: .4; }
 </style>
 </head>
@@ -743,7 +762,7 @@ a { color: inherit; text-decoration: none; }
 
       <div class="topbar-creator">
         <span class="topbar-creator-name">Leandro NP</span>
-        <span class="topbar-creator-version">Versão 2.10</span>
+        <span class="topbar-creator-version">Versão 2.11</span>
       </div>
 
       <button class="btn-fullscreen" onclick="toggleFullScreen()" title="Tela Cheia">
@@ -945,6 +964,19 @@ a { color: inherit; text-decoration: none; }
   </div>
 </div>
 
+<!-- MODAL: HISTÓRICO DA NOTA -->
+<div class="modal-backdrop" id="modal-hist">
+  <div class="modal hist">
+    <div class="modal-title" id="hist-title">Histórico da nota</div>
+    <div class="modal-sub" id="hist-sub"></div>
+    <div class="hist-list" id="hist-list"></div>
+    <div class="hist-note" id="hist-note"></div>
+    <div class="modal-footer">
+      <button class="btn-modal cancel" onclick="closeModal('modal-hist')">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: DEVOLUÇÃO -->
 <div class="modal-backdrop" id="modal-devolver">
   <div class="modal">
@@ -1069,7 +1101,7 @@ a { color: inherit; text-decoration: none; }
 <!-- FIREBASE SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, getDoc, setDoc }
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, getDoc, setDoc, arrayUnion }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1225,6 +1257,10 @@ function startListener() {
   });
 }
 
+const STATUS_LABEL = { lancada: 'Lançadas', aguardando: 'Separado', solicitada: 'Coleta Solicitada', retirada: 'Retiradas' };
+// Registra um evento no histórico da própria nota (atômico: não perde eventos de usuários simultâneos)
+const mkEv = (tipo, texto) => arrayUnion({ ts: Date.now(), tipo, texto });
+
 async function addNota(nota) {
   nota.data_lancamento = new Date().toLocaleString('pt-BR');
   nota.data_status     = nota.data_lancamento;
@@ -1235,7 +1271,7 @@ async function addNota(nota) {
   nota.arquivada       = false;
   nota.data_entrega    = '';
   nota.tentativas_entrega = 0;
-  nota.historico       = [];
+  nota.historico       = [{ ts: Date.now(), tipo: 'lancada', texto: 'Nota lançada no sistema' }];
   nota.atencao         = false;
   nota.paletes_qty     = nota.paletes_qty || 0;
   nota.paletes_devolvidos = nota.paletes_devolvidos || false;
@@ -1255,6 +1291,10 @@ async function addNota(nota) {
 window._updateStatus = async function(id, status) {
   const ts = new Date().toLocaleString('pt-BR');
   const update = { status, data_status: ts };
+  const notaAtual = window._state.notas.find(n => n.id === id);
+  if (notaAtual && notaAtual.status !== status) {
+    update.historico = mkEv('movida', `Movida de ${STATUS_LABEL[notaAtual.status] || notaAtual.status} para ${STATUS_LABEL[status] || status}`);
+  }
   if (status === 'retirada') update.ts_retirada = Date.now();
   if (status !== 'retirada') update.paletes_devolvidos = false;
   try { await updateDoc(doc(window._state.db, 'notas', id), update); }
@@ -1276,7 +1316,13 @@ window.moverCard = function(id, direcao) {
 };
 
 window._updateObs = async function(id, observacao) {
-  try { await updateDoc(doc(window._state.db, 'notas', id), { observacao }); }
+  const notaObs = window._state.notas.find(n => n.id === id);
+  const updObs = { observacao };
+  if (notaObs && (notaObs.observacao || '') !== (observacao || '')) {
+    const t = (observacao || '').trim();
+    updObs.historico = mkEv('obs', t ? 'Observação alterada: ' + (t.length > 200 ? t.slice(0, 200) + '…' : t) : 'Observação removida');
+  }
+  try { await updateDoc(doc(window._state.db, 'notas', id), updObs); }
   catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
 
@@ -1285,7 +1331,7 @@ window._toggleForaEstado = async function(id) {
   if (!nota) return;
   const novo = !nota.fora_estado;
   try {
-    await updateDoc(doc(window._state.db, 'notas', id), { fora_estado: novo });
+    await updateDoc(doc(window._state.db, 'notas', id), { fora_estado: novo, historico: mkEv('transportadora', novo ? 'Marcada como Transportadora' : 'Marcação de Transportadora removida') });
     toast(novo ? 'Nota marcada como Transportadora' : 'Nota desmarcada', novo ? 'warn' : '');
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
@@ -1295,7 +1341,7 @@ window._toggleAtencao = async function(id) {
   if (!nota) return;
   const novoEstado = !nota.atencao;
   try {
-    await updateDoc(doc(window._state.db, 'notas', id), { atencao: novoEstado });
+    await updateDoc(doc(window._state.db, 'notas', id), { atencao: novoEstado, historico: mkEv('atencao', novoEstado ? 'Atenção ativada' : 'Atenção desativada') });
     toast(novoEstado ? 'Atenção ativada!' : 'Atenção desativada', novoEstado ? 'warn' : '');
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
 };
@@ -1331,7 +1377,8 @@ window.zerarPaletes = async function() {
   if (!nota) return;
   try {
     await updateDoc(doc(window._state.db, 'notas', _paletesNotaId), {
-      paletes_qty: 0, paletes_devolvidos: true, data_devolucao_paletes: new Date().toLocaleString('pt-BR')
+      paletes_qty: 0, paletes_devolvidos: true, data_devolucao_paletes: new Date().toLocaleString('pt-BR'),
+      historico: mkEv('paletes', `Paletes zerados (eram ${nota.paletes_qty || 0})`)
     });
     closeModal('modal-paletes');
     toast(`Paletes da NF ${nota.numero_nf} zerados`, 'warn');
@@ -1346,6 +1393,7 @@ window.confirmarPaletes = async function() {
   const nota = window._state.notas.find(n => n.id === _paletesNotaId);
   try {
     const update = { paletes_qty: qty };
+    if ((nota?.paletes_qty || 0) !== qty) update.historico = mkEv('paletes', `Paletes: ${nota?.paletes_qty || 0} → ${qty}`);
     if (qty > 0) { update.paletes_devolvidos = false; update.data_devolucao_paletes = null; }
     await updateDoc(doc(window._state.db, 'notas', _paletesNotaId), update);
     closeModal('modal-paletes');
@@ -1359,7 +1407,8 @@ window.marcarPaletesDevolvidos = async function(id) {
   if (!confirm(`Confirmar devolução dos ${nota.paletes_qty} paletes da NF ${nota.numero_nf}?`)) return;
   try {
     await updateDoc(doc(window._state.db, 'notas', id), {
-      paletes_devolvidos: true, paletes_qty: 0, data_devolucao_paletes: new Date().toLocaleString('pt-BR')
+      paletes_devolvidos: true, paletes_qty: 0, data_devolucao_paletes: new Date().toLocaleString('pt-BR'),
+      historico: mkEv('paletes', `Paletes devolvidos (${nota.paletes_qty || 0})`)
     });
     toast('Paletes devolvidos!', 'success');
   } catch(e) { toast('Erro: ' + e.message, 'error'); }
@@ -1395,7 +1444,8 @@ window.markEntregue = async function(id) {
   if (nota.status !== 'retirada') { toast('Só é possível marcar como Entregue na coluna Retiradas', 'warn'); return; }
   try {
     await updateDoc(doc(window._state.db, 'notas', id), {
-      entregue: true, data_entrega: ts, pendente_transferencia: true, ts_entrega: Date.now()
+      entregue: true, data_entrega: ts, pendente_transferencia: true, ts_entrega: Date.now(),
+      historico: mkEv('entregue', 'Marcada como Entregue')
     });
     _registrarEventoHistorico({
       tipo: 'entregue', numero_nf: nota.numero_nf, cliente: nota.cliente || '', valor: nota.valor || '0',
@@ -1438,7 +1488,7 @@ function iniciarCountdown(id, segundos) {
       clearInterval(_countdowns[id].interval);
       delete _countdowns[id];
       try {
-        await updateDoc(doc(window._state.db, 'notas', id), { arquivada: true, pendente_transferencia: false });
+        await updateDoc(doc(window._state.db, 'notas', id), { arquivada: true, pendente_transferencia: false, historico: mkEv('arquivada', 'Arquivada automaticamente após a entrega') });
         toast('Nota arquivada', 'success');
       } catch(e) { toast('Erro ao arquivar: ' + e.message, 'error'); }
     }, segundos * 1000)
@@ -1448,7 +1498,7 @@ function iniciarCountdown(id, segundos) {
 window.cancelarCountdown = async function(id) {
   if (_countdowns[id]) { clearInterval(_countdowns[id].interval); clearTimeout(_countdowns[id].timeout); delete _countdowns[id]; }
   try {
-    await updateDoc(doc(window._state.db, 'notas', id), { entregue: false, data_entrega: '', pendente_transferencia: false, ts_entrega: null });
+    await updateDoc(doc(window._state.db, 'notas', id), { entregue: false, data_entrega: '', pendente_transferencia: false, ts_entrega: null, historico: mkEv('cancelada', 'Entrega cancelada (desfeita)') });
     try {
       let hist = JSON.parse(localStorage.getItem('nf_historico_v1') || '[]');
       const nota = window._state.notas.find(n => n.id === id);
@@ -1479,7 +1529,8 @@ window.confirmDevolver = async function() {
   try {
     await updateDoc(doc(window._state.db, 'notas', _devolId), {
       status: 'solicitada', entregue: false, data_entrega: '', pendente_transferencia: false,
-      tentativas_entrega: tentativas, observacao: novaObs, data_status: ts, paletes_devolvidos: false
+      tentativas_entrega: tentativas, observacao: novaObs, data_status: ts, paletes_devolvidos: false,
+      historico: mkEv('devolucao', `Devolução registrada — ${tentativas}ª tentativa. Voltou para Coleta Solicitada${motivo ? '. Motivo: ' + motivo : ''}`)
     });
     _registrarEventoHistorico({
       tipo: 'tentativa', numero_nf: nota.numero_nf, cliente: nota.cliente || '', valor: nota.valor || '0',
@@ -1906,6 +1957,7 @@ const renderAll = window.renderAll = function() {
   });
   window._boardReady = true;
   updateAges();
+  if (window._histId && document.getElementById('modal-hist')?.classList.contains('open')) renderHist();
   if (window._selMode) {
     const vis = new Set([...document.querySelectorAll('#body-retirada .card[data-id]')].map(c => c.dataset.id));
     [...window._selIds].forEach(id => { if (!vis.has(id)) window._selIds.delete(id); });
@@ -2032,6 +2084,7 @@ const ICO = {
   note:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>',
   pin:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
   bell:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
+  clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>',
   trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>'
 };
 /* ═══════════════════════════════════════════
@@ -2067,6 +2120,54 @@ document.addEventListener('pointerdown', hideTip, true);
 document.addEventListener('mouseleave', hideTip);
 window.addEventListener('scroll', hideTip, true);
 setInterval(() => { if (_tipTarget && !_tipTarget.isConnected) hideTip(); }, 300);
+
+/* ═══════════════════════════════════════════
+   HISTÓRICO DA NOTA (gravado dentro da própria nota; some junto com ela)
+═══════════════════════════════════════════ */
+window._histId = null;
+function histEntries(nota) {
+  const evs = (Array.isArray(nota.historico) ? nota.historico : []).filter(e => e && e.ts).map(e => ({ ...e }));
+  let legacy = false;
+  if (!evs.some(e => e.tipo === 'lancada')) {
+    const t = parseBR(nota.data_lancamento);
+    if (t) { evs.push({ ts: t, tipo: 'lancada', texto: 'Nota lançada no sistema', legacy: true }); legacy = true; }
+  }
+  if (!evs.some(e => !e.legacy && e.tipo !== 'lancada') && nota.data_status && nota.data_status !== nota.data_lancamento) {
+    const t = parseBR(nota.data_status);
+    if (t) { evs.push({ ts: t, tipo: 'movida', texto: `Entrou em ${STATUS_LABEL[nota.status] || nota.status} (última mudança de coluna)`, legacy: true }); legacy = true; }
+  }
+  if (nota.entregue && nota.data_entrega && !evs.some(e => e.tipo === 'entregue')) {
+    const t = parseBR(nota.data_entrega);
+    if (t) { evs.push({ ts: t, tipo: 'entregue', texto: 'Marcada como Entregue', legacy: true }); legacy = true; }
+  }
+  evs.sort((a, b) => b.ts - a.ts);
+  return { evs, legacy };
+}
+function renderHist() {
+  const nota = window._state.notas.find(n => n.id === window._histId);
+  if (!nota) { closeModal('modal-hist'); return; }
+  document.getElementById('hist-title').textContent = `Histórico — NF ${nota.numero_nf}`;
+  document.getElementById('hist-sub').textContent = nota.cliente || '';
+  const { evs, legacy } = histEntries(nota);
+  const list = document.getElementById('hist-list');
+  list.innerHTML = '';
+  if (!evs.length) { const d = document.createElement('div'); d.className = 'hist-empty'; d.textContent = 'Nenhum registro para esta nota.'; list.appendChild(d); }
+  evs.forEach(e => {
+    const item = document.createElement('div'); item.className = 'hist-item' + (e.legacy ? ' legacy' : '');
+    const dot = document.createElement('span'); dot.className = 'hist-dot t-' + (e.tipo || 'x');
+    const body = document.createElement('div'); body.className = 'hist-body';
+    const txt = document.createElement('div'); txt.className = 'hist-txt'; txt.textContent = e.texto || '';
+    const when = document.createElement('div'); when.className = 'hist-when'; when.textContent = new Date(e.ts).toLocaleString('pt-BR');
+    body.appendChild(txt); body.appendChild(when); item.appendChild(dot); item.appendChild(body); list.appendChild(item);
+  });
+  document.getElementById('hist-note').textContent = legacy
+    ? 'Linhas em cinza são um resumo dos dados que a nota já tinha antes do registro detalhado começar. As ações novas são gravadas com data, hora e detalhes.' : '';
+}
+window.openHistModal = function(id) {
+  window._histId = id;
+  renderHist();
+  openModal('modal-hist');
+};
 
 /* ═══════════════════════════════════════════
    SELEÇÃO EM LOTE (coluna Retiradas)
@@ -2180,6 +2281,8 @@ function cardHTML(nota) {
     </div>`;
   const foraEstadoBtn = `<button class="btn-action btn-icon-only ${foraEstado ? 'fora-estado-on' : ''}" onclick="event.stopPropagation();_toggleForaEstado('${id}')" data-tip="${foraEstado ? 'Remover marcação de Transportadora' : 'Marcar como Transportadora'}">${ICO.pin}</button>`;
   const atencaoBtn = `<button class="btn-action btn-icon-only ${emAtencao ? 'atencao atencao-active' : ''}" onclick="event.stopPropagation();_toggleAtencao('${id}')" data-tip="${emAtencao ? 'Desativar Atenção' : 'Chamar Atenção'}">${ICO.bell}</button>`;
+  const nHist = Array.isArray(nota.historico) ? nota.historico.length : 0;
+  const histBtn = `<button class="btn-action btn-icon-only" onclick="event.stopPropagation();openHistModal('${id}')" data-tip="Ver histórico da nota${nHist ? ' (' + nHist + (nHist === 1 ? ' registro)' : ' registros)') : ''}">${ICO.clock}</button>`;
   const deleteBtn = `<button class="btn-action btn-icon-only del" onclick="event.stopPropagation();openDelModal('${id}','${numero_nf}')" data-tip="Excluir Nota">${ICO.trash}</button>`;
   const selBox = selActive(nota) ? '<span class="card-sel-box"></span>' : '';
 
@@ -2207,7 +2310,7 @@ function cardHTML(nota) {
     ${obsSection}
     <div class="card-actions">
       ${primaryHTML}
-      ${foraEstadoBtn}${atencaoBtn}
+      ${foraEstadoBtn}${atencaoBtn}${histBtn}
       ${navArrowsHTML}
       ${deleteBtn}
     </div>`;
